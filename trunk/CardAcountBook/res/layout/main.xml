@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/card_ace"
+    android:orientation="horizontal" >
+   <!-- For test -->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="#555555"
+        android:gravity="left"
+        android:paddingBottom="5dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:text="현재 사용 금액"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#DDDDDD"
+        android:gravity="right"
+        android:paddingBottom="10dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:text="250,000"
+        android:textColor="@color/black"
+        android:textSize="30dp" />
+	<!-- End -->
+	
+    <TableRow>
+
+        <Button
+            android:id="@+id/my_card_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_card_3"
+            android:text="@string/my_card" />
+
+        <Button
+            android:id="@+id/breakdown_stats_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_chart_3"
+            android:text="@string/breakdown_stats" />
+
+        <Button
+            android:id="@+id/detail_view_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_detail_1"
+            android:text="@string/detail_view" />
+    </TableRow>
+
+    <TableRow>
+
+        <Button
+            android:id="@+id/cash_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_cash_2"
+            android:text="@string/cash" />
+
+        <Button
+            android:id="@+id/notice_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_notice_1"
+            android:text="@string/notice" />
+
+        <Button
+            android:id="@+id/option_btn"
+            style="@style/MainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_option_3"
+            android:text="@string/option" />
+    </TableRow>
+
+</TableLayout>
