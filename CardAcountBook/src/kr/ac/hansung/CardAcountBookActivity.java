@@ -6,8 +6,8 @@ import android.widget.Button;
 
 public class CardAcountBookActivity extends Activity {
 	private Button myCardBtn;
-	
-	
+	private int a;//¼öÁ¤
+		
     @Override
     public void onCreate(Bundle savedInstanceState) {
  
