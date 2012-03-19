@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/d_approval_time_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="14"
+        android:text="@string/test_time"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/d_card_name_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="18"
+        android:text="@string/test_card_text"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/d_place_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="40"
+        android:paddingLeft="5dp"
+        android:text="@string/test_place"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/d_price_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="right"
+        android:text="@string/test_price"
+        android:textColor="@color/black" />
+
+</LinearLayout>
