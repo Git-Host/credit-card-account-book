@@ -27,8 +27,10 @@ public class SmsInfo {
 		setCardName(cardName);
 	}
 	
-	public SmsInfo(String cardName, String cardNumber) {
-		setCardName(cardName);
-		setCardNumber(cardNumber);
+	public SmsInfo(String approvalTime, String cardName, String place, String price) {
+		this.approvalTime = approvalTime;
+		this.cardName = cardName;
+		this.place = place;
+		this.price = price;
 	}
 }
