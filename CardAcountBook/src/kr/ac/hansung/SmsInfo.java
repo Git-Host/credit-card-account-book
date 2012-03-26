@@ -1,5 +1,7 @@
 package kr.ac.hansung;
 
+import java.util.Date;
+
 //Card Information Class
 public class SmsInfo {
 	private String cardName;		//카드 이름

@@ -1,42 +1,58 @@
 package kr.ac.hansung;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-import kr.ac.hansung.MyCardActivity.MyCardAdapter;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailViewActivity extends ListActivity {
 
+	SQLiteDatabase db;
+	CardDB Cdb;
+	Cursor c;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
-
+		
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
-
-		// temp infomation
-		SmsInfo tmpInfo_1 = new SmsInfo("0102", "NH카드", "똥싼바지", "10000");
-		SmsInfo tmpInfo_2 = new SmsInfo("0203", "NH카드", "돈주왕", "20000");
-		SmsInfo tmpInfo_3 = new SmsInfo("0303", "NH카드", "영웅분식", "35000");
-		SmsInfo tmpInfo_4 = new SmsInfo("0305", "NH카드", "한성서점", "50000");
-		SmsInfo tmpInfo_5 = new SmsInfo("0306", "NH카드", "공대매점", "5000");
-		SmsInfo tmpInfo_6 = new SmsInfo("0310", "NH카드", "미래관카페", "28000");
-
-		detailViewList.add(tmpInfo_1);
-		detailViewList.add(tmpInfo_2);
-		detailViewList.add(tmpInfo_3);
-		detailViewList.add(tmpInfo_4);
-		detailViewList.add(tmpInfo_5);
-		detailViewList.add(tmpInfo_6);
-
+			
+		CardDB Cdb = new CardDB(this);
+		db = Cdb.getReadableDatabase();
+				
+		c =db.rawQuery("Select * From breakdowstats;", null);
+		
+		while(c.moveToNext()){
+			String cName = c.getString(1);
+			Date date;
+			
+			int pYear = c.getInt(2);
+			int pMonth = c.getInt(3);
+			int pDay = c.getInt(4);
+			String pPlace = c.getString(5);
+			int pPrice = c.getInt(6);
+			String ApprovalTime = String.valueOf(pMonth)+String.valueOf(pDay);
+			String price = String.valueOf(pPrice);
+			SmsInfo tmp = new SmsInfo(cName);
+			tmp.setApprovalTime(ApprovalTime);
+			tmp.setPlace(pPlace);
+			tmp.setPrice(String.valueOf(pPrice));
+			detailViewList.add(tmp);
+			
+		}
+		
+		
+		
 		DetailViewAdapter dAdapter = new DetailViewAdapter(this,
 				R.layout.detail_view_list_layout, detailViewList);
 
