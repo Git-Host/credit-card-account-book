@@ -1,5 +1,6 @@
 package kr.ac.hansung;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -33,18 +34,25 @@ public class DetailViewActivity extends ListActivity {
 		c =db.rawQuery("Select * From breakdowstats;", null);
 		
 		while(c.moveToNext()){
-			String cName = c.getString(1);
-			Date date;
 			
+			String cName = c.getString(1);		
 			int pYear = c.getInt(2);
 			int pMonth = c.getInt(3);
 			int pDay = c.getInt(4);
 			String pPlace = c.getString(5);
 			int pPrice = c.getInt(6);
-			String ApprovalTime = String.valueOf(pMonth)+String.valueOf(pDay);
-			String price = String.valueOf(pPrice);
+			
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Date date = null;
+			date.setYear(pYear);
+			date.setMonth(pMonth);
+			date.setDate(pDay);
+			String sDate = dateFormat.format(date);
+					
 			SmsInfo tmp = new SmsInfo(cName);
-			tmp.setApprovalTime(ApprovalTime);
+			tmp.setApprovalTime(sDate);
 			tmp.setPlace(pPlace);
 			tmp.setPrice(String.valueOf(pPrice));
 			detailViewList.add(tmp);
