@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.ListActivity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailViewActivity extends ListActivity {
 
@@ -30,26 +30,30 @@ public class DetailViewActivity extends ListActivity {
 			
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
-				
+		
+		
 		c =db.rawQuery("Select * From breakdowstats;", null);
 		
+
 		while(c.moveToNext()){
 			
 			String cName = c.getString(1);		
-			int pYear = c.getInt(2);
-			int pMonth = c.getInt(3);
+			int pYear = c.getInt(2)-1900;
+			int pMonth = c.getInt(3)-1;
 			int pDay = c.getInt(4);
 			String pPlace = c.getString(5);
 			int pPrice = c.getInt(6);
 			
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			
 			Date date = null;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			date = new Date();
+			
 			date.setYear(pYear);
 			date.setMonth(pMonth);
 			date.setDate(pDay);
 			String sDate = dateFormat.format(date);
+			
+			Toast.makeText(this, sDate, 0).show();
 					
 			SmsInfo tmp = new SmsInfo(cName);
 			tmp.setApprovalTime(sDate);
