@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DetailViewActivity extends ListActivity {
 
@@ -33,8 +32,9 @@ public class DetailViewActivity extends ListActivity {
 		
 		
 		c =db.rawQuery("Select * From breakdowstats;", null);
+//		db.execSQL("INSERT INTO breakdowstats VALUES(1,'Ω≈«—',2012,2,3,'øæ∞Ì¿ª',20000,'¿Ø»Ô∫Ò');");
+		 
 		
-
 		while(c.moveToNext()){
 			
 			String cName = c.getString(1);		
@@ -43,6 +43,7 @@ public class DetailViewActivity extends ListActivity {
 			int pDay = c.getInt(4);
 			String pPlace = c.getString(5);
 			int pPrice = c.getInt(6);
+			String category = c.getString(7);
 			
 			Date date = null;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -53,23 +54,23 @@ public class DetailViewActivity extends ListActivity {
 			date.setDate(pDay);
 			String sDate = dateFormat.format(date);
 			
-			Toast.makeText(this, sDate, 0).show();
-					
+								
 			SmsInfo tmp = new SmsInfo(cName);
 			tmp.setApprovalTime(sDate);
 			tmp.setPlace(pPlace);
 			tmp.setPrice(String.valueOf(pPrice));
+			tmp.setCategory(category);
 			detailViewList.add(tmp);
 			
 		}
-		
+		db.close();
 		
 		
 		DetailViewAdapter dAdapter = new DetailViewAdapter(this,
 				R.layout.detail_view_list_layout, detailViewList);
 
 		setListAdapter(dAdapter);
-
+		
 	}
 
 	// MyCardAdapter

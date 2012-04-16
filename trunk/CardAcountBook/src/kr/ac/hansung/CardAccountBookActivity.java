@@ -10,7 +10,7 @@ import android.widget.Button;
 public class CardAccountBookActivity extends Activity {
 	private Button myCardBtn;
 	private Button detailViewBtn;
-
+	private Button chartViewBtn;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,7 +19,8 @@ public class CardAccountBookActivity extends Activity {
 		// Button Create
 		myCardBtn = (Button) findViewById(R.id.my_card_btn);
 		detailViewBtn = (Button) findViewById(R.id.detail_view_btn); 
-
+		chartViewBtn = (Button)findViewById(R.id.breakdown_stats_btn);
+		
 		// My Card Btn Click
 		myCardBtn.setOnClickListener(new OnClickListener() {
 
@@ -38,6 +39,15 @@ public class CardAccountBookActivity extends Activity {
 				Intent detailViewIntent = new Intent(
 						CardAccountBookActivity.this, DetailViewActivity.class);
 				startActivity(detailViewIntent);
+			}
+		});
+		//Chart View Btn Click
+		chartViewBtn.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent GraphViewIntent = new Intent(CardAccountBookActivity.this, GraphViewActivity.class);
+				startActivity(GraphViewIntent);
 			}
 		});
 

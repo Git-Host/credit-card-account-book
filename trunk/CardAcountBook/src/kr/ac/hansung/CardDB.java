@@ -14,7 +14,7 @@ public class CardDB extends SQLiteOpenHelper{
 		// TODO Auto-generated method stub
 		db.execSQL("CREATE TABLE card ( name TEXT PRIMARY KEY ,pDay INTEGER, tAmount INTEGER,CardType INTGER);" );                 
 		db.execSQL("CREATE TABLE breakdowstats ( num INTEGER PRIMARY KEY ,cardName TEXT ,pYear INTEGER ,pMonth INTGER ,pDay INTGER ,pPlace TEXT" +    
-				",price INTGER);" );
+				",price INTGER, category TEXT);" );
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

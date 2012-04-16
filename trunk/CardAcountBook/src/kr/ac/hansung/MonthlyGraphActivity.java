@@ -1,0 +1,185 @@
+package kr.ac.hansung;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.chart.BarChart.Type;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.SeriesSelection;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+public class MonthlyGraphActivity extends Activity implements OnClickListener {
+	GraphicalView gv;
+	SQLiteDatabase db;
+	CardDB Cdb;
+	Cursor c;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.monthly_grapgh_view);
+		
+		int iYear;
+		double monthlyPrice[] = new double[12];
+		
+		CardDB Cdb = new CardDB(this);
+		
+		List<double[]> values = new ArrayList<double[]>();
+		
+		
+		db = Cdb.getReadableDatabase();
+		Calendar calendar = Calendar.getInstance();
+		iYear = calendar.get(Calendar.YEAR);
+		
+		String strQuery[] = new String[12];
+		
+		for(int i = 0;i<strQuery.length;i++){
+			int month = i+1;
+			monthlyPrice[i] = 0;
+			strQuery[i] = "Select price From breakdowstats where pYear = "+iYear+" and pMonth = "+month+";";
+		}
+				
+		for(int i = 0;i<strQuery.length;i++){
+			int prices = 0;
+			c =db.rawQuery(strQuery[i], null);
+			while(c.moveToNext()){
+				prices += c.getInt(0);
+			}	
+			
+			monthlyPrice[i] = prices;
+		}
+		db.close();
+		values.add(monthlyPrice);
+		
+		// 표시할 수치값
+		
+
+		/** 그래프 출력을 위한 그래픽 속성 지정객체 */
+		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+
+		// 상단 표시 제목과 글자 크기
+		renderer.setChartTitle("월별 통계");
+		renderer.setChartTitleTextSize(20);
+
+		// 분류에 대한 이름
+		String[] titles = new String[] { "월별 카드 사용량" };
+
+		// 항목을 표시하는데 사용될 색상값
+		int[] colors = new int[] { Color.YELLOW };
+
+		// 분류명 글자 크기 및 각 색상 지정
+		renderer.setLegendTextSize(15);
+		int length = colors.length;
+		for (int i = 0; i < length; i++) {
+			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
+			r.setColor(colors[i]);
+
+			renderer.addSeriesRenderer(r);
+		}
+
+		// X,Y축 항목이름과 글자 크기
+		renderer.setXTitle("월");
+
+		renderer.setYTitle("사용량", 0);
+		renderer.setAxisTitleTextSize(12);
+
+		// 수치값 글자 크기 / X축 최소,최대값 / Y축 최소,최대값
+		renderer.setLabelsTextSize(10);
+		renderer.setXAxisMin(0.5);
+		renderer.setXAxisMax(12.5);
+		renderer.setYAxisMin(0);
+		renderer.setYAxisMax(24000);
+
+		// X,Y축 라인 색상
+		renderer.setAxesColor(Color.BLACK);
+		// 상단제목, X,Y축 제목, 수치값의 글자 색상
+		renderer.setLabelsColor(Color.DKGRAY);
+
+		// X축의 표시 간격
+		renderer.setXLabels(12);
+		// Y축의 표시 간격
+		renderer.setYLabels(5);
+
+		// X,Y축 정렬방향
+		renderer.setXLabelsAlign(Align.LEFT);
+		renderer.setYLabelsAlign(Align.LEFT);
+		// X,Y축 스크롤 여부 ON/OFF
+		renderer.setPanEnabled(false, false);
+		// ZOOM기능 ON/OFF
+		renderer.setZoomEnabled(false, false);
+		// ZOOM 비율
+		renderer.setZoomRate(1.0f);
+		// 막대간 간격
+		renderer.setBarSpacing(0.5f);
+
+		renderer.setApplyBackgroundColor(true);
+		renderer.setMargins(new int[] { 30, 30, 30, 30 });
+		renderer.setMarginsColor(Color.argb(0, 0xff, 0, 0));
+
+		renderer.setBackgroundColor(Color.TRANSPARENT);
+		renderer.setGridColor(getResources().getColor(R.color.grey));
+		renderer.setShowGrid(true);
+
+		// 설정 정보 설정
+		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+		for (int i = 0; i < titles.length; i++) {
+			CategorySeries series = new CategorySeries(titles[i]);
+			double[] v = values.get(i);
+			int seriesLength = v.length;
+			for (int k = 0; k < seriesLength; k++) {
+				series.add(v[k]);
+			}
+			dataset.addSeries(series.toXYSeries());
+		}
+		renderer.setClickEnabled(true);
+
+		// 그래프 객체 생성
+		gv = ChartFactory
+				.getBarChartView(this, dataset, renderer, Type.DEFAULT);
+		gv.setOnClickListener(this);
+
+		// 그래프를 LinearLayout에 추가
+		LinearLayout llBody = (LinearLayout) findViewById(R.id.Monthly);
+		llBody.addView(gv);
+	}
+
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
+		double[] xy = gv.toRealPoint(0);
+		if (seriesSelection == null) {
+			Toast.makeText(MonthlyGraphActivity.this,
+					"No chart element was clicked", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(
+					MonthlyGraphActivity.this,
+					"Chart element in series index "
+							+ seriesSelection.getSeriesIndex()
+							+ " data point index "
+							+ seriesSelection.getPointIndex() + " was clicked"
+							+ " closest point value X="
+							+ seriesSelection.getXValue() + ", Y="
+							+ seriesSelection.getValue()
+							+ " clicked point value X=" + (float) xy[0]
+							+ ", Y=" + (float) xy[1], Toast.LENGTH_SHORT)
+					.show();
+		}
+	}
+
+}

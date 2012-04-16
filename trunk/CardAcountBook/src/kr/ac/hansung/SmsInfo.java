@@ -9,6 +9,7 @@ public class SmsInfo {
 	private String cardNumber;		//카드 번호
 	private String approvalTime;	//결재 일시
 	private String place;			//결재 장소
+	private String category;
 	
 	public String getCardName() { return cardName; }
 	public String getApprovalType() { return approvalType; }
@@ -16,6 +17,7 @@ public class SmsInfo {
 	public String getCardNumber() { return cardNumber; }
 	public String getApprovalTime() { return approvalTime; }
 	public String getPlace() { return place; }
+	public String getCategory(){ return category; }
 	
 	public void setCardName(String cName) { cardName = cName; }
 	public void setApprovalType(String aType) { approvalType = aType; }
@@ -23,6 +25,7 @@ public class SmsInfo {
 	public void setCardNumber(String cNum) { cardNumber = cNum; }
 	public void setApprovalTime(String aTime) { approvalTime = aTime; }
 	public void setPlace(String _place) { place = _place; }
+	public void setCategory(String _category){category = _category;}
 
 	public SmsInfo(String cardName) {
 		setCardName(cardName);
