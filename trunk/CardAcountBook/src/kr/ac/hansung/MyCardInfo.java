@@ -24,5 +24,13 @@ public class MyCardInfo {
 		this.setCardName(cardName);
 		this.setCardNumber(cardNumber);
 	}
+	
+	public MyCardInfo(String cardName, String cardNumber, int cardImage) {
+		setCardImage(cardImage);
+		setPhoneImage(R.drawable.icon_phone_3);
+		this.setCardName(cardName);
+		this.setCardNumber(cardNumber);
+	}
+	
 
 }

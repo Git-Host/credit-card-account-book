@@ -23,7 +23,7 @@ public class MyCardActivity extends ListActivity {
 
 		//temp infomation
 		MyCardInfo tmpCard = new MyCardInfo("NH 카드", "0012 2341 3482 3848");
-		MyCardInfo tmpCard_2 = new MyCardInfo("신한카드", "3492 3949 2737 4848");
+		MyCardInfo tmpCard_2 = new MyCardInfo("신한카드", "3492 3949 2737 4848", R.drawable.shinhan);
 
 		myCardList.add(tmpCard);
 		myCardList.add(tmpCard_2);

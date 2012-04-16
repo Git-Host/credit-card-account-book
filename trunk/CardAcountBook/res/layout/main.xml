@@ -30,7 +30,7 @@
         android:paddingBottom="10dp"
         android:paddingRight="15dp"
         android:paddingTop="10dp"
-        android:text="250,000"
+        android:text="0원"
         android:textColor="@color/black"
         android:textSize="30dp" />
 	<!-- End -->
