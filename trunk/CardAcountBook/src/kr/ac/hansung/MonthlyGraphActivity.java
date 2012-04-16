@@ -68,14 +68,10 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		values.add(monthlyPrice);
 		
 		// 표시할 수치값
-		
+		double YAxisMax = monthlyPrice[0];
 
 		/** 그래프 출력을 위한 그래픽 속성 지정객체 */
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
-
-		// 상단 표시 제목과 글자 크기
-		renderer.setChartTitle("월별 통계");
-		renderer.setChartTitleTextSize(20);
 
 		// 분류에 대한 이름
 		String[] titles = new String[] { "월별 카드 사용량" };
@@ -89,10 +85,19 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		for (int i = 0; i < length; i++) {
 			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
 			r.setColor(colors[i]);
-
+					
 			renderer.addSeriesRenderer(r);
 		}
-
+		
+		for(int i = 0; i<monthlyPrice.length;i++){
+			if(YAxisMax<monthlyPrice[i])
+				YAxisMax = monthlyPrice[i];
+		}
+		double tmp = Math.ceil(YAxisMax/10000);
+		YAxisMax = tmp*10000;
+		
+		Toast.makeText(this, String.valueOf(YAxisMax),Toast.LENGTH_LONG).show();
+		
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
 
@@ -103,8 +108,9 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		renderer.setLabelsTextSize(10);
 		renderer.setXAxisMin(0.5);
 		renderer.setXAxisMax(12.5);
+		renderer.setYAxisMax(YAxisMax);
 		renderer.setYAxisMin(0);
-		renderer.setYAxisMax(24000);
+		
 
 		// X,Y축 라인 색상
 		renderer.setAxesColor(Color.BLACK);
@@ -114,7 +120,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// X축의 표시 간격
 		renderer.setXLabels(12);
 		// Y축의 표시 간격
-		renderer.setYLabels(5);
+		renderer.setYLabels(7);
 
 		// X,Y축 정렬방향
 		renderer.setXLabelsAlign(Align.LEFT);

@@ -32,7 +32,7 @@ public class DetailViewActivity extends ListActivity {
 		
 		
 		c =db.rawQuery("Select * From breakdowstats;", null);
-//		db.execSQL("INSERT INTO breakdowstats VALUES(1,'Ω≈«—',2012,2,3,'øæ∞Ì¿ª',20000,'¿Ø»Ô∫Ò');");
+		//db.execSQL("INSERT INTO breakdowstats VALUES(2,'Ω≈«—',2012,3,3,'øæ∞Ì¿ª',128000,'¿Ø»Ô∫Ò');");
 		 
 		
 		while(c.moveToNext()){
