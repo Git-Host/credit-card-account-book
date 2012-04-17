@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailViewActivity extends ListActivity {
 
@@ -26,11 +28,21 @@ public class DetailViewActivity extends ListActivity {
 		setContentView(R.layout.detail_view);
 		
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
-			
+		
+		
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
+		Intent intent = getIntent();
 		
-		c =db.rawQuery("Select * From breakdowstats;", null);
+		if(!intent.hasExtra("selMonth"))
+			c =db.rawQuery("Select * From breakdowstats;", null);
+		else if(intent.hasExtra("selMonth")){
+			
+			int selMonth = (int)intent.getDoubleExtra("selMonth", 0);
+			
+			String strQuery = "Select * From breakdowstats where pMonth ="+selMonth+";";
+			c = db.rawQuery(strQuery, null);
+		}
 //		db.execSQL("INSERT INTO breakdowstats VALUES(1,'±ππŒ',2012,2,4,'øæ∞Ì¿ª',128000,'¿Ø»Ô∫Ò');");
 		 
 		
