@@ -14,6 +14,7 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -29,44 +30,44 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Cursor c;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.monthly_grapgh_view);
-		
+
 		int iYear;
 		double monthlyPrice[] = new double[12];
-		
+
 		CardDB Cdb = new CardDB(this);
-		
+
 		List<double[]> values = new ArrayList<double[]>();
-		
-		
+
 		db = Cdb.getReadableDatabase();
 		Calendar calendar = Calendar.getInstance();
 		iYear = calendar.get(Calendar.YEAR);
-		
+
 		String strQuery[] = new String[12];
-		
-		for(int i = 0;i<strQuery.length;i++){
-			int month = i+1;
+
+		for (int i = 0; i < strQuery.length; i++) {
+			int month = i + 1;
 			monthlyPrice[i] = 0;
-			strQuery[i] = "Select price From breakdowstats where pYear = "+iYear+" and pMonth = "+month+";";
+			strQuery[i] = "Select price From breakdowstats where pYear = "
+					+ iYear + " and pMonth = " + month + ";";
 		}
-				
-		for(int i = 0;i<strQuery.length;i++){
+
+		for (int i = 0; i < strQuery.length; i++) {
 			int prices = 0;
-			c =db.rawQuery(strQuery[i], null);
-			while(c.moveToNext()){
+			c = db.rawQuery(strQuery[i], null);
+			while (c.moveToNext()) {
 				prices += c.getInt(0);
-			}	
-			
+			}
+
 			monthlyPrice[i] = prices;
 		}
 		db.close();
 		values.add(monthlyPrice);
-		
+
 		// 표시할 수치값
 		double YAxisMax = monthlyPrice[0];
 
@@ -77,40 +78,39 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		String[] titles = new String[] { "월별 카드 사용량" };
 
 		// 항목을 표시하는데 사용될 색상값
-		int[] colors = new int[] { Color.YELLOW };
+		int[] colors = new int[] { Color.parseColor("#8a2BE2") };
 
 		// 분류명 글자 크기 및 각 색상 지정
-		renderer.setLegendTextSize(15);
+		renderer.setLegendTextSize(25);
 		int length = colors.length;
 		for (int i = 0; i < length; i++) {
 			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
 			r.setColor(colors[i]);
-					
+
 			renderer.addSeriesRenderer(r);
 		}
-		
-		for(int i = 0; i<monthlyPrice.length;i++){
-			if(YAxisMax<monthlyPrice[i])
+
+		for (int i = 0; i < monthlyPrice.length; i++) {
+			if (YAxisMax < monthlyPrice[i])
 				YAxisMax = monthlyPrice[i];
 		}
-		double tmp = Math.ceil(YAxisMax/10000);
-		YAxisMax = tmp*10000;
+		double tmp = Math.ceil(YAxisMax / 10000);
+		YAxisMax = tmp * 10000;
+
 		
-		Toast.makeText(this, String.valueOf(YAxisMax),Toast.LENGTH_LONG).show();
-		
+
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
-
+		renderer.setAxisTitleTextSize(25);
 		renderer.setYTitle("사용량", 0);
-		renderer.setAxisTitleTextSize(12);
+		renderer.setAxisTitleTextSize(25);
 
 		// 수치값 글자 크기 / X축 최소,최대값 / Y축 최소,최대값
-		renderer.setLabelsTextSize(10);
+		renderer.setLabelsTextSize(20);
 		renderer.setXAxisMin(0.5);
 		renderer.setXAxisMax(12.5);
 		renderer.setYAxisMax(YAxisMax);
 		renderer.setYAxisMin(0);
-		
 
 		// X,Y축 라인 색상
 		renderer.setAxesColor(Color.BLACK);
@@ -168,23 +168,16 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
-		double[] xy = gv.toRealPoint(0);
+		
 		if (seriesSelection == null) {
-			Toast.makeText(MonthlyGraphActivity.this,
-					"No chart element was clicked", Toast.LENGTH_SHORT).show();
+
 		} else {
-			Toast.makeText(
-					MonthlyGraphActivity.this,
-					"Chart element in series index "
-							+ seriesSelection.getSeriesIndex()
-							+ " data point index "
-							+ seriesSelection.getPointIndex() + " was clicked"
-							+ " closest point value X="
-							+ seriesSelection.getXValue() + ", Y="
-							+ seriesSelection.getValue()
-							+ " clicked point value X=" + (float) xy[0]
-							+ ", Y=" + (float) xy[1], Toast.LENGTH_SHORT)
-					.show();
+
+			Intent detailViewIntent = new Intent(MonthlyGraphActivity.this,
+					DetailViewActivity.class);
+			detailViewIntent.putExtra("selMonth", seriesSelection.getXValue());
+			startActivity(detailViewIntent);
+
 		}
 	}
 
