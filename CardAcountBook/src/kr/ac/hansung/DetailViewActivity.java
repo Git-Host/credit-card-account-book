@@ -69,7 +69,7 @@ public class DetailViewActivity extends ListActivity {
 			SmsInfo tmp = new SmsInfo(cName);
 			tmp.setApprovalTime(sDate);
 			tmp.setPlace(pPlace);
-			tmp.setPrice(String.valueOf(pPrice));
+			tmp.setPrice(pPrice);
 			tmp.setCategory(category);
 			detailViewList.add(tmp);
 			
@@ -119,7 +119,7 @@ public class DetailViewActivity extends ListActivity {
 				tmpATime.setText(m.getApprovalTime());
 				tmpCName.setText(m.getCardName());
 				tmpPlace.setText(m.getPlace());
-				tmpPrice.setText(m.getPrice());
+				tmpPrice.setText(String.valueOf(m.getPrice()));
 			}
 			return v;
 
