@@ -1,9 +1,10 @@
 package kr.ac.hansung;
 
-import java.util.Date;
+import java.util.Calendar;
 
+import android.content.res.Resources;
 
-//Card Information Class
+//SMS Information Class
 public class SmsInfo {
 	private String cardName;		//카드 이름
 	private String approvalType;	//결재 종류 (체크승인, 신용승인 등)
@@ -12,6 +13,15 @@ public class SmsInfo {
 	private String approvalTime;	//결재 일시
 	private String place;			//결재 장소
 	private String category;
+	
+	static int primaryKey = 1010;
+	
+	
+	
+	final static int NH_PNUM = 15881600;
+	final static int KB_PNUM = 15881788;
+	
+	
 	
 	public String getCardName() { return cardName; }
 	public String getApprovalType() { return approvalType; }
@@ -41,42 +51,62 @@ public class SmsInfo {
 		this.place = place;
 		this.price = price;
 	}
-	
-	public SmsInfo splitSMSAddToSmsInfo(String sms) {
-		String[] tmpSMS = sms.split("\n");
-		SmsInfo tmpSmsObj = new SmsInfo();
-		String[] tmpSplitCardNameNumber = splitCardNameNumber(tmpSMS[2]);
 
-		tmpSmsObj.setCardName(tmpSplitCardNameNumber[0]);
-		tmpSmsObj.setApprovalType(tmpSMS[0]);
-		tmpSmsObj.setPrice(convertToIntPrice(tmpSMS[1]));
-		tmpSmsObj.setCardNumber(tmpSplitCardNameNumber[1]);
-		tmpSmsObj.setApprovalTime(splitApprovalTime(tmpSMS[4]));
-		tmpSmsObj.setPlace(tmpSMS[5]);
-
-		return tmpSmsObj;
-	}
-
-	public int convertToIntPrice(String price) {
-		String tmpPrice;
-
-		tmpPrice = price.replace("원", "");
-		tmpPrice = tmpPrice.replace(",", "");
-
-		return Integer.parseInt(tmpPrice);
+	// Month, Day로 나누기
+	public static String[] splitMonthDay(String monthDay) {
+		String[] tmpMonthDay = monthDay.substring(0, monthDay.indexOf(" ")).split("/");
+		return tmpMonthDay;
 	}
 	
-	public String[] splitCardNameNumber(String cardNameNumber) {
-		String tmpCardName = cardNameNumber.substring(0, cardNameNumber.indexOf("("));
-		String tmpCardNumber = cardNameNumber.substring(cardNameNumber.indexOf("(") + 1, cardNameNumber.indexOf(")"));
+	public static String scatterMessage(String smsAddress, String smsBody) {
+		int tmpAddress = Integer.parseInt(smsAddress);
+		String tmpInsertQuery = null;
+		String[] tmpSplitBody;
+		Calendar c = Calendar.getInstance();
+		String tmpAType, tmpPrice, tmpCardName, tmpCardNum, tmpYear, tmpMonth, tmpDay, tmpPlace;
+		String[] tmpApproval;
 		
-		String[] tmpNameNumber = { tmpCardName, tmpCardNumber };
-		return tmpNameNumber;
-	}
-	
-	public String splitApprovalTime(String approvalTime) {
-		String[] tmpApprovalTime = approvalTime.split(" ");
+		tmpYear = String.valueOf(c.get(Calendar.YEAR));
 		
-		return tmpApprovalTime[0]; 
+		switch (tmpAddress) {
+		case KB_PNUM :
+			tmpSplitBody = smsBody.split("\n");
+			tmpCardName = tmpSplitBody[0].substring(0, tmpSplitBody[0].indexOf("("));
+			tmpCardNum = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("(") + 1, tmpSplitBody[0].indexOf(")"));
+			tmpApproval = splitMonthDay(tmpSplitBody[2]);
+			tmpMonth = tmpApproval[0];
+			tmpDay = tmpApproval[1];
+			tmpPrice = tmpSplitBody[3].replace(",", "").replace("원", "");
+			tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
+			
+			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+					+ primaryKey++ + ", '" + tmpCardName
+					+ "', " + tmpYear + ", " + tmpMonth + ", "
+					+ tmpDay + ", '" + tmpPlace
+					+ "', " + Integer.parseInt(tmpPrice) + ", '기타', '" + tmpCardNum + "');";
+			
+			break;
+		
+		case NH_PNUM :
+			tmpSplitBody = smsBody.split("\n");
+			tmpAType = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("[") + 1, tmpSplitBody[0].indexOf("]"));
+			tmpPrice = tmpSplitBody[1].replace(",", "").replace("원", "");
+			tmpCardName = tmpSplitBody[2].substring(0, tmpSplitBody[2].indexOf("("));
+			tmpCardNum = tmpSplitBody[2].substring(tmpSplitBody[2].indexOf("(") + 1, tmpSplitBody[2].indexOf(")"));
+			String[] tmpAprvl = tmpSplitBody[4].split(" ");
+			String[] tmpApprovalSplit = tmpAprvl[0].split("/");
+			tmpMonth = tmpApprovalSplit[0];
+			tmpDay = tmpApprovalSplit[1];
+			
+			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+					+"null, '" + tmpCardName
+					+ "', " + tmpYear + ", " + tmpMonth + ", "
+					+ tmpDay + ", '" + tmpSplitBody[5]
+					+ "', " + Integer.parseInt(tmpPrice) + ", '기타', '" + tmpCardNum + "');";
+			
+			break;
+		}
+		
+		return tmpInsertQuery; 
 	}
 }
