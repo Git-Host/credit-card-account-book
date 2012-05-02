@@ -11,17 +11,17 @@ public class GraphViewActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph_view);
-		Button Monthly = (Button)findViewById(R.id.monthly);
-		Button Category = (Button)findViewById(R.id.category);
+		Button Monthly = (Button) findViewById(R.id.monthly);
+		Button Category = (Button) findViewById(R.id.category);
 		MyclickListener l = new MyclickListener();
 		Monthly.setOnClickListener(l);
 		Category.setOnClickListener(l);
 	}
-	public class MyclickListener implements OnClickListener
-	{
+
+	public class MyclickListener implements OnClickListener {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			switch(v.getId()){
+			switch (v.getId()) {
 			case R.id.monthly:
 				Intent Monthly_Graph = new Intent(GraphViewActivity.this,
 						MonthlyGraphActivity.class);
@@ -31,6 +31,6 @@ public class GraphViewActivity extends Activity {
 				break;
 			}
 		}
-		
+
 	}
 }

@@ -3,18 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/card_ace"
+    android:gravity="center_vertical"
     android:orientation="vertical" >
 
     <Button
         android:id="@+id/monthly"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="월별 사용내역" />
+        android:gravity="center"
+        android:text="월별 사용내역"
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/category"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="카테고리별 사용내역" />
+        android:gravity="center"
+        android:text="카테고리별 사용내역"
+        android:textSize="20dp" />
 
 </LinearLayout>

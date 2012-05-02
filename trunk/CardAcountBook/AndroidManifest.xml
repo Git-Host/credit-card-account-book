@@ -24,7 +24,7 @@
         <!-- My Card Activity -->
         <activity
             android:name=".MyCardActivity"
-            android:label="@string/app_name" >
+            android:label="@string/my_card" >
             <intent-filter>
                 <action android:name="android.intent.action.MY_CARD" />
 
@@ -35,7 +35,7 @@
         <!-- Detail View Activity -->
         <activity
             android:name=".DetailViewActivity"
-            android:label="@string/app_name" >
+            android:label="@string/detail_view" >
             <intent-filter>
                 <action android:name="android.intent.action.DETAIL_VIEW" />
 

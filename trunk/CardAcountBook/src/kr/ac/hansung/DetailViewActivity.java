@@ -22,66 +22,63 @@ public class DetailViewActivity extends ListActivity {
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Cursor c;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
-		
+
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
-		
-		
+
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 		Intent intent = getIntent();
-		
-		if(!intent.hasExtra("selMonth"))
-			c =db.rawQuery("Select * From breakdowstats;", null);
-		else if(intent.hasExtra("selMonth")){
-			
-			int selMonth = (int)intent.getDoubleExtra("selMonth", 0);
-			
-			String strQuery = "Select * From breakdowstats where pMonth ="+selMonth+";";
+
+		if (!intent.hasExtra("selMonth"))
+			c = db.rawQuery("Select * From breakdowstats;", null);
+		else if (intent.hasExtra("selMonth")) {
+
+			int selMonth = (int) intent.getDoubleExtra("selMonth", 0);
+
+			String strQuery = "Select * From breakdowstats where pMonth ="
+					+ selMonth + ";";
 			c = db.rawQuery(strQuery, null);
-		}
-//		db.execSQL("INSERT INTO breakdowstats VALUES(1,'±ππŒ',2012,2,4,'øæ∞Ì¿ª',128000,'¿Ø»Ô∫Ò');");
-		 
-		
-		while(c.moveToNext()){
-			
-			String cName = c.getString(1);		
-			int pYear = c.getInt(2)-1900;
-			int pMonth = c.getInt(3)-1;
+		} 
+
+		while (c.moveToNext()) {
+
+			String cName = c.getString(1);
+			int pYear = c.getInt(2) - 1900;
+			int pMonth = c.getInt(3) - 1;
 			int pDay = c.getInt(4);
 			String pPlace = c.getString(5);
 			int pPrice = c.getInt(6);
 			String category = c.getString(7);
-			
+
 			Date date = null;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			date = new Date();
-			
+
 			date.setYear(pYear);
 			date.setMonth(pMonth);
 			date.setDate(pDay);
 			String sDate = dateFormat.format(date);
-			
-								
+
 			SmsInfo tmp = new SmsInfo(cName);
 			tmp.setApprovalTime(sDate);
 			tmp.setPlace(pPlace);
 			tmp.setPrice(pPrice);
 			tmp.setCategory(category);
 			detailViewList.add(tmp);
-			
 		}
+		
 		db.close();
-		
-		
+
 		DetailViewAdapter dAdapter = new DetailViewAdapter(this,
 				R.layout.detail_view_list_layout, detailViewList);
 
 		setListAdapter(dAdapter);
-		
+
 	}
 
 	// MyCardAdapter

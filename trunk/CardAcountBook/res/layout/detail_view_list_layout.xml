@@ -10,7 +10,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="14"
-        android:text="@string/test_time"
         android:textColor="@color/black" />
 
     <TextView
@@ -18,7 +17,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="18"
-        android:text="@string/test_card_text"
         android:textColor="@color/black" />
 
     <TextView
@@ -27,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="40"
         android:paddingLeft="5dp"
-        android:text="@string/test_place"
         android:textColor="@color/black" />
 
     <TextView
@@ -36,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="25"
         android:gravity="right"
-        android:text="@string/test_price"
         android:textColor="@color/black" />
 
 </LinearLayout>
