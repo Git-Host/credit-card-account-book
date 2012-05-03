@@ -1,16 +1,18 @@
 package kr.ac.hansung;
 
 public class MyCardInfo {
+	public static int CHECK = 0,CREDIT = 1;
 	private int cardImage;
 	private int phoneImage;
 	private String cardName;
 	private String cardNumber;
+	private int cardType;
 	
 	public int getCardImage() { return cardImage; }
 	public int getPhoneImage() { return phoneImage; }
 	public String getCardNumber() {	return cardNumber; }
 	public String getCardName() { return cardName; }
-
+		
 	public void setCardImage(int cardImage) { this.cardImage = cardImage; }
 	public void setPhoneImage(int phoneImage) { this.phoneImage = phoneImage; }
 	public void setCardName(String cardName) { this.cardName = cardName; }

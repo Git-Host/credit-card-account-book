@@ -13,9 +13,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class DetailViewActivity extends ListActivity {
 
@@ -28,6 +31,17 @@ public class DetailViewActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
 
+		Spinner monthSpinner = (Spinner)findViewById(R.id.spinner);
+		
+
+
+
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.month, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		monthSpinner.setAdapter(adapter);
+		monthSpinner.setOnItemSelectedListener(new OnItemselectListener());
+		
+		
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
 
 		CardDB Cdb = new CardDB(this);
@@ -43,7 +57,12 @@ public class DetailViewActivity extends ListActivity {
 			String strQuery = "Select * From breakdowstats where pMonth ="
 					+ selMonth + ";";
 			c = db.rawQuery(strQuery, null);
-		} 
+
+		}
+		
+		 
+		
+
 
 		while (c.moveToNext()) {
 
@@ -121,6 +140,21 @@ public class DetailViewActivity extends ListActivity {
 			return v;
 
 		}
+	}
+	public class OnItemselectListener implements OnItemSelectedListener{
+
+		public void onItemSelected(AdapterView<?> parent, View view, int position,
+				long id) {
+			// TODO Auto-generated method stub
+			Toast.makeText(DetailViewActivity.this,"선택한 달은"+parent.getItemAtPosition(position),Toast.LENGTH_SHORT).show();
+			
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }

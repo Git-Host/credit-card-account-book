@@ -22,8 +22,8 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 	private static final String INITIAL_FLAG = "initial";
 	private SharedPreferences pref;
-	private Button myCardBtn;
-	private Button detailViewBtn;
+	private Button myCardBtn, detailViewBtn, chartViewBtn, optionViewBtn;
+		
 
 	private SMSReceiver smsReceiver;
 	private static Boolean initialFlag = false;
@@ -35,17 +35,20 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		initialFlag = flag;
 	}
 
-	private Button chartViewBtn;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		// Button Create
 		myCardBtn = (Button) findViewById(R.id.my_card_btn);
 		detailViewBtn = (Button) findViewById(R.id.detail_view_btn);
 		chartViewBtn = (Button) findViewById(R.id.breakdown_stats_btn);
+
+		optionViewBtn = (Button)findViewById(R.id.option_btn);
+		
 
 		pref = getSharedPreferences("initial", MODE_PRIVATE);
 		boolean text = pref.getBoolean(INITIAL_FLAG, false);
@@ -83,6 +86,16 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				Intent GraphViewIntent = new Intent(
 						CardAccountBookActivity.this, GraphViewActivity.class);
 				startActivity(GraphViewIntent);
+			}
+		});
+		// Option View Btn Click
+		optionViewBtn.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent OptionViewIntent = new Intent(
+						CardAccountBookActivity.this,OptionViewActivity.class);
+				startActivity(OptionViewIntent);
 			}
 		});
 
@@ -127,9 +140,11 @@ public class CardAccountBookActivity extends Activity implements CardList {
 			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
 					|| curAddress
 							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
-				smsAddress = cursor.getString(cursor.getColumnIndex("address"));
 				smsBody = cursor.getString(cursor.getColumnIndex("body"));
+				smsAddress = cursor.getString(cursor.getColumnIndex("adress"));
+
 				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
+
 			}
 		}
 		
@@ -151,4 +166,5 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		this.unregisterReceiver(smsReceiver);
 		Log.e("Junu", "onDestroy() called");
 	}
+	
 }
