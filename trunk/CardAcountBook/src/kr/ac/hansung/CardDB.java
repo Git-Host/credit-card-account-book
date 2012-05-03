@@ -13,12 +13,10 @@ public class CardDB extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
+		db.execSQL("CREATE TABLE myCard ( key INTEGER PRIMARY KEY, cardName TEXT, cardNumber TEXT, paymentDay TEXT, tAmount INTEGER, cardType INTEGER);");
+		db.execSQL("CREATE TABLE breakdowstats ( num INTEGER PRIMARY KEY ,cardName TEXT , pYear INTEGER ,pMonth INTGER ,pDay INTGER ,pPlace TEXT"
+				+ ",price INTGER, category TEXT, cardNumber TEXT);");
 
-		db.execSQL("CREATE TABLE card ( name TEXT PRIMARY KEY ,pDay INTEGER, tAmount INTEGER,CardType INTGER,CardNum TEXT);");
-		db.execSQL("CREATE TABLE breakdowstats ( num INTEGER PRIMARY KEY ,cardName TEXT ,pYear INTEGER ,pMonth INTGER ,pDay INTGER ,pPlace TEXT"
-				+ ",price INTGER, category TEXT);");
-
-		
 	}
 
 	@Override
