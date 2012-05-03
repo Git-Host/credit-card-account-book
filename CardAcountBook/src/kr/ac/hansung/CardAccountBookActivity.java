@@ -130,31 +130,40 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		Resources tmpRes = this.getResources();
 
 		Uri READ_SMS = Uri.parse(cpUri);
-		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		db = Cdb.getReadableDatabase();
 
 		while (cursor.moveToNext()) {
-			String curAddress = cursor.getString(cursor
-					.getColumnIndex("address"));
-			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
-					|| curAddress
-							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+			String curAddress = cursor.getString(cursor.getColumnIndex("address"));
+			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
 				smsBody = cursor.getString(cursor.getColumnIndex("body"));
-				smsAddress = cursor.getString(cursor.getColumnIndex("adress"));
+				smsAddress = cursor.getString(cursor.getColumnIndex("address"));
 
 				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
 
 			}
 		}
+		cursor.close();
 		
-		for (int i = 0; i < cardName.length; i++) {
-			cardQuery = "INSERT INTO card VALUES('" + cardName[i] + "', " + creditPeriod[i]
-					+ ", " + targetPrice[i] + ", " + paymentPlan[i] + ", '" + phoneNumber[i] + "');";
-			db.execSQL(cardQuery);
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 100000, '기타', '1*2*');");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*');");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '기타', '3*6*');");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*');");
+		
+		
+		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
+		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
+		cursor = db.rawQuery(myCardQuery, null);
+		
+		while (cursor.moveToNext()) {
+			String tmpCardName = cursor.getString(cursor.getColumnIndex("cardName"));
+			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
+			
+			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', null, null, null);";
+			db.execSQL(tmpQuery);
 		}
-
 		db.close();
+		
 		SharedPreferences.Editor ed = pref.edit();
 		ed.putBoolean(INITIAL_FLAG, true);
 		ed.commit();
@@ -166,5 +175,11 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		this.unregisterReceiver(smsReceiver);
 		Log.e("Junu", "onDestroy() called");
 	}
-	
+
+	public int setCardImage(String s) {
+		
+		
+		return 0;
+	}
+
 }

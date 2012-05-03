@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Credit Card Acount Book</string>
+    <string name="app_name">Credit Card Account Book</string>
     <string name="my_card">나의 카드</string>
     <string name="breakdown_stats">내역 통계</string>
     <string name="detail_view">상세 내역</string>
