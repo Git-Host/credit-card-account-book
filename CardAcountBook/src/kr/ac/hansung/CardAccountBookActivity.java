@@ -1,6 +1,8 @@
 package kr.ac.hansung;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -40,6 +42,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 	private TextView fromDateView;
 	private TextView toDateView;
+	private TextView priceTitleView;
 
 	// getter, setter
 	public void setInitFlag(Boolean flag) {
@@ -55,7 +58,6 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		myCardBtn = (Button) findViewById(R.id.my_card_btn);
 		detailViewBtn = (Button) findViewById(R.id.detail_view_btn);
 		chartViewBtn = (Button) findViewById(R.id.breakdown_stats_btn);
-
 		optionViewBtn = (Button) findViewById(R.id.option_btn);
 
 		pref = getSharedPreferences("initial", MODE_PRIVATE);
@@ -68,6 +70,8 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 		// 메인화면 현재월 1일부터 현재월 현재일까지 보여주는 메소드
 		fromToDateChange();
+		
+		// 현재사용금액을 업데이트한다.
 		showNowPayment();
 
 		// My Card Btn Click
@@ -145,11 +149,10 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		}
 		cursor.close();
 
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 100000, '기타', '1*2*');");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*');");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '기타', '3*6*');");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*');");
-//		
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 100000, '기타', '1*2*', 20120430);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '기타', '3*6*', 20120501);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
@@ -238,6 +241,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				int dayOfMonth) {
 			int month = monthOfYear + 1;
 			toDateView.setText(year + ". " + month + ". " + dayOfMonth + ". ");
+			showNowPayment();
 		}
 	};
 
@@ -247,22 +251,47 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				int dayOfMonth) {
 			int month = monthOfYear + 1;
 			fromDateView.setText(year + ". " + month + ". " + dayOfMonth + ". ");
+			showNowPayment();
 		}
 	};
 
 	public void showNowPayment() {
 		String[] toYearMonthDay = toDateView.getText().toString().split(". ");
 		String[] fromYearMonthDay = fromDateView.getText().toString().split(". ");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		int priceTitle = 0;
+		
+		Date tmpToDate = new Date();
+		Date tmpFromDate = new Date();
+		
+		tmpToDate.setYear(Integer.parseInt(toYearMonthDay[0]) - 1900);
+		tmpToDate.setMonth(Integer.parseInt(toYearMonthDay[1]) - 1);
+		tmpToDate.setDate(Integer.parseInt(toYearMonthDay[2]));
+		
+		tmpFromDate.setYear(Integer.parseInt(fromYearMonthDay[0]) - 1900);
+		tmpFromDate.setMonth(Integer.parseInt(fromYearMonthDay[1]) - 1);
+		tmpFromDate.setDate(Integer.parseInt(fromYearMonthDay[2]));
+
 		SQLiteDatabase db;
-		Cursor c;
+		Cursor cursor;
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 
-//		db.execSQL("CREATE TABLE breakdowstats ( num INTEGER PRIMARY KEY ,cardName TEXT , pYear INTEGER ,pMonth INTGER ,pDay INTGER ,pPlace TEXT"
-//				+ ",price INTGER, category TEXT, cardNumber TEXT);");
-//		
-//		String myCardQuery = "SELECT price FROM breakdowstats;";
-//		c = db.rawQuery(myCardQuery, null);
+		String nowPayQuery = "SELECT price FROM breakdowstats WHERE breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) +
+				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +";";
+		cursor = db.rawQuery(nowPayQuery, null);
+		
+		//////여기부터
+		while (cursor.moveToNext()) {
+			String cPrice = cursor.getString(cursor.getColumnIndex("price"));
+			
+			priceTitle =+ Integer.parseInt(cPrice);
+		}
+		db.close();
+		
+		priceTitleView = (TextView) findViewById(R.id.today_payment);
+		priceTitleView.setText(String.valueOf(priceTitle));
+		priceTitleView.invalidate();
 	}
 
 	@Override

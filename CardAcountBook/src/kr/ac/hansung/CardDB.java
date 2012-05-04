@@ -18,6 +18,7 @@ public class CardDB extends SQLiteOpenHelper {
 				+ ",price INTEGER, category TEXT, cardNumber TEXT, combineDate INTEGER);");
 	}
 
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub

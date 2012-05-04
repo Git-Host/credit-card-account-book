@@ -1,6 +1,8 @@
 package kr.ac.hansung;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.content.ContextWrapper;
 import android.util.Log;
@@ -62,11 +64,13 @@ public class SmsInfo implements CategoryList{
 	
 	public static String scatterMessage(String smsAddress, String smsBody) {
 		int tmpAddress = Integer.parseInt(smsAddress);
+		int inDate;
 		String tmpInsertQuery = null;
+		String tmpAType, tmpPrice, tmpCardName, tmpCardNum, tmpYear, tmpMonth, tmpDay, tmpPlace, tmpCategory;
 		String[] tmpSplitBody;
 		Calendar c = Calendar.getInstance();
-		String tmpAType, tmpPrice, tmpCardName, tmpCardNum, tmpYear, tmpMonth, tmpDay, tmpPlace, tmpCategory;
-		
+		Date date;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		String[] tmpApproval;
 		
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
@@ -84,12 +88,18 @@ public class SmsInfo implements CategoryList{
 			tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
 			tmpCategory = SearchCategory(tmpPlace);
 			
+			date = new Date();
+			date.setYear(Integer.parseInt(tmpYear) - 1900);
+			date.setMonth(Integer.parseInt(tmpMonth));
+			date.setDate(Integer.parseInt(tmpDay));
+			inDate = Integer.parseInt(dateFormat.format(date));
+			
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
 					+ primaryKey++ + ", '" + tmpCardName
 					+ "', " + tmpYear + ", " + tmpMonth + ", "
 					+ tmpDay + ", '" + tmpPlace
 					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "');";
+					+ "', '" + tmpCardNum + "'," + inDate + ");";
 			
 			break;
 		
@@ -105,13 +115,18 @@ public class SmsInfo implements CategoryList{
 			tmpDay = tmpApprovalSplit[1];
 			tmpCategory = SearchCategory(tmpSplitBody[5]);
 			
+			date = new Date();
+			date.setYear(Integer.parseInt(tmpYear) - 1900);
+			date.setMonth(Integer.parseInt(tmpMonth));
+			date.setDate(Integer.parseInt(tmpDay));
+			inDate = Integer.parseInt(dateFormat.format(date));
 			
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
 					+"null, '" + tmpCardName
 					+ "', " + tmpYear + ", " + tmpMonth + ", "
 					+ tmpDay + ", '" + tmpSplitBody[5]
 					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "');";
+					+ "', '" + tmpCardNum + "'," + inDate  + ");";
 			
 			break;
 		}
