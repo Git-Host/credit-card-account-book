@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
@@ -23,9 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyCardActivity extends ListActivity {
+	private static final int GO_EDIT_CARD_OPTION = 1;
+	
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Cursor c;
+	MyCardAdapter mAdapter;
+	
 	ListView cardListView;
 	TextView clickedTextView;
 	
@@ -55,20 +60,40 @@ public class MyCardActivity extends ListActivity {
 		}
 		db.close();
 
-		MyCardAdapter mAdapter = new MyCardAdapter(this, R.layout.my_card_list_layout, myCardList);
+		mAdapter = new MyCardAdapter(this, R.layout.my_card_list_layout, myCardList);
 		setListAdapter(mAdapter);
 		
 		
 		cardListView = this.getListView();
+		cardListView.setOnItemLongClickListener(new myCardListItemLongClickListener());
+			
+		
+	}
 	
-		cardListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				Toast.makeText(MyCardActivity.this, "ธÞที", Toast.LENGTH_LONG).show();
-				return true;
-			}
-		});
+	public class myCardListItemLongClickListener implements AdapterView.OnItemLongClickListener {
+
+		public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+			Bundle containBdl = new Bundle();
+			
+			containBdl.putString("cardName", mAdapter.getItem(position).getCardName());
+			containBdl.putString("cardNumber", mAdapter.getItem(position).getCardNumber());
+			containBdl.putInt("imageRsc", mAdapter.getItem(position).getCardImage());
+			
+			Intent containItent = new Intent(MyCardActivity.this, CardInfoEditActivity.class);
+			containItent.putExtras(containBdl);
+			startActivityForResult(containItent, GO_EDIT_CARD_OPTION);
+			
+			return true;
+		}
 		
 	}
 	
@@ -76,27 +101,12 @@ public class MyCardActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
-		clickedTextView = (TextView) findViewById(R.id.card_name_textview);
-		ImageView clickedPhone= (ImageView) findViewById(R.id.card_phone_imageview);
+		Intent clickedCardDetail = new Intent(MyCardActivity.this, DetailViewActivity.class);
 		
-		v.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				switch (v.getId()){
-				case R.id.card_phone_imageview:
-					Toast.makeText(MyCardActivity.this, "asdfasdfasdf", Toast.LENGTH_LONG).show();
-				}
-				
-			}
-		});
-		Log.e("dd", String.valueOf(v.getId()));
+		clickedCardDetail.putExtra("cardName", mAdapter.getItem(position).getCardName());
+		clickedCardDetail.putExtra("cardNumber", mAdapter.getItem(position).getCardNumber());
 		
-//		clickedPhone.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				callCardCompany(clickedTextView);
-//			}
-//		});
+		startActivity(clickedCardDetail);
 	}
 
 	
@@ -109,7 +119,7 @@ public class MyCardActivity extends ListActivity {
 			callCompany = new Intent(Intent.ACTION_DIAL);
 			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_NH)));
 			startActivity(callCompany);
-		} else if (tmpTv.getText().equals(tmpRes.getString(R.string.KB_check)) || tmpTv.getText().equals(tmpRes.getString(R.string.KB_check))) {
+		} else if (tmpTv.getText().equals(tmpRes.getString(R.string.KB_check)) || tmpTv.getText().equals(tmpRes.getString(R.string.KB_credit))) {
 			callCompany = new Intent(Intent.ACTION_DIAL);
 			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_KB)));
 			startActivity(callCompany);
@@ -143,16 +153,24 @@ public class MyCardActivity extends ListActivity {
 			if (m != null) {
 				ImageView tmpCImage = (ImageView) v.findViewById(R.id.card_imageview);
 				ImageView tmpPImage = (ImageView) v.findViewById(R.id.card_phone_imageview);
-				TextView tmpCName = (TextView) v.findViewById(R.id.card_name_textview);
+				final TextView tmpCName = (TextView) v.findViewById(R.id.card_name_textview);
 				TextView tmpCNum = (TextView) v.findViewById(R.id.card_num_textview);
 				
 				tmpCImage.setImageResource(m.getCardImage());
 				tmpPImage.setImageResource(m.getPhoneImage());
 				tmpCName.setText(m.getCardName());
 				tmpCNum.setText(m.getCardNumber());
+				
+				tmpPImage.setOnClickListener(new View.OnClickListener() {
+					
+					public void onClick(View v) {
+						callCardCompany(tmpCName);
+					}
+					
+				});
+				
 			}
 			return v;
-
 		}
 	}
 

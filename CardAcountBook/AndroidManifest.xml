@@ -42,48 +42,60 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- SMS BroadcastReceiver -->
         <receiver android:name=".SMSReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        
+
         <!-- Graph View Activity -->
-        <activity android:name=".GraphViewActivity" 
-            android:label="@string/app_name">
+        <activity
+            android:name=".GraphViewActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.GRAPH_VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".MonthlyGraphActivity" 
-            android:label="@string/app_name">
+        <activity
+            android:name=".MonthlyGraphActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MONTHLY_GRAPH_VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- Option View Activity -->
-        <activity android:name=".OptionViewActivity"
-            android:label="@string/app_name">
-            <intent-filter >
-                <action android:name="android.intent.action.OPTION_VIEW"/>
-                
-                <category android:name="android.intent.category.DEFAULT"/>
+        <activity
+            android:name=".OptionViewActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.OPTION_VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
+        <!-- Card Info Edit Activity -->
+        <activity
+            android:name=".CardInfoEditActivity"
+            android:label="@string/edit_my_card" >
+            <intent-filter>
+                <action android:name="android.intent.action.CARD_INFO_EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="kr.ac.hansung.WRITE_DATA"/>
-    <uses-permission android:name="kr.ac.hansung.READ_DATA"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="kr.ac.hansung.WRITE_DATA" />
+    <uses-permission android:name="kr.ac.hansung.READ_DATA" />
 
 </manifest>
