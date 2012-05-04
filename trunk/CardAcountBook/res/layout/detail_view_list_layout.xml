@@ -34,5 +34,13 @@
         android:layout_weight="25"
         android:gravity="right"
         android:textColor="@color/black" />
+    
+    <TextView 
+        android:id="@+id/d_category_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="right"
+        android:textColor="@color/black" />
 
 </LinearLayout>

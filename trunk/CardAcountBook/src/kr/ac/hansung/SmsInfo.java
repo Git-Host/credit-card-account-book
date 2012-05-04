@@ -2,10 +2,12 @@ package kr.ac.hansung;
 
 import java.util.Calendar;
 
-import android.content.res.Resources;
+import android.content.ContextWrapper;
+import android.util.Log;
 
 //SMS Information Class
-public class SmsInfo {
+public class SmsInfo implements CategoryList{	
+	
 	private String cardName;		//카드 이름
 	private String approvalType;	//결재 종류 (체크승인, 신용승인 등)
 	private int price;				//결재 가격
@@ -19,7 +21,7 @@ public class SmsInfo {
 	
 	
 	final static int NH_PNUM = 15881600;
-	final static int KB_PNUM = 15881788;
+	final static int KB_PNUM = 15881788; 
 	
 	
 	
@@ -63,7 +65,8 @@ public class SmsInfo {
 		String tmpInsertQuery = null;
 		String[] tmpSplitBody;
 		Calendar c = Calendar.getInstance();
-		String tmpAType, tmpPrice, tmpCardName, tmpCardNum, tmpYear, tmpMonth, tmpDay, tmpPlace;
+		String tmpAType, tmpPrice, tmpCardName, tmpCardNum, tmpYear, tmpMonth, tmpDay, tmpPlace, tmpCategory;
+		
 		String[] tmpApproval;
 		
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
@@ -79,12 +82,14 @@ public class SmsInfo {
 			tmpDay = tmpApproval[1];
 			tmpPrice = tmpSplitBody[3].replace(",", "").replace("원", "");
 			tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
+			tmpCategory = SearchCategory(tmpPlace);
 			
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
 					+ primaryKey++ + ", '" + tmpCardName
 					+ "', " + tmpYear + ", " + tmpMonth + ", "
 					+ tmpDay + ", '" + tmpPlace
-					+ "', " + Integer.parseInt(tmpPrice) + ", '기타', '" + tmpCardNum + "');";
+					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
+					+ "', '" + tmpCardNum + "');";
 			
 			break;
 		
@@ -98,16 +103,33 @@ public class SmsInfo {
 			String[] tmpApprovalSplit = tmpAprvl[0].split("/");
 			tmpMonth = tmpApprovalSplit[0];
 			tmpDay = tmpApprovalSplit[1];
+			tmpCategory = SearchCategory(tmpSplitBody[5]);
+			
 			
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
 					+"null, '" + tmpCardName
 					+ "', " + tmpYear + ", " + tmpMonth + ", "
 					+ tmpDay + ", '" + tmpSplitBody[5]
-					+ "', " + Integer.parseInt(tmpPrice) + ", '기타', '" + tmpCardNum + "');";
+					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
+					+ "', '" + tmpCardNum + "');";
 			
 			break;
 		}
 		
 		return tmpInsertQuery; 
+	}
+	public static String SearchCategory(String place){
+		
+		String Category = "기타";
+			
+		for(int i=0;i<High_Category.length;i++){
+			for(int j=0;j<KeyWord[i].length;j++){
+				if(place.matches(".*"+KeyWord[i][j]+".*")){
+					Category = new String(High_Category[i]);
+				}
+			}
+		}
+				
+		return Category;
 	}
 }

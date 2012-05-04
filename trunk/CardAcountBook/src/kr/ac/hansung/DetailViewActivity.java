@@ -126,11 +126,14 @@ public class DetailViewActivity extends ListActivity {
 						.findViewById(R.id.d_place_view);
 				TextView tmpPrice = (TextView) v
 						.findViewById(R.id.d_price_view);
+				TextView tmpCategory = (TextView)v
+						.findViewById(R.id.d_category_view);
 
 				tmpATime.setText(m.getApprovalTime());
 				tmpCName.setText(m.getCardName());
 				tmpPlace.setText(m.getPlace());
 				tmpPrice.setText(String.valueOf(m.getPrice()));
+				tmpCategory.setText(m.getCategory());
 			}
 			return v;
 
