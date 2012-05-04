@@ -69,6 +69,7 @@ public class SmsInfo {
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
 		
 		switch (tmpAddress) {
+		
 		case KB_PNUM :
 			tmpSplitBody = smsBody.split("\n");
 			tmpCardName = tmpSplitBody[0].substring(0, tmpSplitBody[0].indexOf("("));
