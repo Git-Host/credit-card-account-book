@@ -90,7 +90,7 @@ public class SmsInfo implements CategoryList{
 			
 			date = new Date();
 			date.setYear(Integer.parseInt(tmpYear) - 1900);
-			date.setMonth(Integer.parseInt(tmpMonth));
+			date.setMonth(Integer.parseInt(tmpMonth) - 1);
 			date.setDate(Integer.parseInt(tmpDay));
 			inDate = Integer.parseInt(dateFormat.format(date));
 			
@@ -117,7 +117,7 @@ public class SmsInfo implements CategoryList{
 			
 			date = new Date();
 			date.setYear(Integer.parseInt(tmpYear) - 1900);
-			date.setMonth(Integer.parseInt(tmpMonth));
+			date.setMonth(Integer.parseInt(tmpMonth) - 1);
 			date.setDate(Integer.parseInt(tmpDay));
 			inDate = Integer.parseInt(dateFormat.format(date));
 			

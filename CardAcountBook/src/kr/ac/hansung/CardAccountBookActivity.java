@@ -1,5 +1,6 @@
 package kr.ac.hansung;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -149,7 +150,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		}
 		cursor.close();
 
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 100000, '기타', '1*2*', 20120430);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 2100000, '기타', '1*2*', 20120430);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '기타', '3*6*', 20120501);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*', 20120502);");
@@ -281,16 +282,19 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +";";
 		cursor = db.rawQuery(nowPayQuery, null);
 		
-		//////여기부터
 		while (cursor.moveToNext()) {
 			String cPrice = cursor.getString(cursor.getColumnIndex("price"));
 			
-			priceTitle =+ Integer.parseInt(cPrice);
+			priceTitle = priceTitle + Integer.parseInt(cPrice);
 		}
+		
 		db.close();
 		
+		DecimalFormat df = new DecimalFormat("#,##0");
+		String tmpPriceTitle = df.format(priceTitle) + "원";
+		
 		priceTitleView = (TextView) findViewById(R.id.today_payment);
-		priceTitleView.setText(String.valueOf(priceTitle));
+		priceTitleView.setText(tmpPriceTitle);
 		priceTitleView.invalidate();
 	}
 
