@@ -7,39 +7,39 @@
 
     <TextView
         android:id="@+id/d_approval_time_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="14"
+        android:layout_weight="10"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_card_name_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="18"
+        android:layout_weight="20"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_place_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="40"
+        android:layout_weight="90"
         android:paddingLeft="5dp"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_price_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="25"
+        android:layout_weight="30"
         android:gravity="right"
         android:textColor="@color/black" />
-    
-    <TextView 
+
+    <TextView
         android:id="@+id/d_category_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="25"
+        android:layout_weight="20"
         android:gravity="right"
         android:textColor="@color/black" />
 
