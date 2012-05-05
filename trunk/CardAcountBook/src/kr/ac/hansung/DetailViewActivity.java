@@ -25,19 +25,16 @@ public class DetailViewActivity extends ListActivity {
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Cursor c;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
 
-		Spinner monthSpinner = (Spinner) findViewById(R.id.spinner);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.month, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		monthSpinner.setAdapter(adapter);
-		monthSpinner.setOnItemSelectedListener(new OnItemselectListener());
 
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
 
@@ -70,10 +67,9 @@ public class DetailViewActivity extends ListActivity {
 			String category = c.getString(7);
 
 			Date date = null;
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd");
 			date = new Date();
 
-			date.setYear(pYear);
 			date.setMonth(pMonth);
 			date.setDate(pDay);
 			String sDate = dateFormat.format(date);

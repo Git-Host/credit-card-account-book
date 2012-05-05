@@ -5,12 +5,6 @@
     android:background="@drawable/card_ace"
     android:gravity="right"
     android:orientation="vertical" >
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:prompt="@string/prompt" />
 
     <ListView
         android:id="@+id/android:list"

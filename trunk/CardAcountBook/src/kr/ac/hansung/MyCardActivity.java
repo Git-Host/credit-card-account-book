@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,7 +55,7 @@ public class MyCardActivity extends ListActivity {
 			MyCardInfo tmpCardInfo = new MyCardInfo();
 			tmpCardInfo.setCardName(dbCardName);
 			tmpCardInfo.setCardNumber(dbCardNumber);
-			tmpCardInfo.setCardImage(R.drawable.questionmark_card);
+			tmpCardInfo.setCardImage(setAutoCardImage(dbCardName));
 	
 			myCardList.add(tmpCardInfo);
 		}
@@ -127,7 +128,20 @@ public class MyCardActivity extends ListActivity {
 			// Other Card Phone Number Add
 		}
 	}
-
+	
+	public int setAutoCardImage(String cardName) {
+		Resources autoCardRsc = this.getResources();
+		
+		if (cardName.equals(autoCardRsc.getString(R.string.NH_card))) {
+			return (int)(R.drawable.nh_chaum);
+		} else if (cardName.equals(autoCardRsc.getString(R.string.KB_check))
+				|| cardName.equals(autoCardRsc.getString(R.string.KB_credit))) {
+			return (int)(R.drawable.kb_star);
+		}
+		
+		return (int)(R.drawable.questionmark_card);
+	}
+	
 	// MyCardAdapter 
 	public class MyCardAdapter extends ArrayAdapter<MyCardInfo> {
 
@@ -155,7 +169,7 @@ public class MyCardActivity extends ListActivity {
 				ImageView tmpPImage = (ImageView) v.findViewById(R.id.card_phone_imageview);
 				final TextView tmpCName = (TextView) v.findViewById(R.id.card_name_textview);
 				TextView tmpCNum = (TextView) v.findViewById(R.id.card_num_textview);
-				
+
 				tmpCImage.setImageResource(m.getCardImage());
 				tmpPImage.setImageResource(m.getPhoneImage());
 				tmpCName.setText(m.getCardName());
