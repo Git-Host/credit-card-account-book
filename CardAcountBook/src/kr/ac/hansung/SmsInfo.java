@@ -133,6 +133,8 @@ public class SmsInfo implements CategoryList{
 		
 		return tmpInsertQuery; 
 	}
+	
+	
 	public static String SearchCategory(String place){
 		
 		String Category = "±‚≈∏";
