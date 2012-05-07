@@ -1,5 +1,6 @@
 package kr.ac.hansung;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +32,6 @@ public class DetailViewActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
 
-
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.month, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 		ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
 
 		CardDB Cdb = new CardDB(this);
@@ -53,7 +49,7 @@ public class DetailViewActivity extends ListActivity {
 					+ intent.getStringExtra("cardNumber") + "';";
 			c = db.rawQuery(strQuery, null);
 		} else {
-			c = db.rawQuery("Select * From breakdowstats;", null);
+			c = db.rawQuery("SELECT * FROM breakdowstats ORDER BY combineDate DESC;", null);
 		}
 
 		while (c.moveToNext()) {
@@ -125,33 +121,18 @@ public class DetailViewActivity extends ListActivity {
 				TextView tmpCategory = (TextView)v
 						.findViewById(R.id.d_category_view);
 
+				DecimalFormat df = new DecimalFormat("#,##0");
+				String decimalPoint = df.format(m.getPrice()) + "원";
+				
 				tmpATime.setText(m.getApprovalTime());
 				tmpCName.setText(m.getCardName());
 				tmpPlace.setText(m.getPlace());
-				tmpPrice.setText(String.valueOf(m.getPrice()));
+				tmpPrice.setText(decimalPoint);
 				tmpCategory.setText(m.getCategory());
 			}
 			return v;
 
 		}
-	}
-
-	public class OnItemselectListener implements OnItemSelectedListener {
-
-		public void onItemSelected(AdapterView<?> parent, View view,
-				int position, long id) {
-			// TODO Auto-generated method stub
-			Toast.makeText(DetailViewActivity.this,
-					"선택한 달은" + parent.getItemAtPosition(position),
-					Toast.LENGTH_SHORT).show();
-
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 }

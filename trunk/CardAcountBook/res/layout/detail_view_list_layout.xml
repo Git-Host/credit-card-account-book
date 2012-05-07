@@ -9,38 +9,41 @@
         android:id="@+id/d_approval_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:singleLine="true"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_card_name_view"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
-        android:layout_weight="20"
+        android:gravity="center"
+        android:maxLength="4"
+        android:singleLine="true"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_place_view"
-        android:layout_width="0dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_weight="90"
-        android:paddingLeft="5dp"
+        android:singleLine="true"
         android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/d_price_view"
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
-        android:layout_weight="30"
+        android:ellipsize="start"
         android:gravity="right"
-        android:textColor="@color/black" />
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/d_category_view"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_weight="20"
         android:gravity="right"
+        android:singleLine="true"
         android:textColor="@color/black" />
 
 </LinearLayout>

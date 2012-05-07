@@ -152,7 +152,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 2100000, '기타', '1*2*', 20120430);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '기타', '3*6*', 20120501);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 500000, '기타', '3*6*', 20120501);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
@@ -289,7 +289,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		}
 		
 		db.close();
-		
+
 		DecimalFormat df = new DecimalFormat("#,##0");
 		String tmpPriceTitle = df.format(priceTitle) + "원";
 		
@@ -304,10 +304,4 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		this.unregisterReceiver(smsReceiver);
 		Log.e("Junu", "onDestroy() called");
 	}
-
-	public int setCardImage(String s) {
-
-		return 0;
-	}
-
 }
