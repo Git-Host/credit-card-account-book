@@ -12,7 +12,7 @@ public class SmsInfo implements CategoryList{
 	
 	private String cardName;		//카드 이름
 	private String approvalType;	//결재 종류 (체크승인, 신용승인 등)
-	private int price;				//결재 가격
+	private int price;				//결재 금액
 	private String cardNumber;		//카드 번호
 	private String approvalTime;	//결재 일시
 	private String place;			//결재 장소

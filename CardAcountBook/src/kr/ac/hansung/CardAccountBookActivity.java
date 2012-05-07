@@ -67,6 +67,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		// inbox msg to DB
 		if (text == false) {
 			initialInboxToDB(inboxUri);
+//			initialInboxToDB(gallexyUri);
 		}
 
 		// 메인화면 현재월 1일부터 현재월 현재일까지 보여주는 메소드
@@ -136,8 +137,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		db = Cdb.getReadableDatabase();
 
 		while (cursor.moveToNext()) {
-			String curAddress = cursor.getString(cursor
-					.getColumnIndex("address"));
+			String curAddress = cursor.getString(cursor.getColumnIndex("address"));
 			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
 					|| curAddress
 							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
@@ -147,13 +147,32 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
 
 			}
+			
+			
+			// 건환이 좆같은폰
+//			String curAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
+//			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
+//					|| curAddress
+//							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+//				smsBody = cursor.getString(cursor.getColumnIndex("Title"));
+//				smsAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
+//
+//				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
+//
+//			}
+			
+//			Log.e("jadf", cursor.getString(cursor.getColumnIndex("Title")));
+//			Log.v("JUNU", cursor.getString(0)+" " + cursor.getString(1) + " " + cursor.getString(2) + " " + cursor.getString(3) + " " + cursor.getString(4)
+//					+ " " + cursor.getString(5) + " " + cursor.getString(6)
+//					+ " " + cursor.getString(7) + " " + cursor.getString(8)
+//					+ " " + cursor.getString(9) + " " + cursor.getString(10));
 		}
 		cursor.close();
 
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 2100000, '기타', '1*2*', 20120430);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
 		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 500000, '기타', '3*6*', 20120501);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트', 12000, '기타', '3*6*', 20120502);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '기타', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
