@@ -28,6 +28,9 @@ public class GraphViewActivity extends Activity {
 				startActivity(Monthly_Graph);
 				break;
 			case R.id.category:
+				Intent Category_Graph = new Intent(GraphViewActivity.this,
+						CategoryGraphActivity.class);
+				startActivity(Category_Graph);
 				break;
 			}
 		}
