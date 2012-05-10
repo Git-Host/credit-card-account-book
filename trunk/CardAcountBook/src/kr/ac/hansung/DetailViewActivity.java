@@ -130,6 +130,7 @@ public class DetailViewActivity extends ListActivity {
 			return true;
 		}
 	}
+
 	
 	
 	
@@ -148,6 +149,7 @@ public class DetailViewActivity extends ListActivity {
 		
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy. MM. dd. (E)");
+
 
 		SmsInfo tmpSmsInfo = dAdapter.getItem(position);
 		
