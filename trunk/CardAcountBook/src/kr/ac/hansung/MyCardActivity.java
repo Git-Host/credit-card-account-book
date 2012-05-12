@@ -38,7 +38,7 @@ public class MyCardActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.my_card_tmp);
+		setContentView(R.layout.my_card);
 		
 		ArrayList<MyCardInfo> myCardList = new ArrayList<MyCardInfo>();
 
@@ -165,6 +165,7 @@ public class MyCardActivity extends ListActivity {
 			MyCardInfo m = items.get(position);
 			
 			if (m != null) {
+//				v.setBackgroundResource(m.getCardImage());
 				ImageView tmpCImage = (ImageView) v.findViewById(R.id.card_imageview);
 				ImageView tmpPImage = (ImageView) v.findViewById(R.id.card_phone_imageview);
 				final TextView tmpCName = (TextView) v.findViewById(R.id.card_name_textview);
