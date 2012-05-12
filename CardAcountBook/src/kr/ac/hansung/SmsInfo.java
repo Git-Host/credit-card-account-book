@@ -1,5 +1,6 @@
 package kr.ac.hansung;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +10,7 @@ import android.util.Log;
 
 //SMS Information Class
 public class SmsInfo implements CategoryList{	
-	
+	private int breakKey;
 	private String cardName;		//카드 이름
 	private String approvalType;	//결재 종류 (체크승인, 신용승인 등)
 	private int price;				//결재 금액
@@ -26,7 +27,7 @@ public class SmsInfo implements CategoryList{
 	final static int KB_PNUM = 15881788; 
 	
 	
-	
+	public int getBreakKey() { return breakKey; }
 	public String getCardName() { return cardName; }
 	public String getApprovalType() { return approvalType; }
 	public int getPrice() { return price; }
@@ -35,6 +36,7 @@ public class SmsInfo implements CategoryList{
 	public String getPlace() { return place; }
 	public String getCategory(){ return category; }
 	
+	public void setBreakKey(int key) { breakKey = key; }
 	public void setCardName(String cName) { cardName = cName; }
 	public void setApprovalType(String aType) { approvalType = aType; }
 	public void setPrice(int _price) { price = _price; }
@@ -54,6 +56,14 @@ public class SmsInfo implements CategoryList{
 		this.cardName = cardName;
 		this.place = place;
 		this.price = price;
+	}
+	
+	// 소수점 3자리마다 ,찍고 끝에 "원"을 붙이는 메소드
+	public static String decimalPointToString(int price) {
+		DecimalFormat df = new DecimalFormat("#,##0");
+		String deciamlPoint = df.format(price) + "원";
+		
+		return deciamlPoint;
 	}
 
 	// Month, Day로 나누기

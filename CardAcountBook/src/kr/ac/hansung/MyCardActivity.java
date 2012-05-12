@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -142,6 +143,15 @@ public class MyCardActivity extends ListActivity {
 		return (int)(R.drawable.questionmark_card);
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	// MyCardAdapter 
 	public class MyCardAdapter extends ArrayAdapter<MyCardInfo> {
 
