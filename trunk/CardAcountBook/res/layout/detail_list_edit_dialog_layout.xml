@@ -7,9 +7,7 @@
     android:padding="10dp" >
 
     <!-- 카드이름 변경 뷰 -->
-
     <TableRow>
-
         <TextView
             style="@style/DetailDialogText"
             android:layout_width="wrap_content"
@@ -20,10 +18,11 @@
             android:id="@+id/detail_edit_card_name"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" />
+            android:layout_height="39dp"
+            android:hint="@string/example_card_name" />
     </TableRow>
+  
     <!-- 카드번호 변경 뷰 -->
-
     <TableRow>
 
         <TextView
@@ -36,11 +35,11 @@
             android:id="@+id/detail_edit_card_number"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" />
+            android:layout_height="39dp"
+            android:hint="@string/example_card_number" />
     </TableRow>
 
     <!-- 결제일시 변경 뷰 -->
-
     <TableRow>
 
         <TextView
@@ -55,9 +54,9 @@
             android:layout_width="150dp"
             android:layout_height="39dp"
             android:textColor="@color/white" />
-        <!-- 결제장소 변경 뷰 -->
     </TableRow>
 
+    <!-- 결제장소 변경 뷰 -->
     <TableRow>
 
         <TextView
@@ -70,10 +69,11 @@
             android:id="@+id/detail_edit_place"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" />
-        <!-- 결제금액 변경 뷰 -->
+            android:layout_height="39dp" 
+            android:hint="@string/example_place"/>
     </TableRow>
 
+    <!-- 결제금액 변경 뷰 -->
     <TableRow>
 
         <TextView
@@ -86,10 +86,12 @@
             android:id="@+id/detail_edit_price"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" />
+            android:layout_height="39dp"
+            android:numeric="decimal"
+            android:hint="@string/example_price" />
     </TableRow>
+ 
     <!-- 카테고리 변경 뷰 -->
-
     <TableRow>
 
         <TextView

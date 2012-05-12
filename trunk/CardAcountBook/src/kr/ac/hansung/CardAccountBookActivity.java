@@ -1,6 +1,5 @@
 package kr.ac.hansung;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,13 +20,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class CardAccountBookActivity extends Activity implements CardList {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
-	private final static String inboxUri = "content://sms//inbox";
-	private final static String gallexyUri = "content://com.sec.mms.provider/message";
+	private final static String referenceUri = "content://sms//inbox";
+	private final static String gallexySUri = "content://com.sec.mms.provider/message";
+	private final static String gallexyAUri = "content://com.btb.sec.mms.provider/message";
+	private final static String lGUri = "content://com.lge.messageprovider/msg/inbox";
 
 	private final static int SHOW_DATE_PICKER_FROM = 0;
 	private final static int SHOW_DATE_PICKER_TO = 1;
@@ -37,18 +39,13 @@ public class CardAccountBookActivity extends Activity implements CardList {
 	private Button myCardBtn, detailViewBtn, chartViewBtn, optionViewBtn;
 
 	private SMSReceiver smsReceiver;
-	private static Boolean initialFlag = false;
 	private String DELIVERED = "SMS_DELIVERED";
-	private static int cardDbPKey = 0;
 
 	private TextView fromDateView;
 	private TextView toDateView;
 	private TextView priceTitleView;
 
 	// getter, setter
-	public void setInitFlag(Boolean flag) {
-		initialFlag = flag;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +63,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 		// inbox msg to DB
 		if (text == false) {
-			initialInboxToDB(inboxUri);
+			initialInboxToDB(referenceUri);
 //			initialInboxToDB(gallexyUri);
 		}
 
@@ -96,23 +93,23 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				startActivity(detailViewIntent);
 			}
 		});
+		
 		// Chart View Btn Click
 		chartViewBtn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent GraphViewIntent = new Intent(
-						CardAccountBookActivity.this, GraphViewActivity.class);
+				Intent GraphViewIntent = new Intent(CardAccountBookActivity.this, GraphViewActivity.class);
 				startActivity(GraphViewIntent);
 			}
 		});
+		
 		// Option View Btn Click
 		optionViewBtn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent OptionViewIntent = new Intent(
-						CardAccountBookActivity.this, OptionViewActivity.class);
+				Intent OptionViewIntent = new Intent(CardAccountBookActivity.this, OptionViewActivity.class);
 				startActivity(OptionViewIntent);
 			}
 		});
@@ -128,26 +125,19 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		CardDB Cdb = new CardDB(this);
 		String smsBody = "";
 		String smsAddress = "";
-		String cardQuery;
 		Resources tmpRes = this.getResources();
 
 		Uri READ_SMS = Uri.parse(cpUri);
-		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		db = Cdb.getReadableDatabase();
 
 		while (cursor.moveToNext()) {
 			String curAddress = cursor.getString(cursor.getColumnIndex("address"));
-			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
-					|| curAddress
-							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
 				smsBody = cursor.getString(cursor.getColumnIndex("body"));
 				smsAddress = cursor.getString(cursor.getColumnIndex("address"));
-
 				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
-
 			}
-			
 			
 			// 건환이 좆같은폰
 //			String curAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
@@ -169,20 +159,17 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		}
 		cursor.close();
 
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 2100000, '기타', '1*2*', 20120430);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 500000, '기타', '3*6*', 20120501);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '기타', '3*6*', 20120502);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
-		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
 		cursor = db.rawQuery(myCardQuery, null);
 
 		while (cursor.moveToNext()) {
-			String tmpCardName = cursor.getString(cursor
-					.getColumnIndex("cardName"));
-			String tmpCardNumber = cursor.getString(cursor
-					.getColumnIndex("cardNumber"));
+			String tmpCardName = cursor.getString(cursor.getColumnIndex("cardName"));
+			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
 
 			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', null, null, null);";
 			db.execSQL(tmpQuery);
@@ -251,14 +238,11 @@ public class CardAccountBookActivity extends Activity implements CardList {
 					bdl.getInt("toYear"), bdl.getInt("toMonth") - 1,
 					bdl.getInt("toDay"));
 		}
-
 		return super.onCreateDialog(id, bdl);
 	}
 
 	private DatePickerDialog.OnDateSetListener toDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			int month = monthOfYear + 1;
 			toDateView.setText(year + ". " + month + ". " + dayOfMonth + ". ");
 			showNowPayment();
@@ -266,9 +250,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 	};
 
 	private DatePickerDialog.OnDateSetListener fromDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			int month = monthOfYear + 1;
 			fromDateView.setText(year + ". " + month + ". " + dayOfMonth + ". ");
 			showNowPayment();
@@ -280,7 +262,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		String[] fromYearMonthDay = fromDateView.getText().toString().split(". ");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		int priceTitle = 0;
-		
+
 		Date tmpToDate = new Date();
 		Date tmpFromDate = new Date();
 		
@@ -297,8 +279,9 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 
-		String nowPayQuery = "SELECT price FROM breakdowstats WHERE breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) +
-				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +";";
+		String nowPayQuery = "SELECT price FROM breakdowstats WHERE breakdowstats.combineDate >=" 
+							+ dateFormat.format(tmpFromDate)
+							+ " AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +";";
 		cursor = db.rawQuery(nowPayQuery, null);
 		
 		while (cursor.moveToNext()) {
@@ -306,14 +289,10 @@ public class CardAccountBookActivity extends Activity implements CardList {
 			
 			priceTitle = priceTitle + Integer.parseInt(cPrice);
 		}
-		
 		db.close();
 
-		DecimalFormat df = new DecimalFormat("#,##0");
-		String tmpPriceTitle = df.format(priceTitle) + "원";
-		
 		priceTitleView = (TextView) findViewById(R.id.today_payment);
-		priceTitleView.setText(tmpPriceTitle);
+		priceTitleView.setText(SmsInfo.decimalPointToString(priceTitle));
 		priceTitleView.invalidate();
 	}
 

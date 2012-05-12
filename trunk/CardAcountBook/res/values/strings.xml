@@ -11,7 +11,17 @@
     <string name="today_payment">현재 사용 금액</string>
     <string name="edit_my_card">카드 정보 수정</string>
     <string name="dash"> ~ </string>
-
+	<string name="edit_category">카테고리 선택</string>
+	<string name="terminate_string">종료</string>
+	<string name="edit_string">수정</string>
+	<string name="cancel_string">취소</string>
+    
+	<string name="add_cash_use">현금 사용 추가하기</string>
+	<string name="add_card_use">카드 사용 추가하기</string>
+	<string name="add_my_card">나의 카드 추가하기</string>
+	
+	<string name="list_have_no_items">결제 내역이 없습니다.</string>
+	
     <!-- 나의 카드 정보수정 메뉴 리스트 스트링 -->
     <string name="edit_image">카드이미지 변경하기</string>
     <string name="edit_payment_day">결제일 등록하기</string>
@@ -27,6 +37,58 @@
     <string name="detail_dlg_category">카테고리 :&#160;</string>
     <string name="detail_dlg_edit_title">상세 내역 수정</string>
 
+    <string name="example_card_name">예) NH카드</string>
+    <string name="example_card_number">예) 293*</string>
+    <string name="example_place">예) 이마트</string>
+    <string name="example_price">예) 50000</string>
+    
+    <!-- 하위 카테고리  -->
+    <string name="c_etc">기타</string>
+    <!-- 식비 -->
+    <string name="c_food">주식</string>
+    <string name="c_side_dish">부식</string>
+    <string name="c_snack">간식</string>
+    <string name="c_eat_out">외식</string>
+    <string name="c_alcohol">술/유흥</string>
+    <!-- 주거/통신 -->
+    <string name="c_maintenance_cost">관리비</string>
+    <string name="c_utility_bills">공과금</string>
+    <string name="c_mobile">이동통신</string>
+    <string name="c_internet">인터넷</string>
+    <string name="c_monthly_rent">월세</string>
+    <!-- 생활용품 -->
+    <string name="c_furniture">가구/가전</string>
+    <string name="c_kitchen">주방/욕실</string>
+    <string name="c_goods">잡화</string>
+    <string name="c_consumables">소모</string>
+    <!-- 의복/미용 -->
+    <string name="c_clothing">의류비</string>
+    <string name="c_fashion">패션/잡화</string>
+    <string name="c_hair">헤어/뷰티</string>
+    <string name="c_wash_repair">세탁수선</string>
+    <!-- 건강/문화 -->
+    <string name="c_leisure">운동/레져</string>
+    <string name="c_culture">문화생활</string>
+    <string name="c_travle">여행</string>
+    <string name="c_medical">병원비</string>
+    <!-- 교육/육아 -->
+    <string name="c_tuition">등록금</string>
+    <string name="c_teaching_materials">학원/교재비</string>
+    <string name="c_baby_goods">육아용품</string>
+    <!-- 교통/차량 -->
+    <string name="c_public_transit">대중교통</string>
+    <string name="c_dating">데이트</string>
+    <string name="c_gift">선물</string>
+    <!-- 경조사비/회비 -->
+    <string name="c_family_event">경조사비</string>
+    <string name="c_meeting_fee">모임회비</string>
+    <!-- 카드대금-->
+    <string name="c_card_pay">카드대금</string>
+    
+    
+    
+    
+    
     <!-- month spinner String -->
     <string name="prompt">월을 선택하세요</string>
 
