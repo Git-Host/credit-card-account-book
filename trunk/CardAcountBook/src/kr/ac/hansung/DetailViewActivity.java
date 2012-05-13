@@ -15,25 +15,35 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class DetailViewActivity extends ListActivity implements CategoryList {
-	final static int DETAIL_DATE_PICKER = 0;
+	final static int DETAIL_DATE_EDIT_PICKER = 0;
+	final static int DETAIL_DATE_ADD_PICKER = 5;
+	
 	final static int SHOW_DATE_PICKER_TO = 1;
 	final static int SHOW_DATE_PICKER_FROM = 2;
+	
+	final static int ADD_CASH_USE = 3;
+	final static int ADD_CARD_USE = 4;
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Intent receivedIntent;
+	
+	Calendar today;
 	
 	ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
 	DetailViewAdapter dAdapter;
@@ -45,15 +55,24 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	TextView toDateDetailView;
 	TextView detailPriceView;
 	
+	
+	EditText addDetailCardName;
+	EditText addDetailCardNumber;
+	TextView addDetailApprovalTime;
+	EditText addDetailPlace;
+	EditText addDetailPrice;
+	TextView addDetailCategory;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_view);
+		
+		today = Calendar.getInstance();
 
 		fromToDateChange();
 		
 		receivedIntent = getIntent();
-		
 		dynamicListAdd(dynamicDatabaseCursor(receivedIntent));
 	}
 	
@@ -91,7 +110,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			tmp.setPrice(pPrice);
 			tmp.setCategory(category);
 			tmp.setCardNumber(tmpCardNumber);
-			price = price + pPrice;
 			
 			detailViewList.add(tmp);
 		}
@@ -393,8 +411,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bdl) {
 		switch (id) {
-		case DETAIL_DATE_PICKER :
-			return new DatePickerDialog(this, detailDatePickerListener,	bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
+		case DETAIL_DATE_EDIT_PICKER :
+			return new DatePickerDialog(this, detailDateEditPickerListener,	bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
+		case DETAIL_DATE_ADD_PICKER :
+			return new DatePickerDialog(this, detailDateAddPickerListener,	bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
 		case SHOW_DATE_PICKER_TO:
 			return new DatePickerDialog(this, toDetailDateSetListener,
 					bdl.getInt("toYear"), bdl.getInt("toMonth") - 1,
@@ -407,6 +427,13 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 		return super.onCreateDialog(id, bdl);
 	}
+	
+	// 나중에 DatePickerListener 이걸로 통합하자
+//	public class onMyDateSetListner implements DatePickerDialog.OnDateSetListener {
+//		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//		}
+//		
+//	}
 	
 	private DatePickerDialog.OnDateSetListener toDetailDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -425,7 +452,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	};
 	
 	
-	private DatePickerDialog.OnDateSetListener detailDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+	private DatePickerDialog.OnDateSetListener detailDateEditPickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			int month = monthOfYear + 1;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -433,8 +460,21 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			detailDlgDate.setYear(year - 1900);
 			detailDlgDate.setMonth(month - 1);
 			detailDlgDate.setDate(dayOfMonth);
-
+			
 			editApprovalTime.setText(dateFormat.format(detailDlgDate));
+		}
+	};
+	
+	private DatePickerDialog.OnDateSetListener detailDateAddPickerListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+			int month = monthOfYear + 1;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date detailDlgDate = new Date();
+			detailDlgDate.setYear(year - 1900);
+			detailDlgDate.setMonth(month - 1);
+			detailDlgDate.setDate(dayOfMonth);
+			
+			addDetailApprovalTime.setText(dateFormat.format(detailDlgDate));
 		}
 	};
 	
@@ -443,18 +483,32 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 		public void onClick(View v) {
 			final TextView tmpView = (TextView)v;
+			Bundle aprvlBdl;
+			String[] tmpAprvl;
 			switch (v.getId()) {
 			case R.id.detail_edit_approval_time :
-				Bundle aprvlBdl = new Bundle();
-				String[] tmpAprvl = ((TextView)v).getText().toString().split("-");
+				aprvlBdl = new Bundle();
+				tmpAprvl = ((TextView)v).getText().toString().split("-");
 				aprvlBdl.putInt("aprvlYear", Integer.parseInt(tmpAprvl[0]));
 				aprvlBdl.putInt("aprvlMonth", Integer.parseInt(tmpAprvl[1]));
 				aprvlBdl.putInt("aprvlDay", Integer.parseInt(tmpAprvl[2]));
-				showDialog(DETAIL_DATE_PICKER, aprvlBdl);
+				showDialog(DETAIL_DATE_EDIT_PICKER, aprvlBdl);
 				break;
+				
+			case R.id.detail_add_approval_time :
+				aprvlBdl = new Bundle();
+				tmpAprvl = ((TextView)v).getText().toString().split("-");
+				aprvlBdl.putInt("aprvlYear", Integer.parseInt(tmpAprvl[0]));
+				aprvlBdl.putInt("aprvlMonth", Integer.parseInt(tmpAprvl[1]));
+				aprvlBdl.putInt("aprvlDay", Integer.parseInt(tmpAprvl[2]));
+				showDialog(DETAIL_DATE_ADD_PICKER, aprvlBdl);
+				break;
+				
 			case R.id.detail_edit_category :
+			case R.id.detail_add_category :
 				final String[] detailCategory = new String[categoryList.length];
 				String category = tmpView.getText().toString();
+			
 				for (int i=0; i<categoryList.length; i++) {
 					detailCategory[i] = getResources().getString(categoryList[i]);
 				}
@@ -484,7 +538,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		final int todayMonth;
 		final int todayDay;
 
-		Calendar today = Calendar.getInstance();
 		todayYear = today.get(Calendar.YEAR);
 		todayMonth = today.get(Calendar.MONTH) + 1;
 		todayDay = today.get(Calendar.DAY_OF_MONTH);
@@ -537,8 +590,100 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(R.string.add_cash_use);
-		menu.add(R.string.add_card_use);
+		menu.add(0, ADD_CASH_USE, 0, R.string.add_cash_use);
+		menu.add(0, ADD_CARD_USE, 0, R.string.add_card_use);
+		
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		switch (item.getItemId()) {
+		case ADD_CASH_USE :
+			break;
+		case ADD_CARD_USE :
+			LayoutInflater dlgLayoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+			View addDetailView = dlgLayoutInflater.inflate(R.layout.detail_list_add_dialog_layout, (ViewGroup) findViewById(R.id.detail_add_dlg_root_view));
+
+			addDetailCardName = (EditText) addDetailView.findViewById(R.id.detail_add_card_name);
+			addDetailCardNumber= (EditText) addDetailView.findViewById(R.id.detail_add_card_number);
+			addDetailApprovalTime = (TextView) addDetailView.findViewById(R.id.detail_add_approval_time);
+			addDetailPlace = (EditText) addDetailView.findViewById(R.id.detail_add_place);
+			addDetailPrice = (EditText) addDetailView.findViewById(R.id.detail_add_price);
+			addDetailCategory = (TextView) addDetailView.findViewById(R.id.detail_add_category);
+		
+			if (receivedIntent.hasExtra("cardName") && receivedIntent.hasExtra("cardNumber")) {
+				addDetailCardName.setText(receivedIntent.getStringExtra("cardName"));
+				addDetailCardNumber.setText(receivedIntent.getStringExtra("cardNumber"));
+			}
+			
+			int tmpYear = today.get(Calendar.YEAR);
+			int tmpMonth = today.get(Calendar.MONDAY);
+			int tmpDay = today.get(Calendar.DAY_OF_MONTH);
+			
+			Date tmpDate = new Date();
+			tmpDate.setYear(tmpYear - 1900);
+			tmpDate.setMonth(tmpMonth);
+			tmpDate.setDate(tmpDay);
+			
+			SimpleDateFormat tmpSdf = new SimpleDateFormat("yyyy-MM-dd");
+			String showDate = tmpSdf.format(tmpDate);
+			
+			addDetailApprovalTime.setText(showDate);
+			addDetailApprovalTime.setOnClickListener(new detailEditClickListener());
+			
+			addDetailCategory.setText(R.string.c_etc);
+			addDetailCategory.setOnClickListener(new detailEditClickListener());
+			
+			new AlertDialog.Builder(DetailViewActivity.this)
+			.setView(addDetailView)
+			.setTitle(R.string.add_card_use)
+			.setPositiveButton(R.string.add_string, new addDetailClickListener())
+			.setNegativeButton(R.string.cancel_string, new addDetailClickListener())
+			.show();
+
+			break;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
+	public class addDetailClickListener implements DialogInterface.OnClickListener {
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			case DialogInterface.BUTTON_POSITIVE :
+				String tmpCardName = addDetailCardName.getText().toString();
+				String tmpCardNumber =  addDetailCardNumber.getText().toString();
+				String tmpApprovalTime = addDetailApprovalTime.getText().toString();
+				String tmpPlace = addDetailPlace.getText().toString();
+				String tmpPrice = addDetailPrice.getText().toString();
+				String tmpCategory = addDetailCategory.getText().toString();
+				
+				Cdb = new CardDB(getApplicationContext());
+				db = Cdb.getWritableDatabase();
+				
+				String[] tmpYMD = tmpApprovalTime.split("-"); 
+				
+				String insertQuery = "INSERT INTO breakdowstats VALUES(null, '" 
+									+ tmpCardName + "', " + tmpYMD[0] + "," + tmpYMD[1] + "," + tmpYMD[2]
+									+ ", '" + tmpPlace + "', " + tmpPrice + ", '" + tmpCategory + "', '" 
+									+ tmpCardNumber + "', " + tmpYMD[0] + tmpYMD[1] + tmpYMD[2] + ");";
+				
+				db.execSQL(insertQuery);
+				db.close();
+				
+				SmsInfo tmpObj = new SmsInfo(tmpCardName, tmpCardNumber, tmpYMD[0] + "-" + tmpYMD[1] + "-" + tmpYMD[2], tmpPlace, Integer.parseInt(tmpPrice), tmpCategory);
+				dAdapter.add(tmpObj);
+				dAdapter.notifyDataSetChanged();
+				sumPrice();
+				//뭐시기 그 뭐냐 출력이 제대로 안된다 
+				
+				break;
+			case DialogInterface.BUTTON_NEGATIVE :
+				dialog.dismiss();
+				break;
+			}
+		}
 	}
 }

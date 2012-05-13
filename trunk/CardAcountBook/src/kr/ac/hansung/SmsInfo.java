@@ -23,6 +23,7 @@ public class SmsInfo implements CategoryList{
 	
 	
 	
+	
 	final static int NH_PNUM = 15881600;
 	final static int KB_PNUM = 15881788; 
 	
@@ -45,6 +46,7 @@ public class SmsInfo implements CategoryList{
 	public void setPlace(String _place) { place = _place; }
 	public void setCategory(String _category){category = _category;}
 
+	// 생성자
 	public SmsInfo() {}
 	
 	public SmsInfo(String cardName) {
@@ -56,6 +58,15 @@ public class SmsInfo implements CategoryList{
 		this.cardName = cardName;
 		this.place = place;
 		this.price = price;
+	}
+
+	public SmsInfo(String cardName, String cardNumber, String approvalTime, String place, int price, String category) {
+		this.cardName = cardName;
+		this.cardNumber = cardNumber;
+		this.approvalTime = approvalTime;
+		this.place = place;
+		this.price = price;
+		this.category = category;
 	}
 	
 	// 소수점 3자리마다 ,찍고 끝에 "원"을 붙이는 메소드

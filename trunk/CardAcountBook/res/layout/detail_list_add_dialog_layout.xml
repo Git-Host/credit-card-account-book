@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_add_dlg_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <!-- 카드이름 변경 뷰 -->
+    <TableRow>
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deatil_dlg_edit_card_name" />
+
+        <EditText
+            android:id="@+id/detail_add_card_name"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:hint="@string/example_card_name" />
+    </TableRow>
+  
+    <!-- 카드번호 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deatil_dlg_edit_card_number" />
+
+        <EditText
+            android:id="@+id/detail_add_card_number"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:hint="@string/example_card_number" />
+    </TableRow>
+
+    <!-- 결제일시 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_dlg_approval_time" />
+
+        <TextView
+            android:id="@+id/detail_add_approval_time"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:textColor="@color/white" />
+    </TableRow>
+
+    <!-- 결제장소 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_dlg_place" />
+
+        <EditText
+            android:id="@+id/detail_add_place"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp" 
+            android:hint="@string/example_place"/>
+    </TableRow>
+
+    <!-- 결제금액 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_dlg_price" />
+
+        <EditText
+            android:id="@+id/detail_add_price"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:numeric="decimal"
+            android:hint="@string/example_price" />
+    </TableRow>
+ 
+    <!-- 카테고리 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_dlg_category" />
+
+        <TextView
+            android:id="@+id/detail_add_category"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:textColor="@color/white" />
+    </TableRow>
+
+</TableLayout>
