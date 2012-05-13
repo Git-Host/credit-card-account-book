@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="mNum_gallexy_s_2_KT">SHW-M250K</string>
+	<string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
+	<string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
+    
     <string name="app_name">Credit Card Account Book</string>
     <string name="my_card">나의 카드</string>
     <string name="breakdown_stats">내역 통계</string>
@@ -21,6 +24,11 @@
 	<string name="add_my_card">나의 카드 추가하기</string>
 	
 	<string name="list_have_no_items">결제 내역이 없습니다.</string>
+	
+	<string name="cash_use_time">사용일시 :&#160;</string>
+	<string name="cash_use_place">사용장소 :&#160;</string>
+	<string name="cash_use_price">사용금액 :&#160;</string>
+	<string name="cash_use_list_string">현금</string>
 	
     <!-- 나의 카드 정보수정 메뉴 리스트 스트링 -->
     <string name="edit_image">카드이미지 변경하기</string>
