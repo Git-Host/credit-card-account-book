@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_cash_use_add_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <!-- 사용일시 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_use_time" />
+
+        <TextView
+            android:id="@+id/detail_cash_use_time"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:textColor="@color/white" />
+    </TableRow>
+
+    <!-- 사용장소 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_use_place" />
+
+        <EditText
+            android:id="@+id/detail_cash_use_place"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp" 
+            android:hint="@string/example_place"/>
+    </TableRow>
+
+    <!-- 사용금액 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_use_price" />
+
+        <EditText
+            android:id="@+id/detail_cash_use_price"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:numeric="decimal"
+            android:hint="@string/example_price" />
+    </TableRow>
+ 
+    <!-- 카테고리 변경 뷰 -->
+    <TableRow>
+
+        <TextView
+            style="@style/DetailDialogText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_dlg_category" />
+
+        <TextView
+            android:id="@+id/detail_cash_use_category"
+            style="@style/DetailEditDialogText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:textColor="@color/white" />
+    </TableRow>
+
+</TableLayout>

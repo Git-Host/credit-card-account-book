@@ -15,11 +15,11 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,8 +27,10 @@ import android.widget.TextView;
 public class CardAccountBookActivity extends Activity implements CardList {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
-	private final static String inboxUri = "content://sms//inbox";
-	private final static String gallexyUri = "content://com.sec.mms.provider/message";
+	private final static String REFERENCE_PHONE_URI = "content://sms//inbox";
+	private final static String SAMSUNG_GALLEXY_S2_URI = "content://com.sec.mms.provider/message";
+	private final static String SAMSUNG_GALLEXY_A_URI = "content://com.btb.sec.mms.provider/message";
+	private final static String LG_URI = "content://com.lge.messageprovider/msg/inbox";
 
 	private final static int SHOW_DATE_PICKER_FROM = 0;
 	private final static int SHOW_DATE_PICKER_TO = 1;
@@ -38,18 +40,13 @@ public class CardAccountBookActivity extends Activity implements CardList {
 	private ImageView myCardBtn, detailViewBtn, chartViewBtn, optionViewBtn;
 
 	private SMSReceiver smsReceiver;
-	private static Boolean initialFlag = false;
 	private String DELIVERED = "SMS_DELIVERED";
-	private static int cardDbPKey = 0;
 
 	private TextView fromDateView;
 	private TextView toDateView;
 	private TextView priceTitleView;
 
 	// getter, setter
-	public void setInitFlag(Boolean flag) {
-		initialFlag = flag;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,11 +61,21 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 		pref = getSharedPreferences("initial", MODE_PRIVATE);
 		boolean text = pref.getBoolean(INITIAL_FLAG, false);
+		
+		String modelNumber = getDeviceModelNumber();
+		String cpUri;
 
+		// Device에 따라 적절한 ContentProvider 선택해줌
+		if (modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_LTE_LG))
+				|| modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_SK))) {
+			cpUri = SAMSUNG_GALLEXY_S2_URI;
+		} else {
+			cpUri = REFERENCE_PHONE_URI;
+		}
+		
 		// inbox msg to DB
 		if (text == false) {
-			initialInboxToDB(inboxUri);
-//			initialInboxToDB(gallexyUri);
+			initialInboxToDB(cpUri);
 		}
 
 		// 메인화면 현재월 1일부터 현재월 현재일까지 보여주는 메소드
@@ -123,57 +130,56 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		registerReceiver(smsReceiver, new IntentFilter(DELIVERED));
 	}
 
+	public String getDeviceModelNumber() {
+		String modelNumber = Build.MODEL;
+		return modelNumber;
+	}
+	
+	
 	// 처음 앱 설치시 기존 SMS를 AppDB에 저장하는 Method
 	public void initialInboxToDB(String cpUri) {
 		SQLiteDatabase db;
 		CardDB Cdb = new CardDB(this);
 		String smsBody = "";
 		String smsAddress = "";
-		String cardQuery;
 		Resources tmpRes = this.getResources();
 
 		Uri READ_SMS = Uri.parse(cpUri);
 		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null,
 				null);
 		db = Cdb.getReadableDatabase();
-
+		String modelNumber = getDeviceModelNumber();
+		
 		while (cursor.moveToNext()) {
-			String curAddress = cursor.getString(cursor.getColumnIndex("address"));
-			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
-					|| curAddress
-							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
-				smsBody = cursor.getString(cursor.getColumnIndex("body"));
-				smsAddress = cursor.getString(cursor.getColumnIndex("address"));
-
-				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
-
+			
+			// GallexyS2LTE-LG, GallexyS2-SK
+			if (modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_LTE_LG))
+					|| modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_SK))) {
+				String curAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
+				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
+						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+					smsBody = cursor.getString(cursor.getColumnIndex("Title"));
+					smsAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
+					
+					db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
+				}
+				
+			// Nexus S, GallexyS2-KT
+			} else {
+				String curAddress = cursor.getString(cursor.getColumnIndex("address"));
+				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+					smsBody = cursor.getString(cursor.getColumnIndex("body"));
+					smsAddress = cursor.getString(cursor.getColumnIndex("address"));
+					db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
+				}
 			}
-			
-			
-			// 건환이 좆같은폰
-//			String curAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
-//			if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
-//					|| curAddress
-//							.equals(tmpRes.getString(R.string.phoneNum_NH))) {
-//				smsBody = cursor.getString(cursor.getColumnIndex("Title"));
-//				smsAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
-//
-//				db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
-//
-//			}
-			
-//			Log.e("jadf", cursor.getString(cursor.getColumnIndex("Title")));
-//			Log.v("JUNU", cursor.getString(0)+" " + cursor.getString(1) + " " + cursor.getString(2) + " " + cursor.getString(3) + " " + cursor.getString(4)
-//					+ " " + cursor.getString(5) + " " + cursor.getString(6)
-//					+ " " + cursor.getString(7) + " " + cursor.getString(8)
-//					+ " " + cursor.getString(9) + " " + cursor.getString(10));
 		}
 		cursor.close();
 
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 2100000, '기타', '1*2*', 20120430);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '기타', '1*2*', 20120530);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 500000, '기타', '3*6*', 20120501);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '기타', '3*6*', 20120502);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
