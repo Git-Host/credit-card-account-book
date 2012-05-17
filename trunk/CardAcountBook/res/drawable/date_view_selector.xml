@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/black_bar_button" android:state_pressed="true"/>
-    <item android:drawable="@drawable/grey_bar_button"/>
+    <item android:drawable="@drawable/sky_bar_button_pressed" android:state_pressed="true"/>
+    <item android:drawable="@drawable/sky_bar_button"/>
 
 </selector>

@@ -46,8 +46,6 @@ public class CardAccountBookActivity extends Activity implements CardList {
 	private TextView toDateView;
 	private TextView priceTitleView;
 
-	// getter, setter
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,7 +71,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 			cpUri = REFERENCE_PHONE_URI;
 		}
 		
-		// inbox msg to DB
+		// inbox msg to DBki
 		if (text == false) {
 			initialInboxToDB(cpUri);
 		}
@@ -104,6 +102,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				startActivity(detailViewIntent);
 			}
 		});
+		
 		// Chart View Btn Click
 		chartViewBtn.setOnClickListener(new OnClickListener() {
 
@@ -114,6 +113,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 				startActivity(GraphViewIntent);
 			}
 		});
+		
 		// Option View Btn Click
 		optionViewBtn.setOnClickListener(new OnClickListener() {
 
@@ -130,6 +130,10 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		registerReceiver(smsReceiver, new IntentFilter(DELIVERED));
 	}
 
+	/**
+	 * Method getDeviceModeNumber Android Device Model Number를 얻어온다.
+	 * @return String Model Number
+	 */
 	public String getDeviceModelNumber() {
 		String modelNumber = Build.MODEL;
 		return modelNumber;
@@ -137,6 +141,12 @@ public class CardAccountBookActivity extends Activity implements CardList {
 	
 	
 	// 처음 앱 설치시 기존 SMS를 AppDB에 저장하는 Method
+	/**
+	 * Method initialInboxToDB 각 제조사에 맞는 CP로 SMS에 점근하여 결제SMS를 추출하고 DB에 INSERT하는 메소드.
+	 * 앱을 처음 설치했을때 한번만 동작함.
+	 * 상세내역 및 나의카드 INSERT.
+	 * @param cpUri 각 제조사에 맞는 Content Provider URI
+	 */
 	public void initialInboxToDB(String cpUri) {
 		SQLiteDatabase db;
 		CardDB Cdb = new CardDB(this);
@@ -145,13 +155,12 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		Resources tmpRes = this.getResources();
 
 		Uri READ_SMS = Uri.parse(cpUri);
-		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		db = Cdb.getReadableDatabase();
 		String modelNumber = getDeviceModelNumber();
 		
 		while (cursor.moveToNext()) {
-			
+		
 			// GallexyS2LTE-LG, GallexyS2-SK
 			if (modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_LTE_LG))
 					|| modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_SK))) {
@@ -164,7 +173,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 					db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
 				}
 				
-			// Nexus S, GallexyS2-KT
+			// Nexus S, GallexyS2-KT, PRADA3.0-KT
 			} else {
 				String curAddress = cursor.getString(cursor.getColumnIndex("address"));
 				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
@@ -172,14 +181,14 @@ public class CardAccountBookActivity extends Activity implements CardList {
 					smsAddress = cursor.getString(cursor.getColumnIndex("address"));
 					db.execSQL(SmsInfo.scatterMessage(smsAddress, smsBody));
 				}
-			}
+			} 
 		}
 		cursor.close();
 
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
@@ -190,8 +199,8 @@ public class CardAccountBookActivity extends Activity implements CardList {
 					.getColumnIndex("cardName"));
 			String tmpCardNumber = cursor.getString(cursor
 					.getColumnIndex("cardNumber"));
-
-			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', null, null, null);";
+//			db.execSQL("CREATE TABLE myCard (myCardKey INTEGER PRIMARY KEY, cardName TEXT, cardNumber TEXT, paymentDay INTEGER, tAmount INTEGER, cardType TEXT);");
+			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', 0, 0, '');";
 			db.execSQL(tmpQuery);
 		}
 		db.close();
@@ -201,6 +210,9 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		ed.commit();
 	}
 
+	/**
+	 * Method fromToDateChange Main화면의 기간별 DatePicker를 보여주기 위한 메소드
+	 */
 	public void fromToDateChange() {
 		fromDateView = (TextView) findViewById(R.id.from_date_view);
 		toDateView = (TextView) findViewById(R.id.to_date_view);
@@ -245,6 +257,7 @@ public class CardAccountBookActivity extends Activity implements CardList {
 
 	}
 
+	
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bdl) {
 		switch (id) {
@@ -282,6 +295,9 @@ public class CardAccountBookActivity extends Activity implements CardList {
 		}
 	};
 
+	/**
+	 * Method showNowPayment 현재사용금액을 기간에 따라 갱신해주는 메소드
+	 */
 	public void showNowPayment() {
 		String[] toYearMonthDay = toDateView.getText().toString().split(". ");
 		String[] fromYearMonthDay = fromDateView.getText().toString().split(". ");

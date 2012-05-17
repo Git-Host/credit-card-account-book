@@ -27,6 +27,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * DetailViewActivity.java
+ * 상세내역 뷰를  보여주고 상세내역 리스트의 자동추가및 수동추가
+ * @author Junu Kim
+ */
 public class DetailViewActivity extends ListActivity implements CategoryList {
 	final static int DETAIL_DATE_EDIT_PICKER = 0;
 	final static int DETAIL_DATE_ADD_PICKER = 5;
@@ -83,6 +88,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		dynamicListAdd(dynamicDatabaseCursor(receivedIntent));
 	}
 	
+	/**
+	 * Method dynamicListAdd 동적으로 상세내역을 어뎁터에 추가하는 메소드
+	 * @param detailCursor List에 Add하기 위한 DB Cursor
+	 */
 	public void dynamicListAdd(Cursor detailCursor) {
 		int price = 0;
 		
@@ -131,6 +140,9 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		sumPrice();
 	}
 	
+	/**
+	 * Method sumPrice 상세내역 리스트의 금액을 모두 더하여 뷰에 표시해쥬는 메소드
+	 */
 	public void sumPrice() {
 		int price = 0;
 		
@@ -140,6 +152,12 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		detailPriceView.setText(SmsInfo.decimalPointToString(price));
 	}
 	
+	/**
+	 * Method dynamicDatabaseCursor 두개의 TextView의 Date를 비교하여 해당기간의 상세내역의 Cursor를 리턴하는 메소드
+	 * @param fromDate 'yyyy. MM. dd.' 형식이 입력되어있는 TextView
+	 * @param toDate 'yyyy. MM. dd.' 형식이 입력되어있는 TextView
+	 * @return Cursor 조건에 맞는 상세내역의 Cursor
+	 */
 	public Cursor dynamicDatabaseCursor(TextView fromDate, TextView toDate) {
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
@@ -179,6 +197,11 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		return tmpCursor;
 	}
 	
+	/**
+	 * Method dynamicDatabaseCursor intent에 포함된 정보를 확인하여 조건에 맞게 상세내역의 Cursor를 리턴하는 메소드
+	 * @param intent 정보가 담긴 intent
+	 * @return Cursor 조건에 맞는 상세내역의 Cursor
+	 */
 	public Cursor dynamicDatabaseCursor(Intent intent) {
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
@@ -221,6 +244,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		return tmpCursor;
 	}
 	
+	/**
+	 * detailViewListItemLongClickListener 상세내역의 리스트 하나를 LongClick할때의 Event Handler
+	 * @author Junu Kim
+	 */
 	public class detailViewListItemLongClickListener implements AdapterView.OnItemLongClickListener {
 		
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
@@ -407,7 +434,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 	}
 
-	// MyCardAdapter
+	/**
+	 * DetailViewAdapter ListView의 리스트에 정보를 공급해주는 Adapter
+	 * @author Junu Kim
+	 */
 	public class DetailViewAdapter extends ArrayAdapter<SmsInfo> {
 
 		private ArrayList<SmsInfo> items;
@@ -531,6 +561,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 	};
 
+	/**
+	 * detailEditClickListener 상세내역 정보수정을 위한 Dialog의 Event Handler
+	 * @author Junu Kim
+	 */
 	public class detailEditClickListener implements View.OnClickListener {
 
 		public void onClick(View v) {
@@ -593,6 +627,9 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 	}
 	
+	/**
+	 * Method fromToDateChange 기간별 DatePicker를 보여주기 위한 메소드
+	 */
 	public void fromToDateChange() {
 		fromDateDetailView = (TextView) findViewById(R.id.from_date_view_detail);
 		toDateDetailView = (TextView) findViewById(R.id.to_date_view_detail);
@@ -637,6 +674,11 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 	}
 	
+	/**
+	 * Metohd detailAutoCategory 상세내역 수정을 위한 Dialog에서 카테고리의 자동선택을 위한 메소드
+	 * @param category Category
+	 * @return int Category List에서의 index
+	 */
 	public int detailAutoCategory(String category) {
 		String[] detailCategory = new String[categoryList.length];
 		for (int i=0; i<categoryList.length; i++) {
@@ -747,6 +789,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	/**
+	 * addDetailClickListener 상세내역 수정 Dialog에서 '수정', '취소'버튼의 Event Handler
+	 * @author Junu Kim
+	 */
 	public class addDetailClickListener implements DialogInterface.OnClickListener {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
@@ -784,6 +830,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 	}
 	
+	/**
+	 * addCashDetailClickListener 현금사용 추가 Dialog의 Event Handler
+	 * @author Junu Kim
+	 */
 	public class addCashDetailClickListener implements DialogInterface.OnClickListener {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
@@ -819,8 +869,4 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			}
 		}
 	}
-	
-	
-	
-	
 }
