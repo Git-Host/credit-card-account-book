@@ -15,7 +15,6 @@ public interface CategoryList {
 	
 	final static String[] High_Category = {"기타","식비","주거/통신","생활용품","의복/미용","건강/문화","교육/육아","교통/차량","경조사비/회비","카드대금"};
 	
-	
 	public String[][] KeyWord = 
 	/*기타*/		{{},
 	/*식비*/		{"마트","정육"},{},{},{"맥도날드","베니건스","아웃백","빕스"},{},

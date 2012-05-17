@@ -10,6 +10,11 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 
 // 일단 SMS가 수신되면 메세지내용이 출력되는 리시버
+/**
+ * SMSReceiver.java
+ * 결제SMS수신시 동작하는 BroadcastReceiver
+ * @author Junu Kim
+ */
 public class SMSReceiver extends BroadcastReceiver {
 
 	@Override
@@ -29,7 +34,8 @@ public class SMSReceiver extends BroadcastReceiver {
 				SmsBody = msgs[i].getMessageBody().toString();
 			}
 		}
-		if (SmsAddress.equals(res.getString(R.string.phoneNum_KB))|| SmsAddress.equals(res.getString(R.string.phoneNum_NH))) {
+		
+		if (SmsAddress.equals(res.getString(R.string.phoneNum_KB)) || SmsAddress.equals(res.getString(R.string.phoneNum_NH))) {
 			SQLiteDatabase db;
 			CardDB Cdb = new CardDB(context);
 			db = Cdb.getReadableDatabase();

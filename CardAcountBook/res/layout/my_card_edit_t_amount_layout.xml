@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/target_price_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:gravity="center" >
+
+    <EditText
+        android:id="@+id/target_price_edit_view"
+        style="@style/MyCardDialogText"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical"
+        android:hint="@string/example_price_2"
+        android:paddingRight="30dp"
+        android:singleLine="true"
+        android:inputType="numberDecimal|numberSigned" />
+
+    <TextView
+        style="@style/DetailDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/won" />
+
+</LinearLayout>

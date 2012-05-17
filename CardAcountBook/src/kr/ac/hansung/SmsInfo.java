@@ -9,7 +9,12 @@ import android.app.Activity;
 import android.content.ContextWrapper;
 import android.util.Log;
 
-//SMS Information Class
+/**
+ * SmsInfo.java
+ * SMS정보를 담는 Class
+ * @author Junu Kim
+ *
+ */
 public class SmsInfo implements CategoryList{	
 	private int breakKey;
 	private String cardName;		//카드 이름
@@ -21,9 +26,6 @@ public class SmsInfo implements CategoryList{
 	private String category;
 	
 	static int primaryKey = 1010;
-	
-	
-	
 	
 	final static int NH_PNUM = 15881600;
 	final static int KB_PNUM = 15881788; 
@@ -47,7 +49,6 @@ public class SmsInfo implements CategoryList{
 	public void setPlace(String _place) { place = _place; }
 	public void setCategory(String _category){category = _category;}
 
-	// 생성자
 	public SmsInfo() {}
 	
 	public SmsInfo(String cardName) {
@@ -70,7 +71,11 @@ public class SmsInfo implements CategoryList{
 		this.category = category;
 	}
 	
-	// 소수점 3자리마다 ,찍고 끝에 "원"을 붙이는 메소드
+	/**
+	 * Method decimalPiontToString 세자리 마다 ','를 찍고 '원'을 붙인다.
+	 * @param price ','와 '원'을  붙일 정수
+	 * @return String 결과
+	 */
 	public static String decimalPointToString(int price) {
 		DecimalFormat df = new DecimalFormat("#,##0");
 		String deciamlPoint = df.format(price) + "원";
@@ -78,12 +83,23 @@ public class SmsInfo implements CategoryList{
 		return deciamlPoint;
 	}
 
-	// Month, Day로 나누기
+	/**
+	 * Method splitMonthDay 'MM/dd'형식의 Month와 Day를 분할한다.
+	 * @param monthDay 'MM/dd'형식의 String
+	 * @return String[] 결과
+	 */
 	public static String[] splitMonthDay(String monthDay) {
 		String[] tmpMonthDay = monthDay.substring(0, monthDay.indexOf(" ")).split("/");
 		return tmpMonthDay;
 	}
 	
+	/**
+	 * Method scatterMessage SMS의 발신처 Address와 수신 MessageBody를 카드사의 SMS Format에  
+	 * 에 맞게 적절히 분할하여 각 정보를 DB에 Insert하기 위한 Query문 리턴 
+	 * @param smsAddress SMS 발신처 Address
+	 * @param smsBody SMS Message Body
+	 * @return String 각정보를 DB에 넣는 INSERT QUERY
+	 */
 	public static String scatterMessage(String smsAddress, String smsBody) {
 		int tmpAddress = Integer.parseInt(smsAddress);
 		int inDate;
@@ -116,12 +132,8 @@ public class SmsInfo implements CategoryList{
 			date.setDate(Integer.parseInt(tmpDay));
 			inDate = Integer.parseInt(dateFormat.format(date));
 			
-			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
-					+ primaryKey++ + ", '" + tmpCardName
-					+ "', " + tmpYear + ", " + tmpMonth + ", "
-					+ tmpDay + ", '" + tmpPlace
-					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "'," + inDate + ");";
+			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', " + tmpYear + ", " + tmpMonth + ", "	+ tmpDay + ", '" + tmpPlace
+					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory	+ "', '" + tmpCardNum + "'," + inDate + ");";
 			
 			break;
 		
@@ -157,6 +169,11 @@ public class SmsInfo implements CategoryList{
 	}
 	
 	
+	/**
+	 * Method SearchCategory place의 적절한 카테고리 자동분류. 
+	 * @param place Place
+	 * @return String Category
+	 */
 	public static String SearchCategory(String place){
 		
 		String Category = "기타";
@@ -168,7 +185,6 @@ public class SmsInfo implements CategoryList{
 				}
 			}
 		}
-				
 		return Category;
 	}
 }
