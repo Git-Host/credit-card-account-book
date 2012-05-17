@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	GraphicalView gv;
@@ -93,10 +94,8 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 			if (YAxisMax < monthlyPrice[i])
 				YAxisMax = monthlyPrice[i];
 		}
-		double tmp = Math.ceil(YAxisMax / 10000);
-		YAxisMax = tmp * 10000;
-
-		
+		double tmp = Math.ceil(YAxisMax / 100000);
+		YAxisMax = tmp * 100000;
 
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
@@ -119,15 +118,15 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// X축의 표시 간격
 		renderer.setXLabels(12);
 		// Y축의 표시 간격
-		renderer.setYLabels(7);
+		renderer.setYLabels(0);
 
 		// X,Y축 정렬방향
 		renderer.setXLabelsAlign(Align.LEFT);
 		renderer.setYLabelsAlign(Align.LEFT);
 		// X,Y축 스크롤 여부 ON/OFF
-		renderer.setPanEnabled(false, false);
+		renderer.setPanEnabled(true, false);
 		// ZOOM기능 ON/OFF
-		renderer.setZoomEnabled(false, false);
+		renderer.setZoomEnabled(true, false);
 		// ZOOM 비율
 		renderer.setZoomRate(1.0f);
 		// 막대간 간격
@@ -139,7 +138,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 
 		renderer.setBackgroundColor(Color.TRANSPARENT);
 		renderer.setGridColor(getResources().getColor(R.color.grey));
-		renderer.setShowGrid(true);
+		renderer.setShowGrid(false);
 
 		// 설정 정보 설정
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
@@ -151,9 +150,15 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 				series.add(v[k]);
 			}
 			dataset.addSeries(series.toXYSeries());
+
 		}
 		renderer.setClickEnabled(true);
-
+		
+		for (int i = 1; i < 8; i++) {
+			int tmp1 = (int) (YAxisMax / 7);
+			String ttt = SmsInfo.decimalPointToString(i*tmp1);
+			renderer.addYTextLabel(tmp1*i, ttt);
+		}
 		// 그래프 객체 생성
 		gv = ChartFactory
 				.getBarChartView(this, dataset, renderer, Type.DEFAULT);
@@ -167,7 +172,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
-		
+
 		if (seriesSelection == null) {
 
 		} else {
@@ -179,5 +184,4 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 
 		}
 	}
-
 }
