@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.content.ContextWrapper;
 import android.util.Log;
 
@@ -160,10 +161,10 @@ public class SmsInfo implements CategoryList{
 		
 		String Category = "±‚≈∏";
 			
-		for(int i=0;i<High_Category.length;i++){
+		for(int i=0;i<sCategory.length;i++){
 			for(int j=0;j<KeyWord[i].length;j++){
 				if(place.matches(".*"+KeyWord[i][j]+".*")){
-					Category = new String(High_Category[i]);
+					Category = sCategory[i];
 				}
 			}
 		}

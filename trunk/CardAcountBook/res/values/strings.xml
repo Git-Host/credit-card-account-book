@@ -85,9 +85,10 @@
     <string name="c_baby_goods">육아용품</string>
     <!-- 교통/차량 -->
     <string name="c_public_transit">대중교통</string>
+    <string name="c_oiling">주유비</string>
+    <!-- 경조사비/회비 -->
     <string name="c_dating">데이트</string>
     <string name="c_gift">선물</string>
-    <!-- 경조사비/회비 -->
     <string name="c_family_event">경조사비</string>
     <string name="c_meeting_fee">모임회비</string>
     <!-- 카드대금-->
