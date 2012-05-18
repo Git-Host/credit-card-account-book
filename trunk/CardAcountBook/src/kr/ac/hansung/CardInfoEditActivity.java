@@ -20,7 +20,7 @@ import android.widget.TextView;
  * 카드정보수정 Activity
  * @author Junu Kim
  */
-public class CardInfoEditActivity extends Activity implements CardList {
+public class CardInfoEditActivity extends Activity  {
 	SQLiteDatabase db;
 	CardDB Cdb;
 
@@ -28,7 +28,6 @@ public class CardInfoEditActivity extends Activity implements CardList {
 	
 	private Intent parentIntent;
 	
-	private TextView menuEditImage;
 	private TextView menuEditPayment;
 	private TextView menuEditPaymentDayShow;
 	private TextView menuEditCardType;
@@ -48,7 +47,7 @@ public class CardInfoEditActivity extends Activity implements CardList {
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.card_info_edit);
 		super.onCreate(savedInstanceState);
-		MenuClickListener menuClickListener=  new MenuClickListener();
+		MenuClickListener menuClickListener = new MenuClickListener();
 		parentIntent = this.getIntent();
 		
 		Cdb = new CardDB(this);
@@ -72,8 +71,6 @@ public class CardInfoEditActivity extends Activity implements CardList {
 		titleCardName = (TextView) findViewById(R.id.edit_card_title);
 		titleCardNumber = (TextView) findViewById(R.id.edit_card_number);
 		
-		menuEditImage = (TextView) findViewById(R.id.edit_image);
-		
 		menuEditPayment = (TextView) findViewById(R.id.edit_payment_day);
 		menuEditPaymentDayShow = (TextView) findViewById(R.id.edit_payment_day_show);
 		
@@ -95,7 +92,6 @@ public class CardInfoEditActivity extends Activity implements CardList {
 			menuEditTAmountShow.setText(SmsInfo.decimalPointToString(myCardObj.getTAmount()));
 		}
 		
-		menuEditImage.setOnClickListener(menuClickListener);
 		menuEditPayment.setOnClickListener(menuClickListener);
 		menuEditCardType.setOnClickListener(menuClickListener);
 		menuEditTAmount.setOnClickListener(menuClickListener);
@@ -115,23 +111,6 @@ public class CardInfoEditActivity extends Activity implements CardList {
 		
 		public void onClick(View v) {
 			switch (v.getId()) {
-			case R.id.edit_image :
-//				new AlertDialog.Builder(CardInfoEditActivity.this)
-//				.setTitle(R.string.edit_image)
-//				.setAdapter(adapter, new DialogInterface.OnClickListener() {
-//					
-//					public void onClick(DialogInterface dialog, int which) {
-//						
-//					}
-//				}).create().show();
-//				.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
-//					
-//					public void onClick(DialogInterface dialog, int which) {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//				});
-				break;
 				
 			case R.id.edit_payment_day :
 				new AlertDialog.Builder(CardInfoEditActivity.this)

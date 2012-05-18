@@ -23,6 +23,12 @@
 	<string name="add_cash_use">현금 사용 추가하기</string>
 	<string name="add_card_use">카드 사용 추가하기</string>
 	<string name="add_my_card">나의 카드 추가하기</string>
+	<string name="delete_my_card">카드 삭제</string>
+	<string name="detete_my_card_dlg_title">카드 정보 수정 및 삭제</string>
+	<string name="alert_message_title">경고!</string>
+	<string name="alert_message">카드이름과 카드번호는 필수 입력사항 입니다.</string>
+	<string name="my_card_add_init_payment_day">매월 0일</string>
+	<string name="my_card_add_init_card_type">신용</string>
 	
 	<string name="pDay_every_month">매월&#160;</string>
 	<string name="pDay_day">&#160;일</string>
@@ -57,10 +63,11 @@
     <string name="example_price_2">200000</string>
     <string name="example_every_month">15</string>
     
-    
-    
-    
-    
+    <string name="my_card_add_payment_day_title">결제일 선택</string>
+    <string name="my_card_add_card_type_title">카드종류 선택</string>
+    <string name="my_card_add_payment_day">결   제   일 :&#160;</string>
+    <string name="my_card_add_check_or_credit">카드종류 :&#160;</string>
+    <string name="my_card_add_t_amount">목표금액 :&#160;</string>
     
     <!-- 하위 카테고리  -->
     <string name="c_etc">기타</string>

@@ -24,7 +24,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CardAccountBookActivity extends Activity implements CardList {
+public class CardAccountBookActivity extends Activity {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
 	private final static String REFERENCE_PHONE_URI = "content://sms//inbox";
