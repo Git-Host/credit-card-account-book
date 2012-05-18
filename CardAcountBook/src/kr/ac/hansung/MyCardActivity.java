@@ -3,25 +3,25 @@ package kr.ac.hansung;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +34,7 @@ import android.widget.Toast;
 public class MyCardActivity extends ListActivity {
 	private final static int GO_EDIT_CARD_OPTION = 1;
 	private final static int MY_CARD_ADD = 2;
+	private final static int EMPTY_INPUT_VALUE = 10;
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
@@ -42,6 +43,12 @@ public class MyCardActivity extends ListActivity {
 	
 	ListView cardListView;
 	TextView clickedTextView;
+	
+	TextView addCardPaymentDay;
+	TextView addCardCardType;
+	EditText addCardName;
+	EditText addCardNumber;
+	EditText addCardTargetPrice;
 	
 	int longClickedPosition;
 	
@@ -96,34 +103,57 @@ public class MyCardActivity extends ListActivity {
 			}
 		}
 		
-		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	
-	
 	/**
 	 * myCardListItemLongClickListener 나의카드 리스트의 항목을 Long Click했을때의 Event Handler
 	 * @author Junu Kim
 	 */
 	public class myCardListItemLongClickListener implements AdapterView.OnItemLongClickListener {
-		public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-			Bundle containBdl = new Bundle();
+		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+			String[] items = { getResources().getString(R.string.edit_my_card), getResources().getString(R.string.delete_my_card) };
+			final int position = pos;
 			
-			containBdl.putInt("cardPrimaryKey", mAdapter.getItem(position).getCardPrimaryKey());
-			containBdl.putInt("imageRsc", mAdapter.getItem(position).getCardImage());
-			containBdl.putString("cardName", mAdapter.getItem(position).getCardName());
-			containBdl.putString("cardNumber", mAdapter.getItem(position).getCardNumber());
-			containBdl.putString("cardType", mAdapter.getItem(position).getCardType());
-			containBdl.putInt("paymentDay", mAdapter.getItem(position).getPaymentDay());
-			containBdl.putInt("tAmount", mAdapter.getItem(position).getTAmount());
+			new AlertDialog.Builder(MyCardActivity.this)
+			.setTitle(R.string.detete_my_card_dlg_title)
+			.setItems(items, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which) {
+					case 0 :
+						Bundle containBdl = new Bundle();
+						
+						containBdl.putInt("cardPrimaryKey", mAdapter.getItem(position).getCardPrimaryKey());
+						containBdl.putInt("imageRsc", mAdapter.getItem(position).getCardImage());
+						containBdl.putString("cardName", mAdapter.getItem(position).getCardName());
+						containBdl.putString("cardNumber", mAdapter.getItem(position).getCardNumber());
+						containBdl.putString("cardType", mAdapter.getItem(position).getCardType());
+						containBdl.putInt("paymentDay", mAdapter.getItem(position).getPaymentDay());
+						containBdl.putInt("tAmount", mAdapter.getItem(position).getTAmount());
+						
+						longClickedPosition = position;
+						
+						Intent containItent = new Intent(MyCardActivity.this, CardInfoEditActivity.class);
+						containItent.putExtras(containBdl);
+						
+						startActivityForResult(containItent, GO_EDIT_CARD_OPTION);
+						break;
+					
+					case 1 :
+						new AlertDialog.Builder(MyCardActivity.this)
+						.setTitle("카드 삭제 하기")
+						.setMessage("카드를 삭제하면 해당 카드의 상세내역도 함께 삭제 됩니다. 그래도 삭제 하시겠습니까?")
+						.setPositiveButton("삭제", null)
+						.setNegativeButton("취소", null)
+						.show();
+						break;
+					}
+				}
+			})
+			.show();
 			
-			longClickedPosition = position;
 			
-			Intent containItent = new Intent(MyCardActivity.this, CardInfoEditActivity.class);
-			containItent.putExtras(containBdl);
 			
-			startActivityForResult(containItent, GO_EDIT_CARD_OPTION);
 			return true;
 		}
 	}
@@ -191,8 +221,124 @@ public class MyCardActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case MY_CARD_ADD :
+			LayoutInflater cardAddLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+			View cardAddView = cardAddLayoutInflater.inflate(R.layout.my_card_add_dlg_layout, (ViewGroup) findViewById(R.id.my_card_add_root_view));
+			
+			addCardName = (EditText) cardAddView.findViewById(R.id.my_card_add_card_name);
+			addCardNumber = (EditText) cardAddView.findViewById(R.id.my_card_add_card_number);
+			addCardPaymentDay = (TextView) cardAddView.findViewById(R.id.my_card_add_payment_day);
+			addCardCardType = (TextView) cardAddView.findViewById(R.id.my_card_add_card_type);
+			addCardTargetPrice = (EditText) cardAddView.findViewById(R.id.my_card_add_target_price);
+			
+			AddMyCardDlgListener addCardListener = new AddMyCardDlgListener();
+
+			addCardPaymentDay.setOnClickListener(addCardListener);
+			
+			addCardCardType.setOnClickListener(addCardListener);
+			
+			AddMyCardListener addMyCardListener = new AddMyCardListener();
+			
+			new AlertDialog.Builder(MyCardActivity.this)
+			.setView(cardAddView)
+			.setTitle(R.string.add_my_card)
+			.setPositiveButton(R.string.add_string, addMyCardListener) 
+			.setNegativeButton(R.string.cancel_string, addMyCardListener)
+			.show();
+			
+			break;
+		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * addMyCardListner 카드 수동추가에서 추가버튼을 눌렀을때의 Event Handler
+	 * @author Junu Kim
+	 */
+	public class AddMyCardListener implements DialogInterface.OnClickListener {
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			case DialogInterface.BUTTON_POSITIVE :
+				String cardName = addCardName.getText().toString();
+				String cardNumber = addCardNumber.getText().toString();
+				String cardPaymentDay = addCardPaymentDay.getText().toString();;
+				String cardType = addCardCardType.getText().toString();
+				String cardTargetPrice = addCardTargetPrice.getText().toString();;
+				
+				if (cardName.equals("") || cardNumber.equals("")) {
+					Toast.makeText(MyCardActivity.this, R.string.alert_message, Toast.LENGTH_LONG).show();
+				}
+				
+				
+//				db.execSQL("CREATE TABLE myCard (myCardKey INTEGER PRIMARY KEY, cardName TEXT, cardNumber TEXT, paymentDay INTEGER, tAmount INTEGER, cardType TEXT);");
+				
+				break;
+			case DialogInterface.BUTTON_NEGATIVE :
+				
+				break;
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * AddMyCardDlgListener 카드 수동 추가에서 결제일, 카드종류 뷰의 클릭 리스너
+	 * @author Junu Kim
+	 */
+	public class AddMyCardDlgListener implements View.OnClickListener {
+		String[] dayList = getResources().getStringArray(R.array.day_list);
+		String[] cardTypeList = getResources().getStringArray(R.array.card_type_list);
+		String paymentDay = addCardPaymentDay.getText().toString().replace("매월 ", "");
+		String cardType = addCardCardType.getText().toString();
+		
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.my_card_add_payment_day :
+				new AlertDialog.Builder(MyCardActivity.this)
+				.setTitle(R.string.my_card_add_payment_day_title)
+				.setSingleChoiceItems(dayList, autoCheckDay(paymentDay), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						addCardPaymentDay.setText(getResources().getString(R.string.pDay_every_month) + " " + dayList[which]);
+						paymentDay = dayList[which];
+						dialog.dismiss();
+					}
+				})
+				.show();
+				
+				break;
+			case R.id.my_card_add_card_type :
+				new AlertDialog.Builder(MyCardActivity.this)
+				.setTitle(R.string.my_card_add_card_type_title)
+				.setSingleChoiceItems(cardTypeList, autoCheckCardType(cardType), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						addCardCardType.setText(cardTypeList[which]);
+						cardType = cardTypeList[which];
+						dialog.dismiss();
+					}
+				})
+				.show();
+				
+				break;
+			}
+		}
+		
+		public int autoCheckDay(String date) {
+			for (int i=0; i<dayList.length; i++) {
+				if (dayList[i].equals(date)) 
+					return i;
+			}
+			return -1;
+		}
+		
+		public int autoCheckCardType(String cardType) {
+			for (int i=0; i<cardTypeList.length; i++) {
+				if (cardTypeList[i].equals(cardType)) 
+					return i;
+			}
+			return -1;
+		}
 	}
 	
 	/**
