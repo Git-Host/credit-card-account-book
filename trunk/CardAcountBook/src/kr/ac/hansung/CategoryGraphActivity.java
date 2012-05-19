@@ -14,6 +14,7 @@ import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +22,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.EventLog.Event;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -176,12 +179,14 @@ public class CategoryGraphActivity extends Activity {
 				category = categories.get(9);
 			} else if (c == colors[10]) {
 				category = categories.get(10);
-			} else {
-
 			}
-
-			Toast.makeText(CategoryGraphActivity.this, category,
-					Toast.LENGTH_SHORT).show();
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				Intent detailViewIntent = new Intent(
+						CategoryGraphActivity.this, DetailViewActivity.class);
+				detailViewIntent.putExtra("selCategory", category);
+				startActivity(detailViewIntent);
+				
+			}
 			return true;
 		}
 	}
