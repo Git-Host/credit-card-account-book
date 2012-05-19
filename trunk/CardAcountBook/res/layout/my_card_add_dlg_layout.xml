@@ -6,23 +6,32 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    <!-- 카드이름  뷰 -->
-    <TableRow>
-        <TextView
-            style="@style/DetailDialogText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/deatil_dlg_edit_card_name" />
-
-        <EditText
-            android:id="@+id/my_card_add_card_name"
-            style="@style/DetailEditDialogText"
-            android:layout_width="150dp"
-            android:layout_height="39dp"
-            android:hint="@string/example_card_name" />
-    </TableRow>
-  
     <!-- 카드번호 변경 뷰 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/my_card_add_card_image"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:padding="3dp" />
+
+        <TextView
+            android:id="@+id/my_card_add_card_name"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:singleLine="true" />
+    </LinearLayout>
+
     <TableRow>
 
         <TextView
@@ -40,6 +49,7 @@
     </TableRow>
 
     <!-- 결제일시 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -58,6 +68,7 @@
     </TableRow>
 
     <!-- 결제장소 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -76,6 +87,7 @@
     </TableRow>
 
     <!-- 결제금액 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -89,9 +101,8 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
-            android:numeric="decimal"
-            android:hint="@string/example_price" />
+            android:hint="@string/example_price"
+            android:numeric="decimal" />
     </TableRow>
-
 
 </TableLayout>

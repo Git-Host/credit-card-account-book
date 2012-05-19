@@ -33,8 +33,10 @@ import android.widget.Toast;
  */
 public class MyCardActivity extends ListActivity {
 	private final static int GO_EDIT_CARD_OPTION = 1;
+	private final static int GO_CARD_LIST_RESULT_OK = 3;
 	private final static int MY_CARD_ADD = 2;
 	private final static int EMPTY_INPUT_VALUE = 10;
+	
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
@@ -43,12 +45,6 @@ public class MyCardActivity extends ListActivity {
 	
 	ListView cardListView;
 	TextView clickedTextView;
-	
-	TextView addCardPaymentDay;
-	TextView addCardCardType;
-	EditText addCardName;
-	EditText addCardNumber;
-	EditText addCardTargetPrice;
 	
 	int longClickedPosition;
 	
@@ -96,12 +92,23 @@ public class MyCardActivity extends ListActivity {
 		if (requestCode == GO_EDIT_CARD_OPTION) {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle bdl = data.getBundleExtra("sendBdl");
-				
 				mAdapter.getItem(longClickedPosition).setPaymentDay(bdl.getInt("paymentDay"));
 				mAdapter.getItem(longClickedPosition).setCardType(bdl.getString("cardType"));
 				mAdapter.getItem(longClickedPosition).setTAmount(bdl.getInt("tAmount"));
 			}
+		} else if (requestCode == GO_CARD_LIST_RESULT_OK) {
+			if (resultCode == Activity.RESULT_OK) {
+				Bundle bdl = data.getBundleExtra("sendBdl");
+				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), 
+									bdl.getInt("paymentDay"), bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"));
+				
+				
+				mAdapter.add(tmpObj);
+				mAdapter.notifyDataSetChanged();
+			}
 		}
+		
+		
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -205,7 +212,7 @@ public class MyCardActivity extends ListActivity {
 			return (int)(R.drawable.nh_chaum);
 		} else if (cardName.equals(autoCardRsc.getString(R.string.KB_check))
 				|| cardName.equals(autoCardRsc.getString(R.string.KB_credit))) {
-			return (int)(R.drawable.kb_star);
+			return (int)(R.drawable.kb_kookmin_star);
 		}
 		
 		return (int)(R.drawable.questionmark_card);
@@ -217,129 +224,22 @@ public class MyCardActivity extends ListActivity {
 		menu.add(0, MY_CARD_ADD, 0, R.string.add_my_card);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	
 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MY_CARD_ADD :
-			LayoutInflater cardAddLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-			View cardAddView = cardAddLayoutInflater.inflate(R.layout.my_card_add_dlg_layout, (ViewGroup) findViewById(R.id.my_card_add_root_view));
-			
-			addCardName = (EditText) cardAddView.findViewById(R.id.my_card_add_card_name);
-			addCardNumber = (EditText) cardAddView.findViewById(R.id.my_card_add_card_number);
-			addCardPaymentDay = (TextView) cardAddView.findViewById(R.id.my_card_add_payment_day);
-			addCardCardType = (TextView) cardAddView.findViewById(R.id.my_card_add_card_type);
-			addCardTargetPrice = (EditText) cardAddView.findViewById(R.id.my_card_add_target_price);
-			
-			AddMyCardDlgListener addCardListener = new AddMyCardDlgListener();
-
-			addCardPaymentDay.setOnClickListener(addCardListener);
-			
-			addCardCardType.setOnClickListener(addCardListener);
-			
-			AddMyCardListener addMyCardListener = new AddMyCardListener();
-			
-			new AlertDialog.Builder(MyCardActivity.this)
-			.setView(cardAddView)
-			.setTitle(R.string.add_my_card)
-			.setPositiveButton(R.string.add_string, addMyCardListener) 
-			.setNegativeButton(R.string.cancel_string, addMyCardListener)
-			.show();
+			Intent goCardListActivity = new Intent(MyCardActivity.this, CardListActivity.class);
+			startActivityForResult(goCardListActivity, GO_CARD_LIST_RESULT_OK);
 			
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	/**
-	 * addMyCardListner 카드 수동추가에서 추가버튼을 눌렀을때의 Event Handler
-	 * @author Junu Kim
-	 */
-	public class AddMyCardListener implements DialogInterface.OnClickListener {
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			case DialogInterface.BUTTON_POSITIVE :
-				String cardName = addCardName.getText().toString();
-				String cardNumber = addCardNumber.getText().toString();
-				String cardPaymentDay = addCardPaymentDay.getText().toString();;
-				String cardType = addCardCardType.getText().toString();
-				String cardTargetPrice = addCardTargetPrice.getText().toString();;
-				
-				if (cardName.equals("") || cardNumber.equals("")) {
-					Toast.makeText(MyCardActivity.this, R.string.alert_message, Toast.LENGTH_LONG).show();
-				}
-				
-				
-//				db.execSQL("CREATE TABLE myCard (myCardKey INTEGER PRIMARY KEY, cardName TEXT, cardNumber TEXT, paymentDay INTEGER, tAmount INTEGER, cardType TEXT);");
-				
-				break;
-			case DialogInterface.BUTTON_NEGATIVE :
-				
-				break;
-			}
-		}
-		
-	}
-	
-	
-	/**
-	 * AddMyCardDlgListener 카드 수동 추가에서 결제일, 카드종류 뷰의 클릭 리스너
-	 * @author Junu Kim
-	 */
-	public class AddMyCardDlgListener implements View.OnClickListener {
-		String[] dayList = getResources().getStringArray(R.array.day_list);
-		String[] cardTypeList = getResources().getStringArray(R.array.card_type_list);
-		String paymentDay = addCardPaymentDay.getText().toString().replace("매월 ", "");
-		String cardType = addCardCardType.getText().toString();
-		
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.my_card_add_payment_day :
-				new AlertDialog.Builder(MyCardActivity.this)
-				.setTitle(R.string.my_card_add_payment_day_title)
-				.setSingleChoiceItems(dayList, autoCheckDay(paymentDay), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						addCardPaymentDay.setText(getResources().getString(R.string.pDay_every_month) + " " + dayList[which]);
-						paymentDay = dayList[which];
-						dialog.dismiss();
-					}
-				})
-				.show();
-				
-				break;
-			case R.id.my_card_add_card_type :
-				new AlertDialog.Builder(MyCardActivity.this)
-				.setTitle(R.string.my_card_add_card_type_title)
-				.setSingleChoiceItems(cardTypeList, autoCheckCardType(cardType), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						addCardCardType.setText(cardTypeList[which]);
-						cardType = cardTypeList[which];
-						dialog.dismiss();
-					}
-				})
-				.show();
-				
-				break;
-			}
-		}
-		
-		public int autoCheckDay(String date) {
-			for (int i=0; i<dayList.length; i++) {
-				if (dayList[i].equals(date)) 
-					return i;
-			}
-			return -1;
-		}
-		
-		public int autoCheckCardType(String cardType) {
-			for (int i=0; i<cardTypeList.length; i++) {
-				if (cardTypeList[i].equals(cardType)) 
-					return i;
-			}
-			return -1;
-		}
-	}
 	
 	/**
 	 * MyCardAdapter ListView의 리스트에 정보를 공급해주는 Adapter 

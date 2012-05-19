@@ -13,6 +13,7 @@ public class MyCardInfo {
 	private int paymentDay; 
 	private int tAmount;
 	private String cardName;
+	private String reduceCardName;
 	private String cardNumber;
 	private String cardType;
 	
@@ -22,6 +23,7 @@ public class MyCardInfo {
 	public int getPhoneImage() { return phoneImage; }
 	public String getCardNumber() {	return cardNumber; }
 	public String getCardName() { return cardName; }
+	public String getReduceCardName() { return reduceCardName; }
 	public int getPaymentDay() { return paymentDay; }
 	public String getCardType() { return cardType; }
 	public int getTAmount() {return tAmount; }
@@ -31,6 +33,7 @@ public class MyCardInfo {
 	public void setCardImage(int cardImage) { this.cardImage = cardImage; }
 	public void setPhoneImage(int phoneImage) { this.phoneImage = phoneImage; }
 	public void setCardName(String cardName) { this.cardName = cardName; }
+	public void setReduceCardName(String reduceCardName) { this.reduceCardName = reduceCardName; }
 	public void setCardNumber(String cardNumber) { this.cardNumber = cardNumber; }
 	public void setCardType(String cardType) { this.cardType = cardType; }
 	public void setPaymentDay(int paymentDay) { this.paymentDay = paymentDay; }
@@ -38,6 +41,15 @@ public class MyCardInfo {
 
 	// Constructor
 	public MyCardInfo() {};
+	
+	public MyCardInfo(String cardName, String cardNumber, int paymentDay, int tAmount, String cardType, int cardImage) {
+		this.cardImage = cardImage;
+		this.cardName = cardName;
+		this.cardNumber = cardNumber;
+		this.paymentDay = paymentDay; 
+		this.tAmount = tAmount;
+		this.cardType = cardType;
+	}
 	
 	public MyCardInfo(int cardPrimaryKey, String cardName, String cardNumber, int paymentDay, int tAmount, String cardType) {
 		this.cardPrimaryKey = cardPrimaryKey;
