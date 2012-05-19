@@ -113,12 +113,31 @@
     <!-- 카드대금-->
     <string name="c_card_pay">카드대금</string>
     
-
+    <!-- KB국민은행 카드명 리스트 -->
+    <string name="kb_kookmin_baby_love">KB 국민 아이사랑 카드</string>
+    <string name="kb_kookmin_emart">이마트 KB 국민 카드</string>
+    <string name="kb_kookmin_good_shopping">KB 국민 굿 쇼핑 카드</string>
+    <string name="kb_kookmin_goodday">KB 국민 굿데이 카드</string>
+    <string name="kb_kookmin_happy_auto">KB 국민 해피 오토 카드</string>
+    <string name="kb_kookmin_homeplus">KB 국민 홈플러스 카드</string>
+	<string name="kb_kookmin_hyedam">KB 국민 혜담 카드</string>
+    <string name="kb_kookmin_lg_uplus">LG 유플러스 국민 카드</string>
+    <string name="kb_kookmin_olleh">올레 KB 국민 카드</string>
+    <string name="kb_kookmin_rail_air">KB RAIL AIR 국민 카드</string>
+    <string name="kb_kookmin_sk_energy_loveyou">SK 에너지 러브유 KB 국민 카드</string>
+    <string name="kb_kookmin_sk_smart">SK 국민 스마트 카드</string>
+	<string name="kb_kookmin_star">KB 국민 스타 카드</string>
+    <string name="kb_kookmin_sweet_dream">KB 국민 스위트 드림 카드</string>
+    <string name="kb_kookmin_the_cj">The CJ 국민 카드</string>
+	<string name="kb_kookmin_wise_home">KB 국민 와이즈 홈 카드</string>
+	<string name="kb_kookmin_wise">KB 국민 와이즈 카드</string>
+    
     <string-array name="card_type_list">
         <item>신용</item>
         <item>체크</item>
     </string-array>
-
+	<string name="just_card">카드</string>
+    
     <!-- My Card Payment Day List -->
     <string-array name="day_list">
         <item>1일</item>
