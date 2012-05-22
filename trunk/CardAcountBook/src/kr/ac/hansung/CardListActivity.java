@@ -63,6 +63,11 @@ public class CardListActivity extends ListActivity implements CardInfoList {
 		cardListAdapter = new MyCardAdapter(this, R.layout.my_card_add_card_list_layout, cardList);
 		setListAdapter(cardListAdapter);
 		
+//		MyCardInfo card = new MyCardInfo();
+//		card.setCardName("asdfasdf");
+//		
+//		cardList.add(0, card);
+		
 		super.onCreate(savedInstanceState);
 	}
 

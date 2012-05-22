@@ -7,6 +7,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/period_date_layout_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -54,11 +55,29 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/detail_price_view_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/grey"
+        android:clickable="true"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/detail_price_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@color/grey"
         android:clickable="true"
         android:gravity="right"
@@ -70,21 +89,75 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
+    <!-- 분류 보여주는 리니어레이아웃 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="일시"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLength="4"
+            android:singleLine="true"
+            android:text="카드"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="사용장소"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="금액"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="분류"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="#00000000"
-        android:longClickable="true" >
+        android:layoutAnimation="@anim/anim_layout_controller"
+        android:longClickable="true"
+        android:persistentDrawingCache="animation|scrolling" >
     </ListView>
-    
-    <TextView 
+
+    <TextView
         android:id="@id/android:empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/list_have_no_items"
         android:textColor="@color/black"
-        android:gravity="center"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
 
 </LinearLayout>
