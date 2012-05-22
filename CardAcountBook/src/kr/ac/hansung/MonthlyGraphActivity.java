@@ -34,7 +34,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.monthly_grapgh_view);
+		setContentView(R.layout.monthly_graph_view);
 
 		int iYear;
 		double monthlyPrice[] = new double[12];

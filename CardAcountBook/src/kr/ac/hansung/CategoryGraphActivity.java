@@ -177,8 +177,6 @@ public class CategoryGraphActivity extends Activity {
 				category = categories.get(8);
 			} else if (c == colors[9]) {
 				category = categories.get(9);
-			} else if (c == colors[10]) {
-				category = categories.get(10);
 			}
 			if (event.getAction() == MotionEvent.ACTION_UP) {
 				Intent detailViewIntent = new Intent(

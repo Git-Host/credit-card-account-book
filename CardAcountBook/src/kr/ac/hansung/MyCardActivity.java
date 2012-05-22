@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,13 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * MyCardActivity.java 나의카드 Activity
@@ -36,7 +38,6 @@ public class MyCardActivity extends ListActivity {
 	private final static int GO_CARD_LIST_RESULT_OK = 3;
 	private final static int MY_CARD_ADD = 2;
 	private final static int EMPTY_INPUT_VALUE = 10;
-	
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
@@ -53,7 +54,7 @@ public class MyCardActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_card);
 		
-		ArrayList<MyCardInfo> myCardList = new ArrayList<MyCardInfo>();
+		final ArrayList<MyCardInfo> myCardList = new ArrayList<MyCardInfo>();
 
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
@@ -81,6 +82,7 @@ public class MyCardActivity extends ListActivity {
 		
 		cardListView = this.getListView();
 		cardListView.setOnItemLongClickListener(new myCardListItemLongClickListener());
+		
 	}
 	
 	
@@ -102,14 +104,10 @@ public class MyCardActivity extends ListActivity {
 				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), 
 									bdl.getInt("paymentDay"), bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"));
 				
-				
 				mAdapter.add(tmpObj);
 				mAdapter.notifyDataSetChanged();
 			}
 		}
-		
-		
-		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -165,7 +163,6 @@ public class MyCardActivity extends ListActivity {
 		}
 	}
 	
-	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -176,7 +173,6 @@ public class MyCardActivity extends ListActivity {
 		
 		startActivity(clickedCardDetail);
 	}
-
 	
 	/**
 	 * Method callCardCompany ACTION_DIAL intent를 전송해주는 메소드

@@ -57,6 +57,8 @@ public class CardAccountBookActivity extends Activity {
 		chartViewBtn = (ImageView) findViewById(R.id.breakdown_stats_btn);
 		optionViewBtn = (ImageView) findViewById(R.id.option_btn);
 
+		MainButtonClickListener scatterIntentListener = new MainButtonClickListener();
+		
 		pref = getSharedPreferences("initial", MODE_PRIVATE);
 		boolean text = pref.getBoolean(INITIAL_FLAG, false);
 		
@@ -83,53 +85,46 @@ public class CardAccountBookActivity extends Activity {
 		showNowPayment();
 
 		// My Card Btn Click
-		myCardBtn.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				Intent myCardIntent = new Intent(CardAccountBookActivity.this,
-						MyCardActivity.class);
-				startActivity(myCardIntent);
-
-			}
-		});
+		myCardBtn.setOnClickListener(scatterIntentListener);
 
 		// Detail View Btn Click
-		detailViewBtn.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				Intent detailViewIntent = new Intent(
-						CardAccountBookActivity.this, DetailViewActivity.class);
-				startActivity(detailViewIntent);
-			}
-		});
+		detailViewBtn.setOnClickListener(scatterIntentListener);
 		
 		// Chart View Btn Click
-		chartViewBtn.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent GraphViewIntent = new Intent(
-						CardAccountBookActivity.this, GraphViewActivity.class);
-				startActivity(GraphViewIntent);
-			}
-		});
+		chartViewBtn.setOnClickListener(scatterIntentListener);
 		
 		// Option View Btn Click
-		optionViewBtn.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent OptionViewIntent = new Intent(
-						CardAccountBookActivity.this, OptionViewActivity.class);
-				startActivity(OptionViewIntent);
-			}
-		});
+		optionViewBtn.setOnClickListener(scatterIntentListener);
 
 		// SMS BroadcastReceiver
 		smsReceiver = new SMSReceiver();
 		registerReceiver(smsReceiver, new IntentFilter(DELIVERED));
 	}
 
+	public class MainButtonClickListener implements View.OnClickListener {
+		public void onClick(View v) {
+			Intent scatterIntent = null;
+			switch (v.getId()) {
+			case R.id.my_card_btn :
+				scatterIntent = new Intent(CardAccountBookActivity.this, MyCardActivity.class);
+				break;
+			case R.id.detail_view_btn :
+				scatterIntent = new Intent(
+						CardAccountBookActivity.this, DetailViewActivity.class);
+				break;
+			case R.id.breakdown_stats_btn :
+				scatterIntent = new Intent(CardAccountBookActivity.this, GraphViewActivity.class);
+				break;
+			case R.id.option_btn : 
+				scatterIntent = new Intent(CardAccountBookActivity.this, OptionViewActivity.class);
+				break;
+			}
+			startActivity(scatterIntent);
+		}
+		
+	}
+	
+	
 	/**
 	 * Method getDeviceModeNumber Android Device Model Number를 얻어온다.
 	 * @return String Model Number
@@ -162,11 +157,9 @@ public class CardAccountBookActivity extends Activity {
 		while (cursor.moveToNext()) {
 		
 			// GallexyS2LTE-LG, GallexyS2-SK
-			if (modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_LTE_LG))
-					|| modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_SK))) {
+			if (modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_LTE_LG)) || modelNumber.equals(tmpRes.getString(R.string.mNum_gallexy_s_2_SK))) {
 				String curAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
-				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB))
-						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
+				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))) {
 					smsBody = cursor.getString(cursor.getColumnIndex("Title"));
 					smsAddress = cursor.getString(cursor.getColumnIndex("MDN1st"));
 					
@@ -185,21 +178,35 @@ public class CardAccountBookActivity extends Activity {
 		}
 		cursor.close();
 
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드', 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
+//		public String[] sCategory = {"주식","부식","간식","외식","술/유통","관리비","공과금","이동통신","인터넷","월세","가구/가전","주방/욕실","잡화","소모","의류비","패션/잡화","헤어/뷰티",
+//				"세탁/수선","운동/레져","문화생활","여행","병원비","등록금","학원/교재비","육아용품","대중교통","주유비","데이트","선물","경조사비","모임회비","카드대금"};
+		
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '부식', '1*2*', 20120120);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '간식', '1*2*', 20120220);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '외식', '1*2*', 20120320);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 20, '이마트', 21000, '술/유흥', '1*2*', 20120420);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '관리비', '1*2*', 20120520);");
+//		
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '헤어/뷰티', '1*2*', 20120120);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '여행', '1*2*', 20120220);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '등록금', '1*2*', 20120320);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 20, '이마트', 21000, '대중교통', '1*2*', 20120420);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '대중교통', '1*2*', 20120320);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '대중교통', '1*2*', 20120220);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '선물', '1*2*', 20120520);");
+//		
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
 		cursor = db.rawQuery(myCardQuery, null);
 
 		while (cursor.moveToNext()) {
-			String tmpCardName = cursor.getString(cursor
-					.getColumnIndex("cardName"));
-			String tmpCardNumber = cursor.getString(cursor
-					.getColumnIndex("cardNumber"));
-//			db.execSQL("CREATE TABLE myCard (myCardKey INTEGER PRIMARY KEY, cardName TEXT, cardNumber TEXT, paymentDay INTEGER, tAmount INTEGER, cardType TEXT);");
+			String tmpCardName = cursor.getString(cursor.getColumnIndex("cardName"));
+			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
 			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', 0, 0, '');";
 			db.execSQL(tmpQuery);
 		}
@@ -346,4 +353,5 @@ public class CardAccountBookActivity extends Activity {
 		this.unregisterReceiver(smsReceiver);
 		Log.e("Junu", "onDestroy() called");
 	}
+
 }

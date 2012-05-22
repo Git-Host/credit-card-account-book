@@ -3,23 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/card_ace"
-    android:gravity="center_vertical"
+    android:gravity="center"
     android:orientation="vertical" >
 
-    <Button
+    <ImageButton
         android:id="@+id/monthly"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@color/clocking"
         android:gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/graph_chart"
         android:text="월별 사용내역"
         android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/category"
-        android:layout_width="match_parent"
+    <TextView
+        style="@style/GraphTextStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/monthly_show_text" />
+
+    <ImageButton
+        android:id="@+id/category"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@color/clocking"
         android:gravity="center"
+        android:scaleType="centerInside"
+        android:src="@drawable/graph_pie"
         android:text="카테고리별 사용내역"
         android:textSize="20dp" />
+
+    <TextView
+        style="@style/GraphTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category_show_text" />
 
 </LinearLayout>
