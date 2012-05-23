@@ -99,30 +99,32 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
-		renderer.setAxisTitleTextSize(25);
+		renderer.setAxisTitleTextSize(20);
 		renderer.setYTitle("사용량", 0);
-		renderer.setAxisTitleTextSize(25);
-
+		renderer.setAxisTitleTextSize(20);
+		
 		// 수치값 글자 크기 / X축 최소,최대값 / Y축 최소,최대값
-		renderer.setLabelsTextSize(20);
+		renderer.setLabelsTextSize(15);
 		renderer.setXAxisMin(0.5);
 		renderer.setXAxisMax(12.5);
 		renderer.setYAxisMax(YAxisMax);
 		renderer.setYAxisMin(0);
-
+		
+		renderer.setZoomLimits(new double[]{0,12.5,0 ,0});
+		renderer.setPanLimits(new double[]{0.5,12.5,0,15});
 		// X,Y축 라인 색상
 		renderer.setAxesColor(Color.BLACK);
 		// 상단제목, X,Y축 제목, 수치값의 글자 색상
 		renderer.setLabelsColor(Color.DKGRAY);
-
+		
 		// X축의 표시 간격
-		renderer.setXLabels(12);
+		renderer.setXLabels(0);
 		// Y축의 표시 간격
 		renderer.setYLabels(0);
 
 		// X,Y축 정렬방향
-		renderer.setXLabelsAlign(Align.LEFT);
-		renderer.setYLabelsAlign(Align.LEFT);
+		renderer.setXLabelsAlign(Align.CENTER);
+		renderer.setYLabelsAlign(Align.RIGHT);
 		// X,Y축 스크롤 여부 ON/OFF
 		renderer.setPanEnabled(true, false);
 		// ZOOM기능 ON/OFF
@@ -133,11 +135,10 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		renderer.setBarSpacing(0.5f);
 
 		renderer.setApplyBackgroundColor(true);
-		renderer.setMargins(new int[] { 30, 30, 30, 30 });
+		renderer.setMargins(new int[] { 50, 100, 50, 10 });
 		renderer.setMarginsColor(Color.argb(0, 0xff, 0, 0));
 
 		renderer.setBackgroundColor(Color.TRANSPARENT);
-		renderer.setGridColor(getResources().getColor(R.color.grey));
 		renderer.setShowGrid(false);
 
 		// 설정 정보 설정
@@ -154,10 +155,14 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		}
 		renderer.setClickEnabled(true);
 		
-		for (int i = 1; i < 8; i++) {
-			int tmp1 = (int) (YAxisMax / 7);
+		for (int i = 1; i < 6; i++) {
+			int tmp1 = (int)Math.ceil((YAxisMax /5));
 			String ttt = SmsInfo.decimalPointToString(i*tmp1);
 			renderer.addYTextLabel(tmp1*i, ttt);
+		}
+		for(int i = 0;i<13;i++){
+			String tmp1 = String.valueOf(i+1);
+			renderer.addXTextLabel(i+1,tmp1);
 		}
 		// 그래프 객체 생성
 		gv = ChartFactory
@@ -167,6 +172,18 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// 그래프를 LinearLayout에 추가
 		LinearLayout llBody = (LinearLayout) findViewById(R.id.Monthly);
 		llBody.addView(gv);
+		if(gv != null)
+
+		   {
+
+		          gv.invalidate();
+
+		          gv.repaint();
+
+		   }
+
+
+
 	}
 
 	public void onClick(View v) {

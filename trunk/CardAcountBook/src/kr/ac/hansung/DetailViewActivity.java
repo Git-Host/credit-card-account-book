@@ -526,14 +526,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		return super.onCreateDialog(id, bdl);
 	}
 
-	// 나중에 DatePickerListener 이걸로 통합하자
-	// public class onMyDateSetListner implements
-	// DatePickerDialog.OnDateSetListener {
-	// public void onDateSet(DatePicker view, int year, int monthOfYear, int
-	// dayOfMonth) {
-	// }
-	//
-	// }
 
 	private DatePickerDialog.OnDateSetListener toDetailDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

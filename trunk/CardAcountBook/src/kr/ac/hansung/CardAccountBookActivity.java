@@ -190,9 +190,9 @@ public class CardAccountBookActivity extends Activity {
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '헤어/뷰티', '1*2*', 20120120);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '여행', '1*2*', 20120220);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '등록금', '1*2*', 20120320);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 20, '이마트', 21000, '대중교통', '1*2*', 20120420);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '대중교통', '1*2*', 20120320);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '대중교통', '1*2*', 20120220);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '대중교통', '1*2*', 20120520);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '술/유흥', '1*2*', 20120520);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '등록금', '1*2*', 20120520);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '선물', '1*2*', 20120520);");
 //		
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
