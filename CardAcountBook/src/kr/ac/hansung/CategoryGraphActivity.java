@@ -2,34 +2,26 @@ package kr.ac.hansung;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.model.CategorySeries;
-import org.achartengine.model.SeriesSelection;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.EventLog.Event;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 /**
  * @author Admin
@@ -137,8 +129,9 @@ public class CategoryGraphActivity extends Activity {
 		}
 		renderer.setZoomButtonsVisible(false);
 		renderer.setZoomEnabled(false);
-		renderer.setChartTitleTextSize(20);
 		renderer.setLabelsColor(Color.BLACK);
+		renderer.setLegendTextSize(25);
+		renderer.setLabelsTextSize(25);
 		// ChartFactory.getPieChartView
 
 		mChartView = ChartFactory.getPieChartView(this, series, renderer);
@@ -147,6 +140,16 @@ public class CategoryGraphActivity extends Activity {
 		// mChartView.setBackgroundColor(Color.WHITE);
 		incomePiechartLayout.addView(mChartView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+
+		if (mChartView != null)
+
+		{
+
+			mChartView.invalidate();
+
+			mChartView.repaint();
+
+		}
 	}
 
 	class touch implements OnTouchListener {
@@ -183,7 +186,7 @@ public class CategoryGraphActivity extends Activity {
 						CategoryGraphActivity.this, DetailViewActivity.class);
 				detailViewIntent.putExtra("selCategory", category);
 				startActivity(detailViewIntent);
-				
+
 			}
 			return true;
 		}
