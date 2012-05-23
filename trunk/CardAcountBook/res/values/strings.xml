@@ -15,6 +15,10 @@
     <string name="monthly_show_text">월별 사용 내역 보기</string>
     <string name="category_show_text">카테고리별 사용 내역 보기</string>
     
+    <string name="option_password_title">비밀번호 설정</string>
+    <string name="option_password_description">비밀번호를 설정하여 타인에게 정보를 노출하지 않습니다.</string>
+    <string name="option_csv_title">CSV파일 내보내기</string>
+    <string name="option_csv_description">Excel형태의 CSV파일을 메일로 전송하여 PC에서 사용합니다.</string>
     
     <string name="edit_my_card">카드 정보 수정</string>
     <string name="dash"> ~ </string>

@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 // 일단 SMS가 수신되면 메세지내용이 출력되는 리시버
 /**
