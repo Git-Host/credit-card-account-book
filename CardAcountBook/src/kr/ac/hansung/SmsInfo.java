@@ -5,15 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.app.Activity;
-import android.content.ContextWrapper;
-import android.util.Log;
-
 /**
  * SmsInfo.java
  * SMS정보를 담는 Class
  * @author Junu Kim
- *
  */
 public class SmsInfo implements CategoryList{	
 	private int breakKey;

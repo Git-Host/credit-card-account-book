@@ -5,16 +5,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.zip.Inflater;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -24,72 +21,108 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * @author Admin
- * 
- */
-public class OptionViewActivity extends Activity {
+public class OptionViewActivity extends ListActivity {
+	private static final int OPTION_PASSWORD_SET = 0;
+	private static final int OPTION_CSV_OUT = 1;
+	
 	private Button csvBtn, passBtn;
 	private CardDB cdb;
 	public static final String CSV_COLNAMES = "날짜,카드명,카드번호,사용내역,사용금액,카테고리\n";
 	public static final String ROOT_DIR = "/mnt/sdcard/";
-	LayoutInflater inflater;
-	TextView text;
+	
+	private ArrayList<OptionObj> optionList;
+	private OptionListAdapter optionListAdapter;
+	
+	private class OptionObj {
+		String optionTitle;
+		String optionDescription;
 
-	final static int DIALOG_1 = 0;
+		public OptionObj(String optionTitle, String optionDescription) {
+			this.optionTitle = optionTitle;
+			this.optionDescription = optionDescription;
+		}
+
+		public void setOptionTitle(String optionTitle) { this.optionTitle = optionTitle; }
+		public void setOptionDescription(String optionDescription) { this.optionDescription = optionDescription; }
+
+		public String getOptionTitle() { return optionTitle; }
+		public String getOptionDescription() { return optionDescription; }
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.option_view);
 
-		csvBtn = (Button) findViewById(R.id.csv);
-		passBtn = (Button) findViewById(R.id.password);
-
-		MyOnClickListener l = new MyOnClickListener();
-
-		csvBtn.setOnClickListener(l);
-		passBtn.setOnClickListener(l);
-		text = (TextView) findViewById(R.id.text);
-	}
-
-	class MyOnClickListener implements OnClickListener {
-
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			switch (v.getId()) {
-			case R.id.csv:
-				ExportCSV();
-				break;
-			case R.id.password:
-
-				break;
-			}
-		}
-
+		optionList = new ArrayList<OptionObj>();
+		
+		OptionObj passwordSet = new OptionObj(getResources().getString(R.string.option_password_title), getResources().getString(R.string.option_password_description));
+		OptionObj csvOutput = new OptionObj(getResources().getString(R.string.option_csv_title), getResources().getString(R.string.option_csv_description));
+		
+		optionList.add(passwordSet);
+		optionList.add(csvOutput);
+		
+		optionListAdapter = new OptionListAdapter(this, R.layout.option_view_list_layout, optionList);
+		setListAdapter(optionListAdapter);
 	}
 
 	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-		// TODO Auto-generated method stub
-		return super.onCreateDialog(id, args);
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		switch (position) {
+		case OPTION_PASSWORD_SET :
+			break;
+		case OPTION_CSV_OUT :
+			ExportCSV();
+			break;
+		}
+		
+		super.onListItemClick(l, v, position, id);
 	}
+	
+	public class OptionListAdapter extends ArrayAdapter<OptionObj> {
+		private ArrayList<OptionObj> items;
+
+		public OptionListAdapter(Context context, int textViewResourceId, ArrayList<OptionObj> objects) {
+			super(context, textViewResourceId, objects);
+			items = objects;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View optionView = convertView;
+
+			if (optionView == null) {
+				LayoutInflater optionLayoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				optionView = optionLayoutInflater.inflate(R.layout.option_view_list_layout, null);
+			}
+
+			OptionObj tmpObj = items.get(position);
+
+			if (tmpObj != null) {
+				TextView tmpOptionTitle = (TextView) optionView.findViewById(R.id.option_title);
+				TextView tmpOptionDescription = (TextView) optionView.findViewById(R.id.option_description);
+
+				tmpOptionTitle.setText(tmpObj.getOptionTitle());
+				tmpOptionDescription.setText(tmpObj.getOptionDescription());
+			}
+			
+			return optionView;
+		}
+	}
+
+	
 
 	protected void ExportCSV() {
 
 		try {
-
-			cdb = new CardDB(this);
+			cdb = new CardDB(getApplicationContext());
 			SQLiteDatabase db = cdb.getReadableDatabase();
 
 			Cursor curCSV = db.rawQuery("SELECT * FROM breakdowstats", null);
@@ -130,14 +163,15 @@ public class OptionViewActivity extends Activity {
 			Log.e("MainActivity", e.getMessage(), e);
 
 		}
-		AccountManager mgr = AccountManager.get(this);
+		AccountManager mgr = AccountManager.get(getApplicationContext());
 		Account[] accts = mgr.getAccounts();
 		Account acct = accts[0];
 
 		String szSendFilePath = ROOT_DIR + "/excerDB.csv";
 		File f = new File(szSendFilePath);
 		if (!f.exists()) {
-			Toast.makeText(this, "파일이 없습니다.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(OptionViewActivity.this, "파일이 없습니다.",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		// File객체로부터 Uri값 생성
@@ -156,7 +190,5 @@ public class OptionViewActivity extends Activity {
 		it.putExtra(Intent.EXTRA_STREAM, fileUri);
 
 		startActivity(it);
-
 	}
-
 }
