@@ -66,7 +66,7 @@ public class MyCardActivity extends ListActivity {
 			String cardType = c.getString(c.getColumnIndex("cardType"));
 			
 			MyCardInfo tmpCardInfo = new MyCardInfo(cardPrimaryKey, cardName, cardNumber, paymentDay, tAmount, cardType);
-			tmpCardInfo.setCardImage(setAutoCardImage(cardName));
+//			tmpCardInfo.setCardImage(setAutoCardImage(cardName));
 
 			myCardList.add(tmpCardInfo);
 		}
@@ -96,8 +96,7 @@ public class MyCardActivity extends ListActivity {
 		} else if (requestCode == GO_CARD_LIST_RESULT_OK) {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle bdl = data.getBundleExtra("sendBdl");
-				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), 
-									bdl.getInt("paymentDay"), bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"));
+				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), bdl.getInt("paymentDay"), bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"));
 				
 				mAdapter.add(tmpObj);
 				mAdapter.notifyDataSetChanged();
@@ -151,8 +150,6 @@ public class MyCardActivity extends ListActivity {
 				}
 			})
 			.show();
-			
-			
 			
 			return true;
 		}
@@ -216,14 +213,12 @@ public class MyCardActivity extends ListActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MY_CARD_ADD :
-			Intent goCardListActivity = new Intent(MyCardActivity.this, CardListActivity.class);
+			Intent goCardListActivity = new Intent(MyCardActivity.this, CardExpandableListActivity.class);
 			startActivityForResult(goCardListActivity, GO_CARD_LIST_RESULT_OK);
 			
 			break;
@@ -240,8 +235,7 @@ public class MyCardActivity extends ListActivity {
 
 		private ArrayList<MyCardInfo> items;
 
-		public MyCardAdapter(Context context, int textViewResourceId,
-				ArrayList<MyCardInfo> objects) {
+		public MyCardAdapter(Context context, int textViewResourceId, ArrayList<MyCardInfo> objects) {
 			super(context, textViewResourceId, objects);
 			this.items = objects;
 		}

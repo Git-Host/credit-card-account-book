@@ -5,7 +5,9 @@
     <color name="transparent_green">#7700FF00</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name ="grey">#77808080</color>
-    <color name ="clocking">#00FFFFFF</color>
+    <color name="grey">#77808080</color>
+    <color name="clocking">#00FFFFFF</color>
 	
+    <color name="expandable_child_background">#CBFFFF</color>
+    
 </resources>
