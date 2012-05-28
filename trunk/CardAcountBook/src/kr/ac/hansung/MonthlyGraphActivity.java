@@ -163,6 +163,8 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 			String tmp1 = String.valueOf(i+1);
 			renderer.addXTextLabel(i+1,tmp1);
 		}
+	
+		renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
 		// 그래프 객체 생성
 		gv = ChartFactory
 				.getBarChartView(this, dataset, renderer, Type.DEFAULT);
@@ -189,10 +191,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
 
-		if (seriesSelection == null) {
-
-		} else {
-
+		if (seriesSelection != null) {
 			Intent detailViewIntent = new Intent(MonthlyGraphActivity.this,
 					DetailViewActivity.class);
 			detailViewIntent.putExtra("selMonth", seriesSelection.getXValue());
