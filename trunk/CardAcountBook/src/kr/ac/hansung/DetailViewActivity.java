@@ -289,10 +289,11 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	 * detailViewListItemLongClickListener 상세내역의 리스트 하나를 LongClick할때의 Event Handler
 	 * @author Junu Kim
 	 */
-	public class detailViewListItemLongClickListener implements
-			AdapterView.OnItemLongClickListener {
+	public class detailViewListItemLongClickListener implements	AdapterView.OnItemLongClickListener {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+//			showDialog(id)
+			
 			final int position = pos;
 			LayoutInflater dlgLayoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 			View editDlgView = dlgLayoutInflater.inflate(R.layout.detail_list_edit_dialog_layout, (ViewGroup) findViewById(R.id.detail_edit_dlg_root_view));

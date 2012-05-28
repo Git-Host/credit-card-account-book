@@ -2,10 +2,6 @@ package kr.ac.hansung;
 
 import java.util.ArrayList;
 
-import kr.ac.hansung.CardListActivity.AddMyCardDlgListener;
-import kr.ac.hansung.CardListActivity.AddMyCardListener;
-
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +17,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * CardExpandableListActivity.java
+ * MyCardActivity.java 에서 옵션메뉴 클릭으로 카드 수동 추가시 호출되는 Activity
+ * @author Junu Kim
+ */
 public class CardExpandableListActivity extends ExpandableListActivity implements CardInfoList {
 	private final static int CARD_ADD_DIALOG_SHOW = 0;
 	private CardExpandableListAdapter cardAdapter;
@@ -83,6 +82,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 			cardElement = new MyCardInfo();
 			cardElement.setCardImage(nhCardImg[i]);
 			cardElement.setCardName(getResources().getString(nhCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.NH_card));
 			nhChildList.add(cardElement);
 		}
 		
@@ -137,54 +137,51 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		}
 		return super.onCreateDialog(id, args);
 	}
-	
+
 	public class AddMyCardListener implements DialogInterface.OnClickListener {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE :
+				int paymentDay = Integer.parseInt(dayList[dayListWhich].replace("일", ""));
+				int tAmount = Integer.parseInt(addCardTargetPrice.getText().toString());
+				int cardImage = tmpCardImage;
+				String cardName = tmpCardName;
+				String cardNumber = addCardNumber.getText().toString();
+				String cardType = addCardCardType.getText().toString();
+				
 				if (tmpReduceCardName.equals(getResources().getString(R.string.KB_card))) {
-					int paymentDay = Integer.parseInt(dayList[dayListWhich].replace("일", ""));
-					int tAmount = Integer.parseInt(addCardTargetPrice.getText().toString());
-					int cardImage = tmpCardImage;
-					String cardName = tmpCardName;
-					String cardNumber = addCardNumber.getText().toString();
-					String cardType = addCardCardType.getText().toString();
-					
 					if (cardType.equals(cardTypeList[0])) {
 						cardName = tmpReduceCardName + getResources().getString(R.string.just_card);
 					} else {
 						cardName = tmpReduceCardName + cardTypeList[1];
 					}
-					returnCardObj = new MyCardInfo(cardName, cardNumber, paymentDay, tAmount, cardType, cardImage);
-					
-					
-					SQLiteDatabase db;
-					CardDB Cdb = new CardDB(getApplicationContext());
-					db = Cdb.getReadableDatabase();
-					
-					String insertQuery = "INSERT INTO myCard VALUES (null, '" + cardName + "', '" + cardNumber + "', " + paymentDay + ", "
-										  + tAmount + ",'" + cardType + "');";
-					db.execSQL(insertQuery);
-					db.close();
-					
-					Intent intent = new Intent();
-					Bundle bdl = new Bundle();
-					
-					bdl.putInt("imageRsc", returnCardObj.getCardImage());
-					bdl.putString("cardName", returnCardObj.getCardName());
-					bdl.putString("cardNumber", returnCardObj.getCardNumber());
-					bdl.putString("cardType", returnCardObj.getCardType());
-					bdl.putInt("paymentDay", returnCardObj.getPaymentDay());
-					bdl.putInt("tAmount", returnCardObj.getTAmount());
-					
-					intent.putExtra("sendBdl", bdl);
-					setResult(Activity.RESULT_OK, intent);
-					finish();
 				}
+				returnCardObj = new MyCardInfo(cardName, cardNumber, paymentDay, tAmount, cardType, cardImage);
+				
+				SQLiteDatabase db;
+				CardDB Cdb = new CardDB(getApplicationContext());
+				db = Cdb.getReadableDatabase();
+				String insertQuery = "INSERT INTO myCard VALUES (null, '" + cardName + "', '" + cardNumber + "', " + paymentDay + ", "
+									  + tAmount + ",'" + cardType + "');";
+				db.execSQL(insertQuery);
+				db.close();
+					
+				Intent intent = new Intent();
+				Bundle bdl = new Bundle();
+					
+				bdl.putInt("imageRsc", returnCardObj.getCardImage());
+				bdl.putString("cardName", returnCardObj.getCardName());
+				bdl.putString("cardNumber", returnCardObj.getCardNumber());
+				bdl.putString("cardType", returnCardObj.getCardType());
+				bdl.putInt("paymentDay", returnCardObj.getPaymentDay());
+				bdl.putInt("tAmount", returnCardObj.getTAmount());
+					
+				intent.putExtra("sendBdl", bdl);
+				setResult(Activity.RESULT_OK, intent);
+				finish();
 				
 				break;
 			case DialogInterface.BUTTON_NEGATIVE :
-				
 				removeDialog(CARD_ADD_DIALOG_SHOW);
 				break;
 			}
