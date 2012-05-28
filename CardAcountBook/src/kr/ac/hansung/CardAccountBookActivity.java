@@ -23,6 +23,10 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * CardAccountBookActivity.java Main Activity  
+ * @author Junu Kim
+ */
 public class CardAccountBookActivity extends Activity {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
@@ -197,7 +201,7 @@ public class CardAccountBookActivity extends Activity {
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트뽱뽱예압베이베', 12000, '대중교통', '3*6*', 20120502);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
@@ -206,6 +210,8 @@ public class CardAccountBookActivity extends Activity {
 		while (cursor.moveToNext()) {
 			String tmpCardName = cursor.getString(cursor.getColumnIndex("cardName"));
 			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
+//			int tmpCardImage = cursor.getInt(cursor.getColumnIndex("cardImage"));
+			
 			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', 0, 0, '');";
 			db.execSQL(tmpQuery);
 		}

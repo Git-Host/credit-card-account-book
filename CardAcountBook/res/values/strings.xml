@@ -4,13 +4,13 @@
 	<string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
 	<string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
     
-    <string name="app_name">Credit Card Account Book</string>
+    <string name="app_name">I - CARD</string>
     <string name="my_card">나의 카드</string>
     <string name="breakdown_stats">내역 통계</string>
-    <string name="detail_view">상세 내역</string>
+    <string name="detail_view">사용 내역</string>
     <string name="cash">현금 사용</string>
     <string name="notice">공지사항</string>
-    <string name="option">설  정</string>
+    <string name="option">환경설정</string>
     <string name="today_payment">현재 사용 금액</string>
     <string name="monthly_show_text">월별 사용 내역 보기</string>
     <string name="category_show_text">카테고리별 사용 내역 보기</string>

@@ -1,5 +1,9 @@
 package kr.ac.hansung;
 
+/**
+ * CardInfoList.java CardExpandableListActivity에서 카드리스트를 보여주기 위한 interface
+ * @author Junu Kim
+ */
 public interface CardInfoList {
 
 	// KB국민 카드 이름, 이미지 리스트
@@ -39,6 +43,4 @@ public interface CardInfoList {
 			R.drawable.nh_shoppingsave,
 			R.drawable.questionmark_card
 	};
-	
-	
 }

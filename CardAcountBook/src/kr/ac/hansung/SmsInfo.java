@@ -12,19 +12,20 @@ import java.util.Date;
  */
 public class SmsInfo implements CategoryList{	
 	private int breakKey;
-	private String cardName;		//카드 이름
-	private String approvalType;	//결재 종류 (체크승인, 신용승인 등)
-	private int price;				//결재 금액
-	private String cardNumber;		//카드 번호
-	private String approvalTime;	//결재 일시
-	private String place;			//결재 장소
+	private String cardName;						//카드 이름
+	private String approvalType;					//결재 종류 (체크승인, 신용승인 등)
+	private int price;								//결재 금액
+	private String cardNumber;						//카드 번호
+	private String approvalTime;					//결재 일시
+	private String place;							//결재 장소
 	private String category;
 	
-	static int primaryKey = 1010;
-	
-	final static int NH_PNUM = 15881600;
-	final static int KB_PNUM = 15881788; 
-	
+	final static int NH_PNUM = 15881600;			// 농협
+	final static int KB_PNUM = 15881788; 			// 국민은행
+	final static int CITY_PNUM = 15661000;			// 시티은행
+	final static int KEB_PNUM = 15886700;			// 외환은행
+	final static int SAVING_BANK_PNUM = 15886622;	// 저축은행
+	final static int SHINHAN_PNUM = 15447200;		// 신한은행
 	
 	public int getBreakKey() { return breakKey; }
 	public String getCardName() { return cardName; }
@@ -127,8 +128,15 @@ public class SmsInfo implements CategoryList{
 			date.setDate(Integer.parseInt(tmpDay));
 			inDate = Integer.parseInt(dateFormat.format(date));
 			
-			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', " + tmpYear + ", " + tmpMonth + ", "	+ tmpDay + ", '" + tmpPlace
-					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory	+ "', '" + tmpCardNum + "'," + inDate + ");";
+//			db.execSQL("CREATE TABLE breakdowstats (breakKey INTEGER PRIMARY KEY, cardName TEXT, pYear INTEGER, pMonth INTEGER," +
+//					" pDay INTEGER, pPlace TEXT"
+//					+ ", price INTEGER, category TEXT, cardNumber TEXT, combineDate INTEGER);");
+			
+			
+			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', "
+							  + tmpYear + ", " + tmpMonth + ", " + tmpDay + ", '" + tmpPlace
+							  + "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory + "', '" 
+							  + tmpCardNum + "'," + inDate + ");";
 			
 			break;
 		
@@ -157,6 +165,18 @@ public class SmsInfo implements CategoryList{
 					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
 					+ "', '" + tmpCardNum + "'," + inDate  + ");";
 			
+			break;
+			
+		case CITY_PNUM :
+			break;
+
+		case KEB_PNUM :
+			break;
+		
+		case SAVING_BANK_PNUM :
+			break;
+		
+		case SHINHAN_PNUM :
 			break;
 		}
 		
