@@ -58,7 +58,7 @@ public class CardInfoEditActivity extends Activity  {
 		
 		myCardObj = new MyCardInfo();
 		myCardObj.setCardPrimaryKey(parentBdl.getInt("cardPrimaryKey"));
-		myCardObj.setCardImage(parentBdl.getInt("imageRsc"));
+		myCardObj.setCardImageUri(parentBdl.getString("cardImageUri"));
 		myCardObj.setCardName(parentBdl.getString("cardName"));
 		myCardObj.setCardNumber(parentBdl.getString("cardNumber"));
 		myCardObj.setCardType(parentBdl.getString("cardType"));
@@ -94,7 +94,7 @@ public class CardInfoEditActivity extends Activity  {
 		menuEditCardType.setOnClickListener(menuClickListener);
 		menuEditTAmount.setOnClickListener(menuClickListener);
 		
-		titleCardImage.setImageResource(myCardObj.getCardImage());
+		titleCardImage.setImageResource(getResources().getIdentifier(myCardObj.getCardImageUri(), "drawable", getPackageName()));
 		titleCardName.setText(myCardObj.getCardName());
 		titleCardNumber.setText(myCardObj.getCardNumber());
 	}
@@ -231,16 +231,14 @@ public class CardInfoEditActivity extends Activity  {
 		return -1;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#finish()
-	 */
+	
 	@Override
 	public void finish() {
 		Intent intent = new Intent();
 		Bundle bdl = new Bundle();
 		
 		bdl.putInt("cardPrimaryKey", myCardObj.getCardPrimaryKey());
-		bdl.putInt("imageRsc", myCardObj.getCardImage());
+		bdl.putString("cardImageUri", myCardObj.getCardImageUri());
 		bdl.putString("cardName", myCardObj.getCardName());
 		bdl.putString("cardNumber", myCardObj.getCardNumber());
 		bdl.putString("cardType", myCardObj.getCardType());

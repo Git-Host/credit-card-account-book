@@ -16,6 +16,7 @@ public class MyCardInfo {
 	private String reduceCardName;
 	private String cardNumber;
 	private String cardType;
+	private String cardImageUri;
 	
 	// Getter
 	public int getCardPrimaryKey() { return cardPrimaryKey; }
@@ -26,7 +27,8 @@ public class MyCardInfo {
 	public String getReduceCardName() { return reduceCardName; }
 	public int getPaymentDay() { return paymentDay; }
 	public String getCardType() { return cardType; }
-	public int getTAmount() {return tAmount; }
+	public int getTAmount() { return tAmount; }
+	public String getCardImageUri() { return cardImageUri; }
 
 	// Setter
 	public void setCardPrimaryKey(int cardPrimaryKey) { this.cardPrimaryKey = cardPrimaryKey; }
@@ -38,26 +40,29 @@ public class MyCardInfo {
 	public void setCardType(String cardType) { this.cardType = cardType; }
 	public void setPaymentDay(int paymentDay) { this.paymentDay = paymentDay; }
 	public void setTAmount(int tAmount) { this.tAmount = tAmount; }
+	public void setCardImageUri(String cardImageUri) { this.cardImageUri = cardImageUri; }
 
 	// Constructor
 	public MyCardInfo() {};
 	
-	public MyCardInfo(String cardName, String cardNumber, int paymentDay, int tAmount, String cardType, int cardImage) {
+	public MyCardInfo(String cardName, String cardNumber, int paymentDay, int tAmount, String cardType, int cardImage, String cardImageUri) {
 		this.cardImage = cardImage;
 		this.cardName = cardName;
 		this.cardNumber = cardNumber;
 		this.paymentDay = paymentDay; 
 		this.tAmount = tAmount;
 		this.cardType = cardType;
+		this.cardImageUri = cardImageUri;
 	}
 	
-	public MyCardInfo(int cardPrimaryKey, String cardName, String cardNumber, int paymentDay, int tAmount, String cardType) {
+	public MyCardInfo(int cardPrimaryKey, String cardName, String cardNumber, int paymentDay, int tAmount, String cardType, String cardImageUri) {
 		this.cardPrimaryKey = cardPrimaryKey;
 		this.cardName = cardName;
 		this.cardNumber = cardNumber;
 		this.paymentDay = paymentDay; 
 		this.tAmount = tAmount;
 		this.cardType = cardType;
+		this.cardImageUri = cardImageUri;
 	}
 	
 	public MyCardInfo(String cardName, String cardNumber) {

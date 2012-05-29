@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +34,7 @@ public class MyCardActivity extends ListActivity {
 	private final static int GO_CARD_LIST_RESULT_OK = 3;
 	private final static int MY_CARD_ADD = 2;
 	private final static int EMPTY_INPUT_VALUE = 10;
+	private final static int DELETE_CARD_DIALOG = 4;
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
@@ -64,8 +66,9 @@ public class MyCardActivity extends ListActivity {
 			int paymentDay = c.getInt(c.getColumnIndex("paymentDay"));
 			int tAmount = c.getInt(c.getColumnIndex("tAmount"));
 			String cardType = c.getString(c.getColumnIndex("cardType"));
+			String cardImageUri = c.getString(c.getColumnIndex("cardImageUri"));
 			
-			MyCardInfo tmpCardInfo = new MyCardInfo(cardPrimaryKey, cardName, cardNumber, paymentDay, tAmount, cardType);
+			MyCardInfo tmpCardInfo = new MyCardInfo(cardPrimaryKey, cardName, cardNumber, paymentDay, tAmount, cardType, cardImageUri);
 //			tmpCardInfo.setCardImage(setAutoCardImage(cardName));
 
 			myCardList.add(tmpCardInfo);
@@ -96,7 +99,8 @@ public class MyCardActivity extends ListActivity {
 		} else if (requestCode == GO_CARD_LIST_RESULT_OK) {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle bdl = data.getBundleExtra("sendBdl");
-				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), bdl.getInt("paymentDay"), bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"));
+				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), bdl.getInt("paymentDay"),
+										bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"), bdl.getString("cardImageUri"));
 				
 				mAdapter.add(tmpObj);
 				mAdapter.notifyDataSetChanged();
@@ -110,6 +114,7 @@ public class MyCardActivity extends ListActivity {
 	 * @author Junu Kim
 	 */
 	public class myCardListItemLongClickListener implements AdapterView.OnItemLongClickListener {
+	
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
 			String[] items = { getResources().getString(R.string.edit_my_card), getResources().getString(R.string.delete_my_card) };
 			final int position = pos;
@@ -118,12 +123,13 @@ public class MyCardActivity extends ListActivity {
 			.setTitle(R.string.detete_my_card_dlg_title)
 			.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
+					Bundle containBdl;
 					switch (which) {
 					case 0 :
-						Bundle containBdl = new Bundle();
+						containBdl = new Bundle();
 						
 						containBdl.putInt("cardPrimaryKey", mAdapter.getItem(position).getCardPrimaryKey());
-						containBdl.putInt("imageRsc", mAdapter.getItem(position).getCardImage());
+						containBdl.putString("cardImageUri", mAdapter.getItem(position).getCardImageUri());
 						containBdl.putString("cardName", mAdapter.getItem(position).getCardName());
 						containBdl.putString("cardNumber", mAdapter.getItem(position).getCardNumber());
 						containBdl.putString("cardType", mAdapter.getItem(position).getCardType());
@@ -139,12 +145,25 @@ public class MyCardActivity extends ListActivity {
 						break;
 					
 					case 1 :
-						new AlertDialog.Builder(MyCardActivity.this)
-						.setTitle("카드 삭제 하기")
-						.setMessage("카드를 삭제하면 해당 카드의 상세내역도 함께 삭제 됩니다. 그래도 삭제 하시겠습니까?")
-						.setPositiveButton("삭제", null)
-						.setNegativeButton("취소", null)
-						.show();
+//						DeleteOrEditListener deleteOrEditListener = new DeleteOrEditListener();
+						containBdl = new Bundle();
+						
+						containBdl.putInt("cardPrimaryKey", mAdapter.getItem(position).getCardPrimaryKey());
+						containBdl.putString("cardImageUri", mAdapter.getItem(position).getCardImageUri());
+						containBdl.putString("cardName", mAdapter.getItem(position).getCardName());
+						containBdl.putString("cardNumber", mAdapter.getItem(position).getCardNumber());
+						containBdl.putString("cardType", mAdapter.getItem(position).getCardType());
+						containBdl.putInt("paymentDay", mAdapter.getItem(position).getPaymentDay());
+						containBdl.putInt("tAmount", mAdapter.getItem(position).getTAmount());
+						
+						showDialog(DELETE_CARD_DIALOG, containBdl);
+						
+//						new AlertDialog.Builder(MyCardActivity.this)
+//						.setTitle(R.string.delete_my_card)
+//						.setMessage(R.string.delete_my_card_description)
+//						.setPositiveButton(R.string.delete_string, deleteOrEditListener)
+//						.setNegativeButton(R.string.cancel_string, deleteOrEditListener)
+//						.show();
 						break;
 					}
 				}
@@ -155,6 +174,49 @@ public class MyCardActivity extends ListActivity {
 		}
 	}
 	
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		switch (id) {
+		case DELETE_CARD_DIALOG :
+			return new AlertDialog.Builder(MyCardActivity.this)
+			.setTitle(R.string.delete_my_card)
+			.setMessage(R.string.delete_my_card_description)
+			.setPositiveButton(R.string.delete_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+//					delete query
+				}
+			})
+			.setNegativeButton(R.string.cancel_string, null)
+			.show();
+		}
+		
+		
+		return super.onCreateDialog(id, args);
+		
+		
+		
+	}
+
+	
+	//	public class DeleteOrEditListener implements DialogInterface.OnClickListener {
+//
+//		public void onClick(DialogInterface dialog, int which) {
+//			switch (which) {
+//			case DialogInterface.BUTTON_POSITIVE :
+//				
+//				
+//				break;
+//			case DialogInterface.BUTTON_NEGATIVE :
+//				break;
+//			}
+//		}
+//	}
+	
+	
+
+
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -188,25 +250,6 @@ public class MyCardActivity extends ListActivity {
 		}
 	}
 	
-	/**
-	 * Method setAutoCardImage 나의카드에 추가될 카드의 이미지를 자동으로 찾아서 이미지리소스ID를 리턴하는 메소드
-	 * @param cardName
-	 * @return int Image Resource ID
-	 */
-	public int setAutoCardImage(String cardName) {
-		Resources autoCardRsc = this.getResources();
-		
-		if (cardName.equals(autoCardRsc.getString(R.string.NH_card))) {
-			return (int)(R.drawable.nh_chaum);
-		} else if (cardName.equals(autoCardRsc.getString(R.string.KB_check))
-				|| cardName.equals(autoCardRsc.getString(R.string.KB_credit))) {
-			return (int)(R.drawable.kb_kookmin_star);
-		}
-		
-		return (int)(R.drawable.questionmark_card);
-	}
-	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MY_CARD_ADD, 0, R.string.add_my_card);
@@ -257,7 +300,7 @@ public class MyCardActivity extends ListActivity {
 				final TextView tmpCName = (TextView) v.findViewById(R.id.card_name_textview);
 				TextView tmpCNum = (TextView) v.findViewById(R.id.card_num_textview);
 
-				tmpCImage.setImageResource(m.getCardImage());
+				tmpCImage.setImageResource(getResources().getIdentifier(m.getCardImageUri(), "drawable", getPackageName()));
 				tmpPImage.setImageResource(m.getPhoneImage());
 				tmpCName.setText(m.getCardName());
 				tmpCNum.setText(m.getCardNumber());
