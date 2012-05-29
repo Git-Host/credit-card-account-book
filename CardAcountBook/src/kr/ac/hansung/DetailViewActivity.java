@@ -353,7 +353,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 								if (tmpCursor.getCount() == 0) {
 									String addCardQuery = "INSERT INTO myCard VALUES (null, '" + editCardName.getText().toString()
-														+ "', '" + editCardNumber.getText().toString() + "', null, null, null);";
+														+ "', '" + editCardNumber.getText().toString() + "', null, null, null, '');";
 									db.execSQL(addCardQuery);
 								}
 

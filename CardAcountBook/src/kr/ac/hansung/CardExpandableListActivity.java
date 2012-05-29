@@ -148,6 +148,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				String cardName = tmpCardName;
 				String cardNumber = addCardNumber.getText().toString();
 				String cardType = addCardCardType.getText().toString();
+				String cardImageUri = getResources().getResourceName(cardImage);
 				
 				if (tmpReduceCardName.equals(getResources().getString(R.string.KB_card))) {
 					if (cardType.equals(cardTypeList[0])) {
@@ -156,13 +157,13 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 						cardName = tmpReduceCardName + cardTypeList[1];
 					}
 				}
-				returnCardObj = new MyCardInfo(cardName, cardNumber, paymentDay, tAmount, cardType, cardImage);
+				returnCardObj = new MyCardInfo(cardName, cardNumber, paymentDay, tAmount, cardType, cardImage, cardImageUri);
 				
 				SQLiteDatabase db;
 				CardDB Cdb = new CardDB(getApplicationContext());
 				db = Cdb.getReadableDatabase();
 				String insertQuery = "INSERT INTO myCard VALUES (null, '" + cardName + "', '" + cardNumber + "', " + paymentDay + ", "
-									  + tAmount + ",'" + cardType + "');";
+									  + tAmount + ",'" + cardType + "', '" + cardImageUri + "');";
 				db.execSQL(insertQuery);
 				db.close();
 					
@@ -175,6 +176,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				bdl.putString("cardType", returnCardObj.getCardType());
 				bdl.putInt("paymentDay", returnCardObj.getPaymentDay());
 				bdl.putInt("tAmount", returnCardObj.getTAmount());
+				bdl.putString("cardImageUri", returnCardObj.getCardImageUri());
 					
 				intent.putExtra("sendBdl", bdl);
 				setResult(Activity.RESULT_OK, intent);

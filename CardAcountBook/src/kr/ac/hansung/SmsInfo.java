@@ -128,11 +128,6 @@ public class SmsInfo implements CategoryList{
 			date.setDate(Integer.parseInt(tmpDay));
 			inDate = Integer.parseInt(dateFormat.format(date));
 			
-//			db.execSQL("CREATE TABLE breakdowstats (breakKey INTEGER PRIMARY KEY, cardName TEXT, pYear INTEGER, pMonth INTEGER," +
-//					" pDay INTEGER, pPlace TEXT"
-//					+ ", price INTEGER, category TEXT, cardNumber TEXT, combineDate INTEGER);");
-			
-			
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', "
 							  + tmpYear + ", " + tmpMonth + ", " + tmpDay + ", '" + tmpPlace
 							  + "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory + "', '" 

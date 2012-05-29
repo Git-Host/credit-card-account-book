@@ -210,9 +210,9 @@ public class CardAccountBookActivity extends Activity {
 		while (cursor.moveToNext()) {
 			String tmpCardName = cursor.getString(cursor.getColumnIndex("cardName"));
 			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
-//			int tmpCardImage = cursor.getInt(cursor.getColumnIndex("cardImage"));
 			
-			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber + "', 0, 0, '');";
+			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber
+							   + "', 0, 0, '', '" + setAutoCardImage(tmpCardName) + "');";
 			db.execSQL(tmpQuery);
 		}
 		db.close();
@@ -222,6 +222,31 @@ public class CardAccountBookActivity extends Activity {
 		ed.commit();
 	}
 
+	/**
+	 * Method setAutoCardImage 나의카드에 추가될 카드의 이미지를 자동으로 찾아서 이미지리소스URI를 리턴하는 메소드
+	 * @param cardName
+	 * @return String Image Resource URI
+	 */
+	public String setAutoCardImage(String cardName) {
+		Resources autoCardRsc = this.getResources();
+//		kr.ac.hansung:drawable/nh_chaum_card_chun
+		String imageUri = "kr.ac.hansung:drawable/questionmark_card";
+	
+		if (cardName.equals(autoCardRsc.getString(R.string.NH_card))) {
+			imageUri = "kr.ac.hansung:drawable/nh_chaum";
+			return imageUri;
+		} else if (cardName.equals(autoCardRsc.getString(R.string.KB_check)) || cardName.equals(autoCardRsc.getString(R.string.KB_credit))) {
+			imageUri = "kr.ac.hansung:drawable/kb_kookmin_star";
+			return imageUri;
+		}
+		
+		return imageUri;
+	}
+	
+	
+	
+	
+	
 	/**
 	 * Method fromToDateChange Main화면의 기간별 DatePicker를 보여주기 위한 메소드
 	 */
