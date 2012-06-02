@@ -34,7 +34,13 @@
 	<string name="add_card_use">카드 사용 추가하기</string>
 	<string name="add_my_card">나의 카드 추가하기</string>
 	<string name="delete_my_card">나의 카드 삭제</string>
+	
 	<string name="detete_my_card_dlg_title">카드 정보 수정 및 삭제</string>
+	<string name="delete_breakdown_stats_dlg_title">사용내역 정보 수정 및 삭제</string>
+	<string name="delete_b_stats_edit">사용내역 정보 수정 하기</string>
+	<string name="delete_b_stats_delete">사용내역 삭제 하기</string>
+	<string name="delete_b_alert_msg">정말 삭제 하시겠습니까?</string>
+	
 	<string name="alert_message_title">경고!</string>
 	<string name="alert_message">카드이름과 카드번호는 필수 입력사항 입니다.</string>
 	<string name="my_card_add_init_payment_day">매월 0일</string>
@@ -54,6 +60,11 @@
 	
 	<string name="delete_my_card_description">카드를 삭제하면 해당 카드의 사용내역도 함께 삭제 됩니다. 그래도 삭제 하시겠습니까?</string>
 	<string name="delete_string">삭제</string>
+	
+	<!-- 
+	<string name=""
+	<string name="notication_title"></string>
+	 -->
 	
     <!-- 나의 카드 정보수정 메뉴 리스트 스트링 -->
     <string name="edit_image">카드이미지 변경</string>
@@ -82,6 +93,9 @@
     <string name="my_card_add_payment_day">결   제   일 :&#160;</string>
     <string name="my_card_add_check_or_credit">카드종류 :&#160;</string>
     <string name="my_card_add_t_amount">목표금액 :&#160;</string>
+    
+    <string name="my_card_add_card_number_digits">1234567890*-</string>
+    <string name="my_card_add_target_price_digits">1234567890</string>
     
     <!-- 하위 카테고리  -->
     <string name="c_etc">기타</string>

@@ -112,8 +112,7 @@ public class CardAccountBookActivity extends Activity {
 				scatterIntent = new Intent(CardAccountBookActivity.this, MyCardActivity.class);
 				break;
 			case R.id.detail_view_btn :
-				scatterIntent = new Intent(
-						CardAccountBookActivity.this, DetailViewActivity.class);
+				scatterIntent = new Intent(CardAccountBookActivity.this, DetailViewActivity.class);
 				break;
 			case R.id.breakdown_stats_btn :
 				scatterIntent = new Intent(CardAccountBookActivity.this, GraphViewActivity.class);
@@ -193,9 +192,9 @@ public class CardAccountBookActivity extends Activity {
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '헤어/뷰티', '1*2*', 20120120);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '여행', '1*2*', 20120220);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '등록금', '1*2*', 20120320);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '대중교통', '1*2*', 20120520);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '술/유흥', '1*2*', 20120520);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '등록금', '1*2*', 20120520);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '대중교통', '1*2*', 20120520, 0);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '술/유흥', '1*2*', 20120520, 0);");
+//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '등록금', '1*2*', 20120520, 0);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '선물', '1*2*', 20120520);");
 //		
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
@@ -204,7 +203,7 @@ public class CardAccountBookActivity extends Activity {
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트예압베이베', 12000, '대중교통', '3*6*', 20120502);");
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
-		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats;";
+		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats WHERE deleteFlag = 0;";
 		cursor = db.rawQuery(myCardQuery, null);
 
 		while (cursor.moveToNext()) {
@@ -212,7 +211,7 @@ public class CardAccountBookActivity extends Activity {
 			String tmpCardNumber = cursor.getString(cursor.getColumnIndex("cardNumber"));
 			
 			String tmpQuery = "INSERT INTO myCard VALUES( null, '" + tmpCardName + "', '" + tmpCardNumber
-							   + "', 0, 0, '', '" + setAutoCardImage(tmpCardName) + "');";
+							   + "', 0, 0, '', '" + setAutoCardImage(tmpCardName) + "', 0);";
 			db.execSQL(tmpQuery);
 		}
 		db.close();
@@ -357,8 +356,8 @@ public class CardAccountBookActivity extends Activity {
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 
-		String nowPayQuery = "SELECT price FROM breakdowstats WHERE breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) +
-				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +";";
+		String nowPayQuery = "SELECT price FROM breakdowstats WHERE (breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) +
+				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +") AND breakdowstats.deleteFlag = 0;";
 		cursor = db.rawQuery(nowPayQuery, null);
 		
 		while (cursor.moveToNext()) {

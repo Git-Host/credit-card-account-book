@@ -45,7 +45,11 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
-            android:hint="@string/example_card_number" />
+            android:digits="@string/my_card_add_card_number_digits"
+            android:inputType="phone"
+            android:hint="@string/example_card_number"
+            android:maxLength="19"
+            android:singleLine="true" />
     </TableRow>
 
     <!-- 결제일시 변경 뷰 -->
@@ -102,7 +106,10 @@
             android:layout_width="150dp"
             android:layout_height="39dp"
             android:hint="@string/example_price"
-            android:numeric="decimal" />
+            android:numeric="integer"
+            android:digits="@string/my_card_add_target_price_digits"
+            android:singleLine="true"
+            android:inputType="number" />
     </TableRow>
 
 </TableLayout>

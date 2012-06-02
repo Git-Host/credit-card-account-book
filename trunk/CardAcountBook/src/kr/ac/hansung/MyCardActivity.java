@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,13 +34,14 @@ public class MyCardActivity extends ListActivity {
 	private final static int GO_EDIT_CARD_OPTION = 1;
 	private final static int GO_CARD_LIST_RESULT_OK = 3;
 	private final static int MY_CARD_ADD = 2;
-	private final static int EMPTY_INPUT_VALUE = 10;
 	private final static int DELETE_CARD_DIALOG = 4;
 	
 	SQLiteDatabase db;
 	CardDB Cdb;
 	Cursor c;
+	
 	MyCardAdapter mAdapter;
+	ArrayList<MyCardInfo> myCardList;
 	
 	ListView cardListView;
 	TextView clickedTextView;
@@ -51,12 +53,12 @@ public class MyCardActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_card);
 		
-		final ArrayList<MyCardInfo> myCardList = new ArrayList<MyCardInfo>();
+		myCardList = new ArrayList<MyCardInfo>();
 
-		CardDB Cdb = new CardDB(this);
+		Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 
-		String myCardQuery = "SELECT * FROM myCard;";
+		String myCardQuery = "SELECT * FROM myCard WHERE deleteFlag = 0;";
 		c = db.rawQuery(myCardQuery, null);
 
 		while (c.moveToNext()) {
@@ -67,6 +69,8 @@ public class MyCardActivity extends ListActivity {
 			int tAmount = c.getInt(c.getColumnIndex("tAmount"));
 			String cardType = c.getString(c.getColumnIndex("cardType"));
 			String cardImageUri = c.getString(c.getColumnIndex("cardImageUri"));
+			
+			Log.e("JUNU", c.getString(c.getColumnIndex("deleteFlag")));
 			
 			MyCardInfo tmpCardInfo = new MyCardInfo(cardPrimaryKey, cardName, cardNumber, paymentDay, tAmount, cardType, cardImageUri);
 //			tmpCardInfo.setCardImage(setAutoCardImage(cardName));
@@ -99,9 +103,9 @@ public class MyCardActivity extends ListActivity {
 		} else if (requestCode == GO_CARD_LIST_RESULT_OK) {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle bdl = data.getBundleExtra("sendBdl");
-				MyCardInfo tmpObj = new MyCardInfo(bdl.getString("cardName"), bdl.getString("cardNumber"), bdl.getInt("paymentDay"),
-										bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getInt("imageRsc"), bdl.getString("cardImageUri"));
-				
+				MyCardInfo tmpObj = new MyCardInfo(bdl.getInt("myCardKey"), bdl.getString("cardName"), bdl.getString("cardNumber"), bdl.getInt("paymentDay"),
+										bdl.getInt("tAmount"), bdl.getString("cardType"), bdl.getString("cardImageUri"));
+
 				mAdapter.add(tmpObj);
 				mAdapter.notifyDataSetChanged();
 			}
@@ -118,6 +122,8 @@ public class MyCardActivity extends ListActivity {
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
 			String[] items = { getResources().getString(R.string.edit_my_card), getResources().getString(R.string.delete_my_card) };
 			final int position = pos;
+			
+			longClickedPosition = position;
 			
 			new AlertDialog.Builder(MyCardActivity.this)
 			.setTitle(R.string.detete_my_card_dlg_title)
@@ -136,8 +142,6 @@ public class MyCardActivity extends ListActivity {
 						containBdl.putInt("paymentDay", mAdapter.getItem(position).getPaymentDay());
 						containBdl.putInt("tAmount", mAdapter.getItem(position).getTAmount());
 						
-						longClickedPosition = position;
-						
 						Intent containItent = new Intent(MyCardActivity.this, CardInfoEditActivity.class);
 						containItent.putExtras(containBdl);
 						
@@ -145,7 +149,6 @@ public class MyCardActivity extends ListActivity {
 						break;
 					
 					case 1 :
-//						DeleteOrEditListener deleteOrEditListener = new DeleteOrEditListener();
 						containBdl = new Bundle();
 						
 						containBdl.putInt("cardPrimaryKey", mAdapter.getItem(position).getCardPrimaryKey());
@@ -158,12 +161,6 @@ public class MyCardActivity extends ListActivity {
 						
 						showDialog(DELETE_CARD_DIALOG, containBdl);
 						
-//						new AlertDialog.Builder(MyCardActivity.this)
-//						.setTitle(R.string.delete_my_card)
-//						.setMessage(R.string.delete_my_card_description)
-//						.setPositiveButton(R.string.delete_string, deleteOrEditListener)
-//						.setNegativeButton(R.string.cancel_string, deleteOrEditListener)
-//						.show();
 						break;
 					}
 				}
@@ -176,6 +173,8 @@ public class MyCardActivity extends ListActivity {
 	
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
+		final Bundle tmpBdl = args;
+		
 		switch (id) {
 		case DELETE_CARD_DIALOG :
 			return new AlertDialog.Builder(MyCardActivity.this)
@@ -184,38 +183,32 @@ public class MyCardActivity extends ListActivity {
 			.setPositiveButton(R.string.delete_string, new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
-//					delete query
+					db = Cdb.getWritableDatabase();
+					String updateQuery = "UPDATE myCard SET deleteFlag = 1 WHERE myCardKey = " + tmpBdl.getInt("cardPrimaryKey") + ";";
+					db.execSQL(updateQuery);
+					db.close();
+//					
+//					db = Cdb.getReadableDatabase();
+//					String myCardQuery = "SELECT * FROM myCard WHERE deleteFlag = 1;";
+//					c = db.rawQuery(myCardQuery, null);
+//					
+//					while (c.moveToNext()) {
+//						int cardPrimaryKey = c.getInt(c.getColumnIndex("myCardKey"));
+//						String cardName = c.getString(c.getColumnIndex("cardName"));
+//						String cardNumber = c.getString(c.getColumnIndex("cardNumber"));
+//						String cardImageUri = c.getString(c.getColumnIndex("cardImageUri"));
+//						int deleteFlag = c.getInt(c.getColumnIndex("deleteFlag"));
+//					}
+					
+					myCardList.remove(longClickedPosition);
+					mAdapter.notifyDataSetChanged();
 				}
 			})
 			.setNegativeButton(R.string.cancel_string, null)
 			.show();
 		}
-		
-		
 		return super.onCreateDialog(id, args);
-		
-		
-		
 	}
-
-	
-	//	public class DeleteOrEditListener implements DialogInterface.OnClickListener {
-//
-//		public void onClick(DialogInterface dialog, int which) {
-//			switch (which) {
-//			case DialogInterface.BUTTON_POSITIVE :
-//				
-//				
-//				break;
-//			case DialogInterface.BUTTON_NEGATIVE :
-//				break;
-//			}
-//		}
-//	}
-	
-	
-
-
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {

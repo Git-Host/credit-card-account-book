@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ExpandableListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * CardExpandableListActivity.java
@@ -142,6 +144,12 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE :
+				
+				if (addCardTargetPrice.getText().toString().equals("")) {
+					Toast.makeText(getApplicationContext(), "뿅", Toast.LENGTH_SHORT).show();
+					break;
+				}
+				
 				int paymentDay = Integer.parseInt(dayList[dayListWhich].replace("일", ""));
 				int tAmount = Integer.parseInt(addCardTargetPrice.getText().toString());
 				int cardImage = tmpCardImage;
@@ -149,6 +157,8 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				String cardNumber = addCardNumber.getText().toString();
 				String cardType = addCardCardType.getText().toString();
 				String cardImageUri = getResources().getResourceName(cardImage);
+				int primaryKey = 0;
+				
 				
 				if (tmpReduceCardName.equals(getResources().getString(R.string.KB_card))) {
 					if (cardType.equals(cardTypeList[0])) {
@@ -157,20 +167,29 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 						cardName = tmpReduceCardName + cardTypeList[1];
 					}
 				}
-				returnCardObj = new MyCardInfo(cardName, cardNumber, paymentDay, tAmount, cardType, cardImage, cardImageUri);
 				
 				SQLiteDatabase db;
 				CardDB Cdb = new CardDB(getApplicationContext());
 				db = Cdb.getReadableDatabase();
 				String insertQuery = "INSERT INTO myCard VALUES (null, '" + cardName + "', '" + cardNumber + "', " + paymentDay + ", "
-									  + tAmount + ",'" + cardType + "', '" + cardImageUri + "');";
+									  + tAmount + ",'" + cardType + "', '" + cardImageUri + "', 0);";
 				db.execSQL(insertQuery);
+				
+				String getKeyQuery = "SELECT myCardKey FROM myCard WHERE cardName = '" + cardName + "' AND cardNumber = '"
+									 + cardNumber + "' AND cardImageUri = '" + cardImageUri + "';";
+				Cursor c = db.rawQuery(getKeyQuery, null);
+				
+				while (c.moveToNext()) {
+					primaryKey = c.getInt(c.getColumnIndex("myCardKey"));
+				}
 				db.close();
+
+				returnCardObj = new MyCardInfo(primaryKey, cardName, cardNumber, paymentDay, tAmount, cardType, cardImageUri);
 					
 				Intent intent = new Intent();
 				Bundle bdl = new Bundle();
 					
-				bdl.putInt("imageRsc", returnCardObj.getCardImage());
+				bdl.putInt("myCardKey", returnCardObj.getCardPrimaryKey());
 				bdl.putString("cardName", returnCardObj.getCardName());
 				bdl.putString("cardNumber", returnCardObj.getCardNumber());
 				bdl.putString("cardType", returnCardObj.getCardType());
@@ -190,10 +209,6 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		}
 	}
 	
-	
-	
-	
-	
 	/**
 	 * AddMyCardDlgListener 카드 수동 추가에서 결제일, 카드종류 뷰의 클릭 리스너
 	 * @author Junu Kim
@@ -208,6 +223,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				new AlertDialog.Builder(CardExpandableListActivity.this)
 				.setTitle(R.string.my_card_add_payment_day_title)
 				.setSingleChoiceItems(dayList, autoCheckDay(paymentDay), new DialogInterface.OnClickListener() {
+					
 					public void onClick(DialogInterface dialog, int which) {
 						addCardPaymentDay.setText(getResources().getString(R.string.pDay_every_month) + " " + dayList[which]);
 						paymentDay = dayList[which];
@@ -222,6 +238,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				new AlertDialog.Builder(CardExpandableListActivity.this)
 				.setTitle(R.string.my_card_add_card_type_title)
 				.setSingleChoiceItems(cardTypeList, autoCheckCardType(cardType), new DialogInterface.OnClickListener() {
+					
 					public void onClick(DialogInterface dialog, int which) {
 						addCardCardType.setText(cardTypeList[which]);
 						cardType = cardTypeList[which];
