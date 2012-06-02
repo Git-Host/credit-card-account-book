@@ -61,10 +61,10 @@
 	<string name="delete_my_card_description">카드를 삭제하면 해당 카드의 사용내역도 함께 삭제 됩니다. 그래도 삭제 하시겠습니까?</string>
 	<string name="delete_string">삭제</string>
 	
-	<!-- 
-	<string name=""
-	<string name="notication_title"></string>
-	 -->
+	<!-- Notification Strings -->
+	<string name="notification_ticker_text">I-CARD 새로운 사용내역이 도착하였습니다.</string>
+	<string name="notification_text">새로운 사용내역이 등록되었습니다.</string>
+	<string name="notification_title">I-CARD</string>
 	
     <!-- 나의 카드 정보수정 메뉴 리스트 스트링 -->
     <string name="edit_image">카드이미지 변경</string>

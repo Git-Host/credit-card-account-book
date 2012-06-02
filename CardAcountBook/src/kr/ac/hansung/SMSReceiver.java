@@ -18,7 +18,9 @@ import android.telephony.SmsMessage;
  * @author Junu Kim
  */
 public class SMSReceiver extends BroadcastReceiver {
-
+	private NotificationManager smsNotificationManager;
+	private Notification smsNotification;
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
@@ -27,10 +29,11 @@ public class SMSReceiver extends BroadcastReceiver {
 		String SmsBody = "";
 		Resources res = context.getResources();
 		
-		NotificationManager smsNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification smsNotification = new Notification();
+		// Notification Manager
+		smsNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		smsNotification = new Notification();
 		smsNotification.icon = R.drawable.ic_launcher;
-		smsNotification.tickerText = "»ì¾ÆÀÕ³×!!";
+		smsNotification.tickerText = res.getString(R.string.notification_ticker_text);
 		smsNotification.when = System.currentTimeMillis();
 		smsNotification.number = 0;
 		smsNotification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -38,9 +41,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		Intent itnt = new Intent(context.getApplicationContext(), DetailViewActivity.class);
 		PendingIntent pi = PendingIntent.getActivity(context, 0, itnt, 0);
 		
-//		smsNotification.setLatestEventInfo(context.getApplicationContext(), contentTitle, contentText, pi);
-		
-		
+		smsNotification.setLatestEventInfo(context.getApplicationContext(), res.getString(R.string.notification_title), res.getString(R.string.notification_text), pi);
 		
 		
 		if (bundle != null) {
