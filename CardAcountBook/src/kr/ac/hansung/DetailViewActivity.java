@@ -42,6 +42,10 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 	final static int ADD_CASH_USE = 3;
 	final static int ADD_CARD_USE = 4;
+	
+	final static int DELETE_OR_EDIT_DIALOG = 7;
+	final static int EDIT_DIALOG = 8;
+	final static int DELETE_ALERT_DIALOG = 9;
 
 	SQLiteDatabase db;
 	CardDB Cdb;
@@ -50,6 +54,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	String categoryQuery;
 	
 	Calendar today;
+	Bundle _bdl;
 
 	ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
 	DetailViewAdapter dAdapter;
@@ -99,29 +104,32 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	 * @param detailCursor List에 Add하기 위한 DB Cursor
 	 */
 	public void dynamicListAdd(Cursor detailCursor) {
-		int price = 0;
 
 		detailViewList.clear();
 		detailPriceView = (TextView) findViewById(R.id.detail_price_view);
 
 		while (detailCursor.moveToNext()) {
 
+//			db.execSQL("CREATE TABLE breakdowstats (breakKey INTEGER PRIMARY KEY, cardName TEXT, pYear INTEGER, pMonth INTEGER, pDay INTEGER, pPlace TEXT"
+//					+ ", price INTEGER, category TEXT, cardNumber TEXT, combineDate INTEGER, deleteFlag INTEGER);");
+			
+			
 			int primaryKey = detailCursor.getInt(detailCursor.getColumnIndex("breakKey"));
-			String cName = detailCursor.getString(1);
-			int pYear = detailCursor.getInt(2) - 1900;
-			int pMonth = detailCursor.getInt(3) - 1;
-			int pDay = detailCursor.getInt(4);
-			String pPlace = detailCursor.getString(5);
-			int pPrice = detailCursor.getInt(6);
-			String category = detailCursor.getString(7);
+			String cName = detailCursor.getString(detailCursor.getColumnIndex("cardName"));
+			int pYear = detailCursor.getInt(detailCursor.getColumnIndex("pYear"));
+			int pMonth = detailCursor.getInt(detailCursor.getColumnIndex("pMonth"));
+			int pDay = detailCursor.getInt(detailCursor.getColumnIndex("pDay"));
+			String pPlace = detailCursor.getString(detailCursor.getColumnIndex("pPlace"));
+			int pPrice = detailCursor.getInt(detailCursor.getColumnIndex("price"));
+			String category = detailCursor.getString(detailCursor.getColumnIndex("category"));
 			String tmpCardNumber = detailCursor.getString(detailCursor.getColumnIndex("cardNumber"));
-
+			
 			Date date = null;
 			date = new Date();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-			date.setYear(pYear);
-			date.setMonth(pMonth);
+			date.setYear(pYear - 1900);
+			date.setMonth(pMonth - 1);
 			date.setDate(pDay);
 			String sDate = dateFormat.format(date);
 
@@ -160,8 +168,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	}
 
 	/**
-	 * Method dynamicDatabaseCursor 두개의 TextView의 Date를 비교하여 해당기간의 상세내역의 Cursor를
-	 * 리턴하는 메소드
+	 * Method dynamicDatabaseCursor 두개의 TextView의 Date를 비교하여 해당기간의 상세내역의 Cursor를 리턴하는 메소드
 	 * @param fromDate 'yyyy. MM. dd.' 형식이 입력되어있는 TextView
 	 * @param toDate 'yyyy. MM. dd.' 형식이 입력되어있는 TextView
 	 * @return Cursor 조건에 맞는 상세내역의 Cursor
@@ -191,15 +198,15 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		if (receivedIntent.hasExtra("cardName")	&& receivedIntent.hasExtra("cardNumber")) {
 			tmpStr = "SELECT * FROM breakdowstats WHERE cardName = '" + receivedIntent.getStringExtra("cardName")
 					+ "' AND cardNumber = '" + receivedIntent.getStringExtra("cardNumber")
-					+ "' AND combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= " + tmpFormat.format(tmpToDate)
-					+ " ORDER BY combineDate DESC;";
+					+ "' AND (combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= " + tmpFormat.format(tmpToDate)
+					+ ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 		} else if (receivedIntent.hasExtra("selCategory")) {
 			tmpStr = categoryQuery + ") AND (combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= " 
 					+ tmpFormat.format(tmpToDate)
-					+ ") ORDER BY combineDate DESC;";
+					+ ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 		} else {
 			tmpStr = "SELECT * FROM breakdowstats WHERE combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= "
-					+ tmpFormat.format(tmpToDate) + " ORDER BY combineDate DESC;";
+					+ tmpFormat.format(tmpToDate) + " AND deleteFlag = 0 ORDER BY combineDate DESC;";
 		}
 
 		tmpCursor = db.rawQuery(tmpStr, null);
@@ -236,7 +243,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		// 월별사용목록 intent
 		if (intent.hasExtra("selMonth")) {
 			int selMonth = (int) intent.getDoubleExtra("selMonth", 0);
-			String strQuery = "SELECT * FROM breakdowstats WHERE pMonth =" + selMonth + ";";
+			String strQuery = "SELECT * FROM breakdowstats WHERE pMonth =" + selMonth + " AND deleteFlag = 0;";
 			tmpCursor = db.rawQuery(strQuery, null);
 			fromToLinear.setVisibility(View.GONE);
 			priceView.setVisibility(View.VISIBLE);
@@ -247,7 +254,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			String strQuery = "SELECT * FROM breakdowstats WHERE cardName = '" + intent.getStringExtra("cardName")
 							  + "' AND cardNumber = '" + intent.getStringExtra("cardNumber") 
 							  + "' AND combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= "
-							  + tmpFormat.format(tmpToDate) + " ORDER BY combineDate DESC;";
+							  + tmpFormat.format(tmpToDate) + " AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(strQuery, null);
 		
 		// 카테고리별사용목록  intent 
@@ -271,14 +278,14 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			categoryQuery = strQuery;
 			
 			strQuery += ") AND (combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= "
-							  + tmpFormat.format(tmpToDate) + ") ORDER BY combineDate DESC;";
+							  + tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(strQuery, null);
 		
 		// 상세내역보기 
 		} else {
-			String tmpStr = "SELECT * FROM breakdowstats WHERE combineDate >= " + tmpFormat.format(tmpFromDate)
+			String tmpStr = "SELECT * FROM breakdowstats WHERE (combineDate >= " + tmpFormat.format(tmpFromDate)
 							+ " AND combineDate <= "
-							+ tmpFormat.format(tmpToDate) + " ORDER BY combineDate DESC;";
+							+ tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(tmpStr, null);
 		}
 
@@ -292,111 +299,9 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	public class detailViewListItemLongClickListener implements	AdapterView.OnItemLongClickListener {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
-//			showDialog(id)
-			
-			final int position = pos;
-			LayoutInflater dlgLayoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-			View editDlgView = dlgLayoutInflater.inflate(R.layout.detail_list_edit_dialog_layout, (ViewGroup) findViewById(R.id.detail_edit_dlg_root_view));
-
-			final EditText editCardName = (EditText) editDlgView.findViewById(R.id.detail_edit_card_name);
-			final EditText editCardNumber = (EditText) editDlgView.findViewById(R.id.detail_edit_card_number);
-			editApprovalTime = (TextView) editDlgView.findViewById(R.id.detail_edit_approval_time);
-			final EditText editPlace = (EditText) editDlgView.findViewById(R.id.detail_edit_place);
-			final EditText editPrice = (EditText) editDlgView.findViewById(R.id.detail_edit_price);
-			final TextView editCategory = (TextView) editDlgView.findViewById(R.id.detail_edit_category);
-
-			final String beforeCardName = dAdapter.getItem(position).getCardName();
-			final String beforeCardNumber = dAdapter.getItem(position).getCardNumber();
-			final String beforeApprovalTime = dAdapter.getItem(position).getApprovalTime();
-			final String beforePlace = dAdapter.getItem(position).getPlace();
-			final String beforePrice = String.valueOf(dAdapter.getItem(position).getPrice());
-			final String beforeCategory = dAdapter.getItem(position).getCategory();
-
-			editCardName.setText(beforeCardName);
-			editCardName.setSelection(beforeCardName.length());
-
-			editCardNumber.setText(beforeCardNumber);
-			editCardNumber.setSelection(beforeCardNumber.length());
-
-			editApprovalTime.setText(beforeApprovalTime);
-
-			editPlace.setText(beforePlace);
-			editPlace.setSelection(beforePlace.length());
-
-			editPrice.setText(beforePrice);
-			editPrice.setSelection(beforePrice.length());
-
-			editCategory.setText(beforeCategory);
-
-			editApprovalTime.setOnClickListener(new detailEditClickListener());
-			editCategory.setOnClickListener(new detailEditClickListener());
-
-			new AlertDialog.Builder(DetailViewActivity.this)
-					.setTitle(getResources().getString(R.string.detail_dlg_edit_title))
-					.setPositiveButton(R.string.edit_string,new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							String[] tmpDate = editApprovalTime.getText().toString().split("-");
-							
-							if (beforeCardName.equals(editCardName.getText().toString())
-									&& beforeCardNumber.equals(editCardNumber.getText().toString())
-									&& beforeApprovalTime.equals(editApprovalTime.getText().toString())
-									&& beforePlace.equals(editPlace.getText().toString()) && beforePrice.equals(editPrice.getText().toString())
-									&& beforeCategory.equals(editCategory.getText().toString())) {
-								
-							} else if (!beforeCardName.equals(editCardName.getText().toString()) || !beforeCardNumber.equals(editCardNumber.getText().toString())) {
-								CardDB Cdb = new CardDB(DetailViewActivity.this);
-								db = Cdb.getReadableDatabase();
-
-								String checkQuery = "SELECT * FROM breakdowstats WHERE cardName = '" + editCardName.getText().toString()
-													+ "' AND cardNumber = '" + editCardNumber.getText().toString() + "';";
-								Cursor tmpCursor = db.rawQuery(checkQuery, null);
-
-								if (tmpCursor.getCount() == 0) {
-									String addCardQuery = "INSERT INTO myCard VALUES (null, '" + editCardName.getText().toString()
-														+ "', '" + editCardNumber.getText().toString() + "', null, null, null, '');";
-									db.execSQL(addCardQuery);
-								}
-
-								String updateQuery = "UPDATE breakdowstats SET cardName = '" + editCardName.getText().toString() + "', cardNumber = '"
-													+ editCardNumber.getText().toString() + "' WHERE breakKey = "+ dAdapter.getItem(position).getBreakKey() + ";";
-								db.execSQL(updateQuery);
-								db.close();
-
-								SmsInfo tmpObj = dAdapter.getItem(position);
-								tmpObj.setCardName(editCardName.getText().toString());
-								tmpObj.setCardNumber(editCardNumber.getText().toString());
-
-								dAdapter.notifyDataSetChanged();
-								sumPrice();
-							} else {
-								CardDB Cdb = new CardDB(DetailViewActivity.this);
-								db = Cdb.getReadableDatabase();
-
-								String updateQuery = "UPDATE breakdowstats SET cardName = '" + editCardName.getText().toString() + "', cardNumber = '" + editCardNumber.getText().toString()
-												+ "', pYear = "+ Integer.parseInt(tmpDate[0]) + ", pMonth = "+ Integer.parseInt(tmpDate[1])+ ", pDay = " + Integer.parseInt(tmpDate[2])
-												+ ", combineDate = "+ Integer.parseInt(editApprovalTime.getText().toString().replace("-",""))+ ", pPlace = '"+ editPlace.getText().toString()
-												+ "', price = "+ Integer.parseInt(editPrice.getText().toString())+ ", category = '"+ editCategory.getText().toString()+ "' WHERE breakKey = "
-												+ dAdapter.getItem(position).getBreakKey() + ";";
-
-								db.execSQL(updateQuery);
-								db.close();
-
-								SmsInfo tmpObj = dAdapter.getItem(position);
-								tmpObj.setCardName(editCardName.getText().toString());
-								tmpObj.setCardNumber(editCardNumber.getText().toString());
-								tmpObj.setApprovalTime(editApprovalTime.getText().toString());
-								tmpObj.setPlace(editPlace.getText().toString());
-								tmpObj.setPrice(Integer.parseInt(editPrice.getText().toString()));
-								tmpObj.setCategory(editCategory.getText().toString());
-
-								dAdapter.notifyDataSetChanged();
-								sumPrice();
-							}
-						}
-					}).setCancelable(false)
-					.setNegativeButton(R.string.cancel_string, null)
-					.setView(editDlgView).show();
-
+			Bundle bdl = new Bundle();
+			bdl.putInt("position", pos);
+			showDialog(DELETE_OR_EDIT_DIALOG, bdl);
 			return true;
 		}
 	}
@@ -512,17 +417,211 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bdl) {
+		String[] delete_edit_array = { getResources().getString(R.string.delete_b_stats_edit), getResources().getString(R.string.delete_b_stats_delete) };
+		_bdl = new Bundle();
+		_bdl = bdl;
+		
+		Dialog createDialog;
+		AlertDialog.Builder builder;
+
 		switch (id) {
-		case DETAIL_DATE_EDIT_PICKER:
+		case DETAIL_DATE_EDIT_PICKER :
 			return new DatePickerDialog(this, detailDateEditPickerListener, bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
-		case DETAIL_DATE_ADD_PICKER:
+			
+		case DETAIL_DATE_ADD_PICKER :
 			return new DatePickerDialog(this, detailDateAddPickerListener, bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
-		case DETAIL_DATE_CASH_ADD_PICKER:
+			
+		case DETAIL_DATE_CASH_ADD_PICKER :
 			return new DatePickerDialog(this, detailDateCardAddPickerListener, bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
-		case SHOW_DATE_PICKER_TO:
+			
+		case SHOW_DATE_PICKER_TO :
 			return new DatePickerDialog(this, toDetailDateSetListener, bdl.getInt("toYear"), bdl.getInt("toMonth") - 1, bdl.getInt("toDay"));
-		case SHOW_DATE_PICKER_FROM:
+			
+		case SHOW_DATE_PICKER_FROM :
 			return new DatePickerDialog(this, fromDetailDateSetListener, bdl.getInt("toYear"), bdl.getInt("toMonth") - 1, bdl.getInt("toDay"));
+			
+		case DELETE_OR_EDIT_DIALOG :
+			builder = new AlertDialog.Builder(this);
+			
+			builder
+			.setTitle(R.string.delete_breakdown_stats_dlg_title)
+			.setItems(delete_edit_array, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					Bundle tmpBdl = new Bundle();
+					tmpBdl.putInt("position", _bdl.getInt("position"));
+					switch (which) {
+					case 0 :	// 사용내역 수정 클릭
+						removeDialog(DELETE_OR_EDIT_DIALOG);
+						showDialog(EDIT_DIALOG, tmpBdl);
+						break;
+						
+					case 1 :	// 사용내역 삭제 클릭
+						removeDialog(DELETE_OR_EDIT_DIALOG);
+						showDialog(DELETE_ALERT_DIALOG, tmpBdl);
+						break;
+					}
+					
+				}
+			});
+			
+			createDialog = builder.create();
+			return createDialog;
+		
+		case DELETE_ALERT_DIALOG :
+			builder = new AlertDialog.Builder(this);
+			
+			
+			builder
+			.setTitle(R.string.delete_b_stats_delete)
+			.setMessage(R.string.delete_b_alert_msg)
+			.setPositiveButton(R.string.delete_string, new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) {
+					int pos = _bdl.getInt("position");
+					
+					Cdb = new CardDB(getApplicationContext());
+					db = Cdb.getReadableDatabase();
+
+					int key = dAdapter.getItem(pos).getBreakKey();
+					
+					String deleteFlagUpdateQuery = "UPDATE breakdowstats SET deleteFlag = 1 WHERE breakKey = " + key + ";";
+					
+					db.execSQL(deleteFlagUpdateQuery);
+					db.close();
+
+					dAdapter.remove(dAdapter.getItem(pos));
+					dAdapter.notifyDataSetChanged();
+					
+					removeDialog(DELETE_ALERT_DIALOG);
+				}
+			})
+			.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(DELETE_ALERT_DIALOG);
+				}
+			});
+						
+			createDialog = builder.create();
+			return createDialog;
+			
+		case EDIT_DIALOG :
+			builder = new AlertDialog.Builder(this);
+			
+			final int position = _bdl.getInt("position");;
+			LayoutInflater dlgLayoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+			View editDlgView = dlgLayoutInflater.inflate(R.layout.detail_list_edit_dialog_layout, (ViewGroup) findViewById(R.id.detail_edit_dlg_root_view));
+
+			final EditText editCardName = (EditText) editDlgView.findViewById(R.id.detail_edit_card_name);
+			final EditText editCardNumber = (EditText) editDlgView.findViewById(R.id.detail_edit_card_number);
+			editApprovalTime = (TextView) editDlgView.findViewById(R.id.detail_edit_approval_time);
+			final EditText editPlace = (EditText) editDlgView.findViewById(R.id.detail_edit_place);
+			final EditText editPrice = (EditText) editDlgView.findViewById(R.id.detail_edit_price);
+			final TextView editCategory = (TextView) editDlgView.findViewById(R.id.detail_edit_category);
+
+			final String beforeCardName = dAdapter.getItem(position).getCardName();
+			final String beforeCardNumber = dAdapter.getItem(position).getCardNumber();
+			final String beforeApprovalTime = dAdapter.getItem(position).getApprovalTime();
+			final String beforePlace = dAdapter.getItem(position).getPlace();
+			final String beforePrice = String.valueOf(dAdapter.getItem(position).getPrice());
+			final String beforeCategory = dAdapter.getItem(position).getCategory();
+
+			editCardName.setText(beforeCardName);
+			editCardName.setSelection(beforeCardName.length());
+
+			editCardNumber.setText(beforeCardNumber);
+			editCardNumber.setSelection(beforeCardNumber.length());
+
+			editApprovalTime.setText(beforeApprovalTime);
+
+			editPlace.setText(beforePlace);
+			editPlace.setSelection(beforePlace.length());
+
+			editPrice.setText(beforePrice);
+			editPrice.setSelection(beforePrice.length());
+
+			editCategory.setText(beforeCategory);
+
+			editApprovalTime.setOnClickListener(new detailEditClickListener());
+			editCategory.setOnClickListener(new detailEditClickListener());
+			
+			
+			builder
+			.setTitle(getResources().getString(R.string.detail_dlg_edit_title))
+			.setPositiveButton(R.string.edit_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					String[] tmpDate = editApprovalTime.getText().toString().split("-");
+					
+					if (beforeCardName.equals(editCardName.getText().toString())
+							&& beforeCardNumber.equals(editCardNumber.getText().toString())
+							&& beforeApprovalTime.equals(editApprovalTime.getText().toString())
+							&& beforePlace.equals(editPlace.getText().toString()) && beforePrice.equals(editPrice.getText().toString())
+							&& beforeCategory.equals(editCategory.getText().toString())) {
+						
+					} else if (!beforeCardName.equals(editCardName.getText().toString()) || !beforeCardNumber.equals(editCardNumber.getText().toString())) {
+						CardDB Cdb = new CardDB(DetailViewActivity.this);
+						db = Cdb.getReadableDatabase();
+
+						String checkQuery = "SELECT * FROM breakdowstats WHERE cardName = '" + editCardName.getText().toString()
+											+ "' AND cardNumber = '" + editCardNumber.getText().toString() + "' AND deleteFlag = 0;";
+						Cursor tmpCursor = db.rawQuery(checkQuery, null);
+
+						if (tmpCursor.getCount() == 0) {
+							String addCardQuery = "INSERT INTO myCard VALUES (null, '" + editCardName.getText().toString()
+												+ "', '" + editCardNumber.getText().toString() + "', null, null, null, '', 0);";
+							db.execSQL(addCardQuery);
+						}
+
+						String updateQuery = "UPDATE breakdowstats SET cardName = '" + editCardName.getText().toString() + "', cardNumber = '"
+											+ editCardNumber.getText().toString() + "' WHERE breakKey = "+ dAdapter.getItem(position).getBreakKey() + ";";
+						db.execSQL(updateQuery);
+						db.close();
+
+						SmsInfo tmpObj = dAdapter.getItem(position);
+						tmpObj.setCardName(editCardName.getText().toString());
+						tmpObj.setCardNumber(editCardNumber.getText().toString());
+
+						dAdapter.notifyDataSetChanged();
+						sumPrice();
+					} else {
+						CardDB Cdb = new CardDB(DetailViewActivity.this);
+						db = Cdb.getReadableDatabase();
+
+						String updateQuery = "UPDATE breakdowstats SET cardName = '" + editCardName.getText().toString() + "', cardNumber = '" + editCardNumber.getText().toString()
+											 + "', pYear = "+ Integer.parseInt(tmpDate[0]) + ", pMonth = "+ Integer.parseInt(tmpDate[1])+ ", pDay = " + Integer.parseInt(tmpDate[2])
+											 + ", combineDate = "+ Integer.parseInt(editApprovalTime.getText().toString().replace("-",""))+ ", pPlace = '"+ editPlace.getText().toString()
+											 + "', price = "+ Integer.parseInt(editPrice.getText().toString())+ ", category = '"+ editCategory.getText().toString()+ "' WHERE breakKey = "
+											 + dAdapter.getItem(position).getBreakKey() + ";";
+
+						db.execSQL(updateQuery);
+						db.close();
+
+						SmsInfo tmpObj = dAdapter.getItem(position);
+						tmpObj.setCardName(editCardName.getText().toString());
+						tmpObj.setCardNumber(editCardNumber.getText().toString());
+						tmpObj.setApprovalTime(editApprovalTime.getText().toString());
+						tmpObj.setPlace(editPlace.getText().toString());
+						tmpObj.setPrice(Integer.parseInt(editPrice.getText().toString()));
+						tmpObj.setCategory(editCategory.getText().toString());
+
+						dAdapter.notifyDataSetChanged();
+						sumPrice();
+					}
+				}
+			})
+			.setCancelable(false)
+			.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(EDIT_DIALOG);
+				}
+			})
+			.setView(editDlgView);
+			
+			createDialog = builder.create();
+			return createDialog;
 		}
 		return super.onCreateDialog(id, bdl);
 	}
@@ -808,7 +907,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 	/**
 	 * addDetailClickListener 상세내역 수정 Dialog에서 '수정', '취소'버튼의 Event Handler
-	 * 
 	 * @author Junu Kim
 	 */
 	public class addDetailClickListener implements DialogInterface.OnClickListener {
@@ -831,7 +929,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 									+ tmpCardName + "', " + tmpYMD[0] + "," + tmpYMD[1]
 									+ "," + tmpYMD[2] + ", '" + tmpPlace + "', " + tmpPrice
 									+ ", '" + tmpCategory + "', '" + tmpCardNumber + "', "
-									+ tmpYMD[0] + tmpYMD[1] + tmpYMD[2] + ");";
+									+ tmpYMD[0] + tmpYMD[1] + tmpYMD[2] + ", 0);";
 
 				db.execSQL(insertQuery);
 				db.close();
@@ -854,8 +952,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	 * 
 	 * @author Junu Kim
 	 */
-	public class addCashDetailClickListener implements
-			DialogInterface.OnClickListener {
+	public class addCashDetailClickListener implements DialogInterface.OnClickListener {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE:
@@ -874,7 +971,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 									 + cashString + "', " + tmpYMD[0] + "," + tmpYMD[1]
 									 + "," + tmpYMD[2] + ", '" + tmpPlace + "', " + tmpPrice
 									 + ", '" + tmpCategory + "', '', " + tmpYMD[0]
-									 + tmpYMD[1] + tmpYMD[2] + ");";
+									 + tmpYMD[1] + tmpYMD[2] + ", 0);";
 
 				db.execSQL(insertQuery);
 				db.close();

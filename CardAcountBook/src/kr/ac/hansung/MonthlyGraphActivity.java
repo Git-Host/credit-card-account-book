@@ -52,7 +52,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 			int month = i + 1;
 			monthlyPrice[i] = 0;
 			strQuery[i] = "Select price From breakdowstats where pYear = "
-					+ iYear + " and pMonth = " + month + ";";
+					+ iYear + " and pMonth = " + month + " AND deleteFlag = 0;";
 		}
 
 		for (int i = 0; i < strQuery.length; i++) {

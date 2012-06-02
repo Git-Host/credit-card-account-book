@@ -131,7 +131,7 @@ public class SmsInfo implements CategoryList{
 			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', "
 							  + tmpYear + ", " + tmpMonth + ", " + tmpDay + ", '" + tmpPlace
 							  + "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory + "', '" 
-							  + tmpCardNum + "'," + inDate + ");";
+							  + tmpCardNum + "'," + inDate + ", 0);";
 			
 			break;
 		
@@ -158,7 +158,7 @@ public class SmsInfo implements CategoryList{
 					+ "', " + tmpYear + ", " + tmpMonth + ", "
 					+ tmpDay + ", '" + tmpSplitBody[5]
 					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "'," + inDate  + ");";
+					+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
 			
 			break;
 			

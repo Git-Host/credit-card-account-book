@@ -55,7 +55,7 @@ public class CategoryGraphActivity extends Activity {
 		int currentMonth = date.getMonth() + 1;
 
 		String strQuery = "Select Distinct category from breakdowstats where pYear = "
-				+ currentYear + " and pMonth = " + currentMonth + ";";
+				+ currentYear + " and pMonth = " + currentMonth + " AND deleteFlag = 0;";
 		c = db.rawQuery(strQuery, null);
 		ArrayList<String> Icategories = new ArrayList<String>();
 		ArrayList<Double> values = new ArrayList<Double>();
@@ -63,8 +63,8 @@ public class CategoryGraphActivity extends Activity {
 		while (c.moveToNext()) {
 			for (int i = 0; i < CategoryList.i_category.length; i++) {
 				for (int j = 0; j < CategoryList.i_category[i].length; j++) {
-					String getCategory = getResources().getString(
-							CategoryList.i_category[i][j]);
+					String getCategory = getResources().getString(CategoryList.i_category[i][j]);
+					
 					if (c.getString(0).matches(getCategory)) {
 						Icategories.add(CategoryList.High_Category[i]);
 
@@ -91,7 +91,7 @@ public class CategoryGraphActivity extends Activity {
 							+ currentYear
 							+ " and pMonth = "
 							+ currentMonth
-							+ " and category = '" + s + "';";
+							+ " and category = '" + s + "' AND deleteFlag = 0;";
 					c = db.rawQuery(ss, null);
 					while (c.moveToNext()) {
 						double value = c.getInt(0);
@@ -138,8 +138,7 @@ public class CategoryGraphActivity extends Activity {
 		touch l = new touch();
 		mChartView.setOnTouchListener(l);
 		// mChartView.setBackgroundColor(Color.WHITE);
-		incomePiechartLayout.addView(mChartView, new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		incomePiechartLayout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		if (mChartView != null)
 

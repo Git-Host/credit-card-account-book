@@ -32,7 +32,6 @@ public class OptionViewActivity extends ListActivity {
 	private static final int OPTION_PASSWORD_SET = 0;
 	private static final int OPTION_CSV_OUT = 1;
 	
-	private Button csvBtn, passBtn;
 	private CardDB cdb;
 	public static final String CSV_COLNAMES = "날짜,카드명,카드번호,사용내역,사용금액,카테고리\n";
 	public static final String ROOT_DIR = "/mnt/sdcard/";
@@ -125,21 +124,19 @@ public class OptionViewActivity extends ListActivity {
 			cdb = new CardDB(getApplicationContext());
 			SQLiteDatabase db = cdb.getReadableDatabase();
 
-			Cursor curCSV = db.rawQuery("SELECT * FROM breakdowstats", null);
+			Cursor curCSV = db.rawQuery("SELECT * FROM breakdowstats WHERE deleteFlag = 0", null);
 
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(ROOT_DIR + "/excerDB.csv"), "MS949"));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ROOT_DIR + "/excerDB.csv"), "MS949"));
 			writer.write(CSV_COLNAMES);
 
 			while (curCSV.moveToNext()) {
 
 				Date date = new Date();
 				date.setYear(curCSV.getInt(2) - 1900);
-				date.setMonth(curCSV.getInt(3) + 1);
+				date.setMonth(curCSV.getInt(3) - 1);
 				date.setDate(curCSV.getInt(4));
 
-				String strDate = android.text.format.DateFormat.format(
-						"yyyy-MM-dd", date).toString();
+				String strDate = android.text.format.DateFormat.format("yyyy-MM-dd", date).toString();
 
 				String arrStr = strDate + "," + curCSV.getString(1) + ","
 						+ curCSV.getString(8) + "," + curCSV.getString(5) + ","
@@ -149,7 +146,8 @@ public class OptionViewActivity extends ListActivity {
 				writer.write(arrStr);
 
 			}
-
+			db.close();
+			
 			curCSV.close();
 
 			writer.close();
@@ -170,8 +168,7 @@ public class OptionViewActivity extends ListActivity {
 		String szSendFilePath = ROOT_DIR + "/excerDB.csv";
 		File f = new File(szSendFilePath);
 		if (!f.exists()) {
-			Toast.makeText(OptionViewActivity.this, "파일이 없습니다.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(OptionViewActivity.this, "파일이 없습니다.", Toast.LENGTH_SHORT).show();
 		}
 
 		// File객체로부터 Uri값 생성
