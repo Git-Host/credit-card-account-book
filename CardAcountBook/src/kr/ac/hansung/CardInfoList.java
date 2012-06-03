@@ -43,4 +43,22 @@ public interface CardInfoList {
 			R.drawable.nh_shoppingsave,
 			R.drawable.questionmark_card
 	};
+	
+	//Lotte 카드 이름, 이미지 리스트
+	public int[] LotteCardName = {
+			R.string.lotte_dc_supreme,
+			R.string.lotte_dc_sweet,
+			R.string.lotte_driving_pass,
+			R.string.lotte_happy_point,
+			R.string.lotte_lotte,
+			R.string.Lotte_card
+	};
+	public int[] LotteCardImg = {
+			R.drawable.lotte_dc_supreme,
+			R.drawable.lotte_dc_sweet,
+			R.drawable.lotte_driving_pass,
+			R.drawable.lotte_happy_point,
+			R.drawable.lotte_lotte,
+			R.drawable.questionmark_card
+	};
 }

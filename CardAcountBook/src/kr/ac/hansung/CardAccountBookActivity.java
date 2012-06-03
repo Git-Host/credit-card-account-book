@@ -27,6 +27,10 @@ import android.widget.TextView;
  * CardAccountBookActivity.java Main Activity  
  * @author Junu Kim
  */
+/**
+ * @author Admin
+ *
+ */
 public class CardAccountBookActivity extends Activity {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
@@ -53,7 +57,15 @@ public class CardAccountBookActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
+//		SharedPreferences pref = getSharedPreferences(
+//				"Pref", Activity.MODE_PRIVATE);
+//		Boolean setPass = false;
+//		pref.getBoolean("setPass", setPass);
+//		if(setPass){
+//			
+//		}
+		
 		// Button Create
 		myCardBtn = (ImageView) findViewById(R.id.my_card_btn);
 		detailViewBtn = (ImageView) findViewById(R.id.detail_view_btn);
@@ -180,27 +192,11 @@ public class CardAccountBookActivity extends Activity {
 		}
 		cursor.close();
 
-//		public String[] sCategory = {"주식","부식","간식","외식","술/유통","관리비","공과금","이동통신","인터넷","월세","가구/가전","주방/욕실","잡화","소모","의류비","패션/잡화","헤어/뷰티",
-//				"세탁/수선","운동/레져","문화생활","여행","병원비","등록금","학원/교재비","육아용품","대중교통","주유비","데이트","선물","경조사비","모임회비","카드대금"};
-		
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '부식', '1*2*', 20120120);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '간식', '1*2*', 20120220);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '외식', '1*2*', 20120320);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 20, '이마트', 21000, '술/유흥', '1*2*', 20120420);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '관리비', '1*2*', 20120520);");
-//		
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 1, 20, '이마트', 21000, '헤어/뷰티', '1*2*', 20120120);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 20, '이마트', 21000, '여행', '1*2*', 20120220);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 20, '이마트', 21000, '등록금', '1*2*', 20120320);");
+
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '대중교통', '1*2*', 20120520, 0);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '술/유흥', '1*2*', 20120520, 0);");
 //		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '등록금', '1*2*', 20120520, 0);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 20, '이마트', 21000, '선물', '1*2*', 20120520);");
-//		
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 30, '이마트', 21000, '주식', '1*2*', 20120430);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 30, '삼마트', 40000, '술/유흥', '1*2*', 20120530);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 1, '사마트', 5000, '의류비', '3*6*', 20120501);");
-//		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민체크' , 2012, 5, 2, '토마트삼마트이마트오마트예압베이베', 12000, '대중교통', '3*6*', 20120502);");
+
 
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats WHERE deleteFlag = 0;";
@@ -375,7 +371,7 @@ public class CardAccountBookActivity extends Activity {
 		priceTitleView.setText(tmpPriceTitle);
 		priceTitleView.invalidate();
 	}
-
+		
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

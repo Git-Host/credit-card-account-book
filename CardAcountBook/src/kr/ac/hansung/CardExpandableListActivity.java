@@ -64,11 +64,13 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		ArrayList<String> cardCompanyList = new ArrayList<String>();
 		cardCompanyList.add(getResources().getString(R.string.KB_card));
 		cardCompanyList.add(getResources().getString(R.string.NH_card));
+		cardCompanyList.add(getResources().getString(R.string.Lotte_card));
 		
 		// Child List
 		ArrayList<ArrayList<MyCardInfo>> cardList = new ArrayList<ArrayList<MyCardInfo>>();
 		ArrayList<MyCardInfo> kbChildList = new ArrayList<MyCardInfo>();
 		ArrayList<MyCardInfo> nhChildList = new ArrayList<MyCardInfo>();
+		ArrayList<MyCardInfo> lotteChildList = new ArrayList<MyCardInfo>();
 		
 		// KB child ADD
 		for (int i=0; i<CardInfoList.kbCardImg.length; i++) {
@@ -88,9 +90,19 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 			nhChildList.add(cardElement);
 		}
 		
+		//Lotte child ADD
+		for(int i=0;i<CardInfoList.LotteCardImg.length;i++){
+			cardElement = new MyCardInfo();
+			cardElement.setCardImage(LotteCardImg[i]);
+			cardElement.setCardName(getResources().getString(LotteCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.Lotte_card));
+			lotteChildList.add(cardElement);
+		}
+		
 		// Attach child list to group ist
 		cardList.add(kbChildList);
 		cardList.add(nhChildList);
+		cardList.add(lotteChildList);
 		
 		cardAdapter = new CardExpandableListAdapter(cardCompanyList, cardList);
 		setListAdapter(cardAdapter);

@@ -5,13 +5,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@drawable/other_background" >
-
+	<TextView 
+	    android:layout_width="wrap_content"
+	    android:layout_height="30dp"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginTop="30dp"
+	    android:textSize="15sp"
+	    android:textColor="#FFFFFFFF"
+	    android:text="(단위  :천원)"/>
     <LinearLayout
         android:id="@+id/Monthly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp" >
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp" >
     </LinearLayout>
 
 </LinearLayout>

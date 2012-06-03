@@ -167,6 +167,14 @@
 	<string name="nh_ok_check">농협OK체크카드</string>
 	<string name="nh_shoppingsave">채움 쇼핑세이브카드 </string>
 	
+	<!-- Lotte카드 카드명 리스트 -->
+	<string name = "lotte_dc_supreme">DC Supreme 카드</string>
+	<string name = "lotte_driving_pass">Driving Pass 카드</string>
+	<string name = "lotte_lotte">롯데 롯데카드</string>
+	<string name = "lotte_happy_point">해피포인트 롯데체크카드</string>
+	<string name = "lotte_dc_sweet">DC Sweet 롯데 체크카드</string>
+	
+	
     <string-array name="card_type_list">
         <item>신용</item>
         <item>체크</item>
