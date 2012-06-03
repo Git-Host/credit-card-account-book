@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	GraphicalView gv;
@@ -35,8 +36,8 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.monthly_graph_view);
 
-		int iYear;
-		double monthlyPrice[] = new double[12];
+		int iYear,iMonth;
+		
 
 		CardDB Cdb = new CardDB(this);
 
@@ -45,8 +46,13 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		db = Cdb.getReadableDatabase();
 		Calendar calendar = Calendar.getInstance();
 		iYear = calendar.get(Calendar.YEAR);
-
-		String strQuery[] = new String[12];
+		iMonth = calendar.get(Calendar.MONTH)+1;
+		if(iMonth<6){
+			iMonth = 5;
+		}
+		
+		double monthlyPrice[] = new double[iMonth];
+		String strQuery[] = new String[iMonth];
 
 		for (int i = 0; i < strQuery.length; i++) {
 			int month = i + 1;
@@ -66,9 +72,9 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		}
 		db.close();
 		values.add(monthlyPrice);
-
+		
 		// 표시할 수치값
-		double YAxisMax = monthlyPrice[0];
+		double YAxisMax = monthlyPrice[0]/1000;
 
 		/** 그래프 출력을 위한 그래픽 속성 지정객체 */
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
@@ -78,9 +84,10 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 
 		// 항목을 표시하는데 사용될 색상값
 		int[] colors = new int[] { Color.parseColor("#8a2BE2") };
-
+		
 		// 분류명 글자 크기 및 각 색상 지정
 		renderer.setLegendTextSize(25);
+
 		int length = colors.length;
 		for (int i = 0; i < length; i++) {
 			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
@@ -99,18 +106,16 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
 		renderer.setAxisTitleTextSize(20);
-		renderer.setYTitle("사용량", 0);
-		renderer.setAxisTitleTextSize(20);
-		
+				
 		// 수치값 글자 크기 / X축 최소,최대값 / Y축 최소,최대값
-		renderer.setLabelsTextSize(15);
+		renderer.setLabelsTextSize(20);
 		renderer.setXAxisMin(0.5);
-		renderer.setXAxisMax(12.5);
+		renderer.setXAxisMax(iMonth+0.5);
 		renderer.setYAxisMax(YAxisMax);
 		renderer.setYAxisMin(0);
 		
-		renderer.setZoomLimits(new double[]{0,12.5,0 ,0});
-		renderer.setPanLimits(new double[]{0.5,12.5,0,15});
+		renderer.setZoomLimits(new double[]{0,iMonth+0.5,0 ,0});
+		renderer.setPanLimits(new double[]{0.5,iMonth+0.5,0,15});
 		// X,Y축 라인 색상
 		renderer.setAxesColor(Color.BLACK);
 		// 상단제목, X,Y축 제목, 수치값의 글자 색상
@@ -132,14 +137,17 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		renderer.setZoomRate(1.0f);
 		// 막대간 간격
 		renderer.setBarSpacing(0.5f);
-
+		
 		renderer.setApplyBackgroundColor(true);
-		renderer.setMargins(new int[] { 50, 100, 50, 10 });
+		renderer.setMargins(new int[] { 60, 60, 50, 10 });
 		renderer.setMarginsColor(Color.argb(0, 0xff, 0, 0));
-
+		
 		renderer.setBackgroundColor(Color.TRANSPARENT);
 		renderer.setShowGrid(false);
-
+		
+		
+		
+	
 		// 설정 정보 설정
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 		for (int i = 0; i < titles.length; i++) {
@@ -156,15 +164,18 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		
 		for (int i = 1; i < 6; i++) {
 			int tmp1 = (int)Math.ceil((YAxisMax /5));
-			String ttt = SmsInfo.decimalPointToString(i*tmp1);
+			String ttt = SmsInfo.decimalPointToString(i*(tmp1/1000));
+			ttt = ttt.substring(0,ttt.length()-1);
 			renderer.addYTextLabel(tmp1*i, ttt);
 		}
-		for(int i = 0;i<13;i++){
+		for(int i = 0;i<iMonth+1;i++){
 			String tmp1 = String.valueOf(i+1);
 			renderer.addXTextLabel(i+1,tmp1);
 		}
-	
+		
+		
 		renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
+		renderer.getSeriesRendererAt(0).setChartValuesTextSize(25);
 		// 그래프 객체 생성
 		gv = ChartFactory
 				.getBarChartView(this, dataset, renderer, Type.DEFAULT);
