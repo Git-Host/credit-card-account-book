@@ -28,6 +28,8 @@ import android.widget.Toast;
  */
 public class CardExpandableListActivity extends ExpandableListActivity implements CardInfoList {
 	private final static int CARD_ADD_DIALOG_SHOW = 0;
+	private final static int INVALID_INPUT = 1;
+	
 	private CardExpandableListAdapter cardAdapter;
 	private ExpandableListView cardExpandableListView; 
 	
@@ -113,9 +115,11 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		Dialog addDialog;
+		AlertDialog.Builder addBuilder;
 		switch (id) {
+		
 		case CARD_ADD_DIALOG_SHOW :
-			AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
+			addBuilder = new AlertDialog.Builder(this);
 			tmpCardName = args.getString("cardName");
 			tmpReduceCardName = args.getString("reduceCardName");
 			tmpCardImage = args.getInt("cardImage");
@@ -148,6 +152,23 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 			
 			addDialog = addBuilder.create();
 			return addDialog;
+		
+		case INVALID_INPUT :
+			addBuilder = new AlertDialog.Builder(this);
+			
+			addBuilder
+			.setTitle(R.string.invalid_input_alert_title)
+			.setMessage(R.string.invalid_input_alert_description)
+			.setIcon(android.R.drawable.ic_dialog_alert)
+			.setPositiveButton(R.string.identify_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(INVALID_INPUT);
+				}
+			});
+			
+			addDialog = addBuilder.create();
+			return addDialog;
 		}
 		return super.onCreateDialog(id, args);
 	}
@@ -156,21 +177,25 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE :
-				
-				if (addCardTargetPrice.getText().toString().equals("")) {
-					Toast.makeText(getApplicationContext(), "ª–", Toast.LENGTH_SHORT).show();
+				int tAmount = 0;
+
+				// When CardName, CardNumber were Blank
+				if (addCardNumber.getText().toString().equals("")) {
+					removeDialog(CARD_ADD_DIALOG_SHOW);
+					showDialog(INVALID_INPUT);
 					break;
+					
+				} else if (!addCardTargetPrice.getText().toString().equals("") && !addCardNumber.getText().toString().equals("")) {
+					tAmount = Integer.parseInt(addCardTargetPrice.getText().toString());
 				}
 				
 				int paymentDay = Integer.parseInt(dayList[dayListWhich].replace("¿œ", ""));
-				int tAmount = Integer.parseInt(addCardTargetPrice.getText().toString());
 				int cardImage = tmpCardImage;
 				String cardName = tmpCardName;
 				String cardNumber = addCardNumber.getText().toString();
 				String cardType = addCardCardType.getText().toString();
 				String cardImageUri = getResources().getResourceName(cardImage);
 				int primaryKey = 0;
-				
 				
 				if (tmpReduceCardName.equals(getResources().getString(R.string.KB_card))) {
 					if (cardType.equals(cardTypeList[0])) {
@@ -179,6 +204,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 						cardName = tmpReduceCardName + cardTypeList[1];
 					}
 				}
+				
 				
 				SQLiteDatabase db;
 				CardDB Cdb = new CardDB(getApplicationContext());
@@ -215,6 +241,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 				
 				break;
 			case DialogInterface.BUTTON_NEGATIVE :
+				setResult(Activity.RESULT_CANCELED);
 				removeDialog(CARD_ADD_DIALOG_SHOW);
 				break;
 			}

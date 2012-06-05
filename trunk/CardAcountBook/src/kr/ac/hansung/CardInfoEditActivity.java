@@ -43,8 +43,8 @@ public class CardInfoEditActivity extends Activity  {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.card_info_edit);
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.card_info_edit);
 		MenuClickListener menuClickListener = new MenuClickListener();
 		parentIntent = this.getIntent();
 		
@@ -68,6 +68,9 @@ public class CardInfoEditActivity extends Activity  {
 		titleCardImage = (ImageView) findViewById(R.id.edit_card_image);
 		titleCardName = (TextView) findViewById(R.id.edit_card_title);
 		titleCardNumber = (TextView) findViewById(R.id.edit_card_number);
+		
+		titleCardName.setSelected(true);
+		titleCardNumber.setSelected(true);
 		
 		menuEditPayment = (TextView) findViewById(R.id.edit_payment_day);
 		menuEditPaymentDayShow = (TextView) findViewById(R.id.edit_payment_day_show);

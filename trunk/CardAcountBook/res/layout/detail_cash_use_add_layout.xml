@@ -7,6 +7,7 @@
     android:padding="10dp" >
 
     <!-- 사용일시 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -24,6 +25,7 @@
     </TableRow>
 
     <!-- 사용장소 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -36,11 +38,14 @@
             android:id="@+id/detail_cash_use_place"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" 
-            android:hint="@string/example_place"/>
+            android:layout_height="39dp"
+            android:hint="@string/example_place"
+            android:maxLength="15"
+            android:singleLine="true" />
     </TableRow>
 
     <!-- 사용금액 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -54,11 +59,14 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
+            android:hint="@string/example_price"
+            android:maxLength="9"
             android:numeric="decimal"
-            android:hint="@string/example_price" />
+            android:singleLine="true" />
     </TableRow>
- 
+
     <!-- 카테고리 변경 뷰 -->
+
     <TableRow>
 
         <TextView
