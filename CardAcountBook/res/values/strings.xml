@@ -30,6 +30,7 @@
 	<string name="register_string">등록</string>
 	<string name="cancel_string">취소</string>
     <string name="add_string">추가</string>
+    <string name="identify_string">확인</string>
 	<string name="add_cash_use">현금 사용 추가하기</string>
 	<string name="add_card_use">카드 사용 추가하기</string>
 	<string name="add_my_card">나의 카드 추가하기</string>
@@ -41,8 +42,6 @@
 	<string name="delete_b_stats_delete">사용내역 삭제 하기</string>
 	<string name="delete_b_alert_msg">정말 삭제 하시겠습니까?</string>
 	
-	<string name="alert_message_title">경고!</string>
-	<string name="alert_message">카드이름과 카드번호는 필수 입력사항 입니다.</string>
 	<string name="my_card_add_init_payment_day">매월 0일</string>
 	<string name="my_card_add_init_card_type">신용</string>
 	<string name="month_use">월 사용금액</string>
@@ -50,6 +49,7 @@
 	<string name="pDay_every_month">매월&#160;</string>
 	<string name="pDay_day">&#160;일</string>
 	<string name="won">&#160;원</string>
+	<string name="no_space_won">원</string>
 	
 	<string name="list_have_no_items">결제 내역이 없습니다.</string>
 	
@@ -60,6 +60,14 @@
 	
 	<string name="delete_my_card_description">카드를 삭제하면 해당 카드의 사용내역도 함께 삭제 됩니다. 그래도 삭제 하시겠습니까?</string>
 	<string name="delete_string">삭제</string>
+	
+	<string name="progress_bar_title">사용내역 자동 등록</string>
+	<string name="progress_bar_wait">등록중입니다. 잠시만 기다려 주세요.</string>
+	<string name="progress_bar_msg">현재 스마트폰에 수신되어 있는 결제 SMS를 자동 등록합니다. 등록하지 않을시에는 이후에 수신되는 결제SMS에 대해서만 등록됩니다.</string>
+	
+	<string name="invalid_input_alert_title">입력 오류!</string>
+	<string name="invalid_input_alert_description">카드번호는 필수사항입니다. 다시 입력하세요.</string>
+	<string name="invalid_input_alert_description_add_cash">입력이 올바르지 않습니다. 다시 입력하세요.</string>
 	
 	<!-- Notification Strings -->
 	<string name="notification_ticker_text">I-CARD 새로운 사용내역이 도착하였습니다.</string>

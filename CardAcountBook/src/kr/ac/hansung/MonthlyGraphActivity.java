@@ -34,10 +34,10 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.monthly_graph_view);
 
 		int iYear,iMonth;
 		
+		setContentView(R.layout.monthly_graph_view);
 
 		CardDB Cdb = new CardDB(this);
 

@@ -17,7 +17,8 @@
         android:hint="@string/example_price_2"
         android:paddingRight="30dp"
         android:singleLine="true"
-        android:inputType="numberDecimal|numberSigned" />
+        android:inputType="numberDecimal|numberSigned"
+        android:maxLength="9" />
 
     <TextView
         style="@style/DetailDialogText"

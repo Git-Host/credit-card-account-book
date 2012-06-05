@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 // 일단 SMS가 수신되면 메세지내용이 출력되는 리시버
 /**
@@ -18,6 +19,9 @@ import android.telephony.SmsMessage;
  * @author Junu Kim
  */
 public class SMSReceiver extends BroadcastReceiver {
+	private SmsInfo smsInfoClass;
+	private String receivedQuery;
+	
 	private NotificationManager smsNotificationManager;
 	private Notification smsNotification;
 	
@@ -25,8 +29,9 @@ public class SMSReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
 		SmsMessage[] msgs = null;
-		String SmsAddress = "";
-		String SmsBody = "";
+		String smsAddress = "";
+		String smsBody = "";
+		smsInfoClass = new SmsInfo(context);
 		Resources res = context.getResources();
 		
 		// Notification Manager
@@ -43,24 +48,35 @@ public class SMSReceiver extends BroadcastReceiver {
 		
 		smsNotification.setLatestEventInfo(context.getApplicationContext(), res.getString(R.string.notification_title), res.getString(R.string.notification_text), pi);
 		
-		
 		if (bundle != null) {
 			Object[] pdus = (Object[]) bundle.get("pdus");
 			msgs = new SmsMessage[pdus.length];
 			for (int i = 0; i < msgs.length; i++) {
 				msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-				SmsAddress = msgs[i].getOriginatingAddress();
-				SmsBody = msgs[i].getMessageBody().toString();
+				smsAddress = msgs[i].getOriginatingAddress();
+				smsBody = smsBody + msgs[i].getMessageBody().toString();
 			}
+			Log.v("JUNU", smsAddress);
+			Log.v("JUNU", smsBody);
 		}
 		
-		if (SmsAddress.equals(res.getString(R.string.phoneNum_KB)) || SmsAddress.equals(res.getString(R.string.phoneNum_NH))) {
+		if (smsAddress.equals(res.getString(R.string.phoneNum_KB)) || smsAddress.equals(res.getString(R.string.phoneNum_NH))
+			|| smsAddress.equals(res.getString(R.string.phoneNum_CITY)) || smsAddress.equals(res.getString(R.string.phoneNum_KEB))
+			|| smsAddress.equals(res.getString(R.string.phoneNum_saving_bank)) || smsAddress.equals(res.getString(R.string.phoneNum_SHINHAN))
+			
+				|| smsAddress.equals("01042434994"))	{
+		
 			SQLiteDatabase db;
 			CardDB Cdb = new CardDB(context);
 			db = Cdb.getReadableDatabase();
-			db.execSQL(SmsInfo.scatterMessage(SmsAddress, SmsBody));
+
+			receivedQuery = smsInfoClass.scatterMessage(smsAddress, smsBody);
+			
+			if (!receivedQuery.equals(res.getString(R.string.sms_form_error))) {
+				db.execSQL(receivedQuery);
+				smsNotificationManager.notify(0, smsNotification);
+			}
 			db.close();
-			smsNotificationManager.notify(0, smsNotification);
 		} 
 	}
 }

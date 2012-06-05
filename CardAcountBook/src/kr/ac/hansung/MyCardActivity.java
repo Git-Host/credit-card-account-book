@@ -108,6 +108,9 @@ public class MyCardActivity extends ListActivity {
 
 				mAdapter.add(tmpObj);
 				mAdapter.notifyDataSetChanged();
+			
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				mAdapter.notifyDataSetInvalidated();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -200,11 +203,17 @@ public class MyCardActivity extends ListActivity {
 //						int deleteFlag = c.getInt(c.getColumnIndex("deleteFlag"));
 //					}
 					
+					removeDialog(DELETE_CARD_DIALOG);
 					myCardList.remove(longClickedPosition);
 					mAdapter.notifyDataSetChanged();
 				}
 			})
-			.setNegativeButton(R.string.cancel_string, null)
+			.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(DELETE_CARD_DIALOG);
+				}
+			})
 			.show();
 		}
 		return super.onCreateDialog(id, args);
@@ -297,6 +306,9 @@ public class MyCardActivity extends ListActivity {
 				tmpPImage.setImageResource(m.getPhoneImage());
 				tmpCName.setText(m.getCardName());
 				tmpCNum.setText(m.getCardNumber());
+				
+				tmpCName.setSelected(true);
+				tmpCNum.setSelected(true);
 				
 				tmpPImage.setOnClickListener(new View.OnClickListener() {
 					

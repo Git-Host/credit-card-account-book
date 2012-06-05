@@ -4,13 +4,19 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 
 /**
  * SmsInfo.java
  * SMS정보를 담는 Class
  * @author Junu Kim
  */
-public class SmsInfo implements CategoryList{	
+public class SmsInfo implements CategoryList {
+	private Context context;
 	private int breakKey;
 	private String cardName;						//카드 이름
 	private String approvalType;					//결재 종류 (체크승인, 신용승인 등)
@@ -19,6 +25,7 @@ public class SmsInfo implements CategoryList{
 	private String approvalTime;					//결재 일시
 	private String place;							//결재 장소
 	private String category;
+	private static Resources res;
 	
 	final static int NH_PNUM = 15881600;			// 농협
 	final static int KB_PNUM = 15881788; 			// 국민은행
@@ -27,6 +34,8 @@ public class SmsInfo implements CategoryList{
 	final static int SAVING_BANK_PNUM = 15886622;	// 저축은행
 	final static int SHINHAN_PNUM = 15447200;		// 신한은행
 	
+	// getter
+	public Context getContext() { return context; }
 	public int getBreakKey() { return breakKey; }
 	public String getCardName() { return cardName; }
 	public String getApprovalType() { return approvalType; }
@@ -35,7 +44,9 @@ public class SmsInfo implements CategoryList{
 	public String getApprovalTime() { return approvalTime; }
 	public String getPlace() { return place; }
 	public String getCategory(){ return category; }
+	public String getSmsFormErrorString() { return res.getString(R.string.sms_form_error); }
 	
+	// setter
 	public void setBreakKey(int key) { breakKey = key; }
 	public void setCardName(String cName) { cardName = cName; }
 	public void setApprovalType(String aType) { approvalType = aType; }
@@ -45,7 +56,14 @@ public class SmsInfo implements CategoryList{
 	public void setPlace(String _place) { place = _place; }
 	public void setCategory(String _category){category = _category;}
 
+	
+	// Constructor
 	public SmsInfo() {}
+	
+	public SmsInfo(Context context) {
+		this.context = context;
+		res = context.getResources();
+	}
 	
 	public SmsInfo(String cardName) {
 		setCardName(cardName);
@@ -58,7 +76,8 @@ public class SmsInfo implements CategoryList{
 		this.price = price;
 	}
 
-	public SmsInfo(String cardName, String cardNumber, String approvalTime, String place, int price, String category) {
+	public SmsInfo(int breakKey, String cardName, String cardNumber, String approvalTime, String place, int price, String category) {
+		this.breakKey = breakKey;
 		this.cardName = cardName;
 		this.cardNumber = cardNumber;
 		this.approvalTime = approvalTime;
@@ -96,7 +115,7 @@ public class SmsInfo implements CategoryList{
 	 * @param smsBody SMS Message Body
 	 * @return String 각정보를 DB에 넣는 INSERT QUERY
 	 */
-	public static String scatterMessage(String smsAddress, String smsBody) {
+	public String scatterMessage(String smsAddress, String smsBody) {
 		int tmpAddress = Integer.parseInt(smsAddress);
 		int inDate;
 		String tmpInsertQuery = null;
@@ -109,6 +128,12 @@ public class SmsInfo implements CategoryList{
 		
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
 		
+		// 명희전화번호꺼 신한으로 바꾸기
+		if (smsAddress.equals("01039487705")
+				|| smsAddress.equals("01042434994")) {
+			tmpAddress = SHINHAN_PNUM;
+		}
+		
 		switch (tmpAddress) {
 		
 		case KB_PNUM :
@@ -118,7 +143,7 @@ public class SmsInfo implements CategoryList{
 			tmpApproval = splitMonthDay(tmpSplitBody[2]);
 			tmpMonth = tmpApproval[0];
 			tmpDay = tmpApproval[1];
-			tmpPrice = tmpSplitBody[3].replace(",", "").replace("원", "");
+			tmpPrice = tmpSplitBody[3].replace(",", "").replace(res.getString(R.string.no_space_won), "");
 			tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
 			tmpCategory = SearchCategory(tmpPlace);
 			
@@ -138,7 +163,7 @@ public class SmsInfo implements CategoryList{
 		case NH_PNUM :
 			tmpSplitBody = smsBody.split("\n");
 			tmpAType = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("[") + 1, tmpSplitBody[0].indexOf("]"));
-			tmpPrice = tmpSplitBody[1].replace(",", "").replace("원", "");
+			tmpPrice = tmpSplitBody[1].replace(",", "").replace(res.getString(R.string.no_space_won), "");
 			tmpCardName = tmpSplitBody[2].substring(0, tmpSplitBody[2].indexOf("("));
 			tmpCardNum = tmpSplitBody[2].substring(tmpSplitBody[2].indexOf("(") + 1, tmpSplitBody[2].indexOf(")"));
 			String[] tmpAprvl = tmpSplitBody[4].split(" ");
@@ -161,6 +186,45 @@ public class SmsInfo implements CategoryList{
 					+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
 			
 			break;
+		
+		case SHINHAN_PNUM :
+			tmpSplitBody = smsBody.split(" ");
+			
+			Vector<String> stringVector = new Vector<String>();
+					
+			for (int i=0; i<tmpSplitBody.length; i++) {
+				if (!tmpSplitBody[i].equals("")) {
+					stringVector.add(tmpSplitBody[i]);
+				}
+			}
+			
+			if (stringVector.get(1).contains(res.getString(R.string.refusal_card_payment))
+					|| stringVector.get(4).contains(res.getString(R.string.refusal_cause))) {
+				return getSmsFormErrorString();
+			}
+			
+			tmpAType = stringVector.get(0);
+			tmpPrice = stringVector.get(3).replace(",", "").replace(res.getString(R.string.no_space_won), "");
+			tmpCardName = res.getString(R.string.SHINHAN_card);
+			tmpCardNum = res.getString(R.string.SHINHAN_blank_card_number);
+			String[] _tmpApproval = stringVector.get(1).split("/");
+			tmpMonth = _tmpApproval[0];
+			tmpDay = _tmpApproval[1];
+			tmpCategory = SearchCategory(stringVector.get(4));
+
+			date = new Date();
+			date.setYear(Integer.parseInt(tmpYear) - 1900);
+			date.setMonth(Integer.parseInt(tmpMonth) - 1);
+			date.setDate(Integer.parseInt(tmpDay));
+			inDate = Integer.parseInt(dateFormat.format(date));
+			
+			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+					+"null, '" + tmpCardName
+					+ "', " + tmpYear + ", " + tmpMonth + ", "
+					+ tmpDay + ", '" + stringVector.get(4)
+					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
+					+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
+			break;
 			
 		case CITY_PNUM :
 			break;
@@ -171,7 +235,7 @@ public class SmsInfo implements CategoryList{
 		case SAVING_BANK_PNUM :
 			break;
 		
-		case SHINHAN_PNUM :
+		default : 
 			break;
 		}
 		

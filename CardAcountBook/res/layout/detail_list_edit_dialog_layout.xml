@@ -7,7 +7,9 @@
     android:padding="10dp" >
 
     <!-- 카드이름 변경 뷰 -->
+
     <TableRow>
+
         <TextView
             style="@style/DetailDialogText"
             android:layout_width="wrap_content"
@@ -19,10 +21,13 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
-            android:hint="@string/example_card_name" />
+            android:hint="@string/example_card_name"
+            android:maxLength="10"
+            android:singleLine="true" />
     </TableRow>
-  
+
     <!-- 카드번호 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -36,10 +41,15 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
-            android:hint="@string/example_card_number" />
+            android:digits="@string/my_card_add_card_number_digits"
+            android:hint="@string/example_card_number"
+            android:inputType="phone"
+            android:maxLength="19"
+            android:singleLine="true" />
     </TableRow>
 
     <!-- 결제일시 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -57,6 +67,7 @@
     </TableRow>
 
     <!-- 결제장소 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -69,11 +80,14 @@
             android:id="@+id/detail_edit_place"
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
-            android:layout_height="39dp" 
-            android:hint="@string/example_place"/>
+            android:layout_height="39dp"
+            android:hint="@string/example_place"
+            android:maxLength="15"
+            android:singleLine="true" />
     </TableRow>
 
     <!-- 결제금액 변경 뷰 -->
+
     <TableRow>
 
         <TextView
@@ -87,11 +101,14 @@
             style="@style/DetailEditDialogText"
             android:layout_width="150dp"
             android:layout_height="39dp"
+            android:hint="@string/example_price"
             android:numeric="decimal"
-            android:hint="@string/example_price" />
+            android:maxLength="9"
+            android:singleLine="true" />
     </TableRow>
- 
+
     <!-- 카테고리 변경 뷰 -->
+
     <TableRow>
 
         <TextView
