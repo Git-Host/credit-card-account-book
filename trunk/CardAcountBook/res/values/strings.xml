@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="mNum_gallexy_s_2_KT">SHW-M250K</string>
-	<string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
-	<string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
-    
-	<!-- Main Strings -->
+
+    <string name="mNum_gallexy_s_2_KT">SHW-M250K</string>
+    <string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
+    <string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
+
+    <!-- Main Strings -->
     <string name="app_name">I - CARD</string>
     <string name="my_card">나의 카드</string>
     <string name="breakdown_stats">내역 통계</string>
@@ -15,21 +16,23 @@
     <string name="today_payment">현재 사용 금액</string>
     <string name="monthly_show_text">월별 사용 내역 보기</string>
     <string name="category_show_text">카테고리별 사용 내역 보기</string>
-    
+
     <!-- Option Strings -->
     <string name="option_password_title">비밀번호 설정</string>
     <string name="option_password_description">비밀번호를 설정하여 타인에게 정보를 노출하지 않습니다.</string>
     <string name="option_csv_title">CSV파일 내보내기</string>
     <string name="option_csv_description">Excel형태의 CSV파일을 메일로 전송하여 PC에서 사용합니다.</string>
-    
+    <string name="option_theme_title">테마 설정</string>
+    <string name="option_theme_description">테마를 설정하여 아이콘과 배경화면이 바뀝니다.</string>
     <string name="edit_my_card">카드 정보 수정</string>
     <string name="dash"> ~ </string>
-	<string name="edit_category">카테고리 선택</string>
-	<string name="terminate_string">종료</string>
-	<string name="edit_string">수정</string>
-	<string name="register_string">등록</string>
-	<string name="cancel_string">취소</string>
+    <string name="edit_category">카테고리 선택</string>
+    <string name="terminate_string">종료</string>
+    <string name="edit_string">수정</string>
+    <string name="register_string">등록</string>
+    <string name="cancel_string">취소</string>
     <string name="add_string">추가</string>
+
     <string name="identify_string">확인</string>
 	<string name="add_cash_use">현금 사용 추가하기</string>
 	<string name="add_card_use">카드 사용 추가하기</string>
@@ -74,6 +77,7 @@
 	<string name="notification_text">새로운 사용내역이 등록되었습니다.</string>
 	<string name="notification_title">I-CARD</string>
 	
+
     <!-- 나의 카드 정보수정 메뉴 리스트 스트링 -->
     <string name="edit_image">카드이미지 변경</string>
     <string name="edit_payment_day">결제일 등록</string>
@@ -81,31 +85,28 @@
     <string name="edit_card_type">카드종류 등록</string>
 
     <!-- 상세내역 다이얼로그 스트링 -->
-    <string name="deatil_dlg_edit_card_name">카드이름 :&#160;</string>
-    <string name="deatil_dlg_edit_card_number">카드번호 :&#160;</string>
-    <string name="detail_dlg_approval_time">결제일시 :&#160;</string>
-    <string name="detail_dlg_place">결제장소 :&#160;</string>
-    <string name="detail_dlg_price">결제금액 :&#160;</string>
-    <string name="detail_dlg_category">카테고리 :&#160;</string>
+    <string name="deatil_dlg_edit_card_name">카드이름 : </string>
+    <string name="deatil_dlg_edit_card_number">카드번호 : </string>
+    <string name="detail_dlg_approval_time">결제일시 : </string>
+    <string name="detail_dlg_place">결제장소 : </string>
+    <string name="detail_dlg_price">결제금액 : </string>
+    <string name="detail_dlg_category">카테고리 : </string>
     <string name="detail_dlg_edit_title">상세 내역 수정</string>
-
     <string name="example_card_name">NH카드</string>
     <string name="example_card_number">293*</string>
     <string name="example_place">이마트</string>
     <string name="example_price">50000</string>
     <string name="example_price_2">200000</string>
     <string name="example_every_month">15</string>
-    
     <string name="my_card_add_payment_day_title">결제일 선택</string>
     <string name="my_card_add_card_type_title">카드종류 선택</string>
-    <string name="my_card_add_payment_day">결   제   일 :&#160;</string>
-    <string name="my_card_add_check_or_credit">카드종류 :&#160;</string>
-    <string name="my_card_add_t_amount">목표금액 :&#160;</string>
-    
+    <string name="my_card_add_payment_day">결   제   일 : </string>
+    <string name="my_card_add_check_or_credit">카드종류 : </string>
+    <string name="my_card_add_t_amount">목표금액 : </string>
     <string name="my_card_add_card_number_digits">1234567890*-</string>
     <string name="my_card_add_target_price_digits">1234567890</string>
-    
-    <!-- 하위 카테고리  -->
+
+    <!-- 하위 카테고리 -->
     <string name="c_etc">기타</string>
     <!-- 식비 -->
     <string name="c_food">주식</string>
@@ -146,9 +147,9 @@
     <string name="c_gift">선물</string>
     <string name="c_family_event">경조사비</string>
     <string name="c_meeting_fee">모임회비</string>
-    <!-- 카드대금-->
+    <!-- 카드대금 -->
     <string name="c_card_pay">카드대금</string>
-    
+
     <!-- KB국민은행 카드명 리스트 -->
     <string name="kb_kookmin_baby_love">KB 국민 아이사랑 카드</string>
     <string name="kb_kookmin_emart">이마트 KB 국민 카드</string>
@@ -156,39 +157,72 @@
     <string name="kb_kookmin_goodday">KB 국민 굿데이 카드</string>
     <string name="kb_kookmin_happy_auto">KB 국민 해피 오토 카드</string>
     <string name="kb_kookmin_homeplus">KB 국민 홈플러스 카드</string>
-	<string name="kb_kookmin_hyedam">KB 국민 혜담 카드</string>
+    <string name="kb_kookmin_hyedam">KB 국민 혜담 카드</string>
     <string name="kb_kookmin_lg_uplus">LG 유플러스 국민 카드</string>
     <string name="kb_kookmin_olleh">올레 KB 국민 카드</string>
     <string name="kb_kookmin_rail_air">KB RAIL AIR 국민 카드</string>
     <string name="kb_kookmin_sk_energy_loveyou">SK 에너지 러브유 KB 국민 카드</string>
     <string name="kb_kookmin_sk_smart">SK 국민 스마트 카드</string>
-	<string name="kb_kookmin_star">KB 국민 스타 카드</string>
+    <string name="kb_kookmin_star">KB 국민 스타 카드</string>
     <string name="kb_kookmin_sweet_dream">KB 국민 스위트 드림 카드</string>
     <string name="kb_kookmin_the_cj">The CJ 국민 카드</string>
-	<string name="kb_kookmin_wise_home">KB 국민 와이즈 홈 카드</string>
-	<string name="kb_kookmin_wise">KB 국민 와이즈 카드</string>
+    <string name="kb_kookmin_wise_home">KB 국민 와이즈 홈 카드</string>
+    <string name="kb_kookmin_wise">KB 국민 와이즈 카드</string>
+
+    <!-- NH카드 카드명 리스트 -->
+    <string name="nh_chaum_card_chun">채움카드(천)</string>
+    <string name="nh_chaum_check">채움 체크카드</string>
+    <string name="nh_chaum">채움 스마티 카드</string>
+    <string name="nh_ok_check">농협OK체크카드</string>
+    <string name="nh_shoppingsave">채움 쇼핑세이브카드 </string>
+
+    <!-- Lotte카드 카드명 리스트 -->
+    <string name="lotte_dc_supreme">DC Supreme 카드</string>
+    <string name="lotte_driving_pass">Driving Pass 카드</string>
+    <string name="lotte_lotte">롯데 롯데카드</string>
+    <string name="lotte_happy_point">해피포인트 롯데체크카드</string>
+    <string name="lotte_dc_sweet">DC Sweet 롯데 체크카드</string>
+
+	<!-- Woori카드 카드명 리스트  -->
+    <string name="woori_e">우리 E 카드</string>
+    <string name="woori_green">우리 그린 카드</string>
+    <string name="woori_skypass">SKYPASS 우리 V 카드</string>
+    <string name="woori_v_oiling">우리 V 카드 주유형</string>
+    <string name="woori_v_tiara">우리 V 카드 티아라</string>
+    <string name="woori_v">우리 V 카드</string>
     
-	<!-- NH카드 카드명 리스트 -->
-	<string name="nh_chaum_card_chun">채움카드(천)</string>
-	<string name="nh_chaum_check">채움 체크카드</string>
-	<string name="nh_chaum">채움 스마티 카드</string>
-	<string name="nh_ok_check">농협OK체크카드</string>
-	<string name="nh_shoppingsave">채움 쇼핑세이브카드 </string>
-	
-	<!-- Lotte카드 카드명 리스트 -->
-	<string name = "lotte_dc_supreme">DC Supreme 카드</string>
-	<string name = "lotte_driving_pass">Driving Pass 카드</string>
-	<string name = "lotte_lotte">롯데 롯데카드</string>
-	<string name = "lotte_happy_point">해피포인트 롯데체크카드</string>
-	<string name = "lotte_dc_sweet">DC Sweet 롯데 체크카드</string>
-	
-	
+    <!-- Samsung카드 카드명 리스트 -->
+	<string name="samsung_2">삼성카드2</string>
+    <string name="samsung_car_moa">삼성 카앤모아 카드</string>
+    <string name="samsung_cjone">CJ ONE 삼성카드</string>
+    <string name="samsung_costco">코스트코 삼성 카드</string>
+    <string name="samsung_s_class">삼성카드 S 클래스</string>
+    
+    <!-- sinhan카드 카드명 리스트 -->
+    <string name="sinhan_4050">신한 4050 카드</string>
+    <string name="sinhan_achim">신한 아침애 카드</string>
+    <string name="sinhan_gscaltex">신한 GS칼텍스 샤인</string> 
+    <string name="sinhan_high_point">신한 하이 포인트 나노</string>    
+    <string name="sinhan_lady">신한 레이디 카드</string>
+    <string name="sinhan_love">신한 러브 카드</string>    
+    <string name="sinhan_wisdom">신한 에스모아 생활의 지혜</string>
+    
+    <!-- hyundai카드 카드명 리스트 -->
+    <string name="hyundai_h3">현대 카드 H3</string>
+    <string name="hyundai_m">현대 카드 M</string>
+    <string name="hyundai_m3">현대카드 M3</string> 
+    <string name="hyundai_r3">현대카드 R3</string>    
+    <string name="hyundai_v">현대카드 V</string>
+    <string name="hyundai_zero">현대카드 ZERO</string>    
+   
+    
     <string-array name="card_type_list">
         <item>신용</item>
         <item>체크</item>
     </string-array>
-	<string name="just_card">카드</string>
-    
+
+    <string name="just_card">카드</string>
+
     <!-- My Card Payment Day List -->
     <string-array name="day_list">
         <item>1일</item>

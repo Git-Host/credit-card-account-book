@@ -12,7 +12,7 @@
 	    android:layout_marginTop="30dp"
 	    android:textSize="15sp"
 	    android:textColor="#FFFFFFFF"
-	    android:text="(단위  :천원)"/>
+	    android:text="(단위 : 천원)"/>
     <LinearLayout
         android:id="@+id/Monthly"
         android:layout_width="match_parent"

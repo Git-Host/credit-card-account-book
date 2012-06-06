@@ -28,12 +28,9 @@ import android.widget.LinearLayout;
  * 
  */
 public class CategoryGraphActivity extends Activity {
-	private GraphicalView mChartView;
-	private SQLiteDatabase db;
-	private CardDB Cdb;
-	private Cursor c;
-	private int SelMonth;
-	private ArrayList<String> categories = new ArrayList<String>();
+	
+	private final static int GO_DETAIL = 0;
+	
 	int[] colors = new int[] { Color.parseColor("#F08080"),
 			Color.parseColor("#7CFC00"), Color.parseColor("#EE82EE"),
 			Color.parseColor("#87CEFA"), Color.parseColor("#FFD700"),
@@ -46,9 +43,28 @@ public class CategoryGraphActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_graph_view);
+		setGraph();
+	}
+	
 
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode) {
+		setGraph();
+		super.startActivityForResult(intent, requestCode);
+	}
+	
+	public void setGraph(){
+		
+		final GraphicalView mChartView;
+		final ArrayList<String> categories = new ArrayList<String>();
+		SQLiteDatabase db;
+		Cursor c;
+		int SelMonth;
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
+		// Pie차트 그리기
+		LinearLayout incomePiechartLayout = (LinearLayout) findViewById(R.id.pie_graph_layout);
+		incomePiechartLayout.removeAllViews();
 
 		Date date = new Date();
 		int currentYear = date.getYear() + 1900;
@@ -103,8 +119,7 @@ public class CategoryGraphActivity extends Activity {
 
 		}
 
-		// Pie차트 그리기
-		LinearLayout incomePiechartLayout = (LinearLayout) findViewById(R.id.pie_graph_layout);
+		
 
 		// sereise
 		CategorySeries series = new CategorySeries("!1");
@@ -135,59 +150,58 @@ public class CategoryGraphActivity extends Activity {
 		// ChartFactory.getPieChartView
 
 		mChartView = ChartFactory.getPieChartView(this, series, renderer);
-		touch l = new touch();
-		mChartView.setOnTouchListener(l);
+		
+		mChartView.setOnTouchListener(new OnTouchListener() {
+			
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				int c = mChartView.toBitmap().getPixel((int) event.getX(),
+						(int) event.getY());
+				String category = getResources().getString(R.string.c_etc);
+
+				if (c == colors[0]) {
+					category = categories.get(0);
+				} else if (c == colors[1]) {
+					category = categories.get(1);
+				} else if (c == colors[2]) {
+					category = categories.get(2);
+				} else if (c == colors[3]) {
+					category = categories.get(3);
+				} else if (c == colors[4]) {
+					category = categories.get(4);
+				} else if (c == colors[5]) {
+					category = categories.get(5);
+				} else if (c == colors[6]) {
+					category = categories.get(6);
+				} else if (c == colors[7]) {
+					category = categories.get(7);
+				} else if (c == colors[8]) {
+					category = categories.get(8);
+				} else if (c == colors[9]) {
+					category = categories.get(9);
+				}
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					Intent detailViewIntent = new Intent(
+							CategoryGraphActivity.this, DetailViewActivity.class);
+					detailViewIntent.putExtra("selCategory", category);
+					startActivityForResult(detailViewIntent, GO_DETAIL);
+
+				}
+				return true;
+			}
+		});
 		// mChartView.setBackgroundColor(Color.WHITE);
 		incomePiechartLayout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-
+		
 		if (mChartView != null)
 
 		{
-
+			
 			mChartView.invalidate();
 
 			mChartView.repaint();
 
 		}
-	}
-
-	class touch implements OnTouchListener {
-
-		public boolean onTouch(View v, MotionEvent event) {
-			// TODO Auto-generated method stub
-			int c = mChartView.toBitmap().getPixel((int) event.getX(),
-					(int) event.getY());
-			String category = getResources().getString(R.string.c_etc);
-
-			if (c == colors[0]) {
-				category = categories.get(0);
-			} else if (c == colors[1]) {
-				category = categories.get(1);
-			} else if (c == colors[2]) {
-				category = categories.get(2);
-			} else if (c == colors[3]) {
-				category = categories.get(3);
-			} else if (c == colors[4]) {
-				category = categories.get(4);
-			} else if (c == colors[5]) {
-				category = categories.get(5);
-			} else if (c == colors[6]) {
-				category = categories.get(6);
-			} else if (c == colors[7]) {
-				category = categories.get(7);
-			} else if (c == colors[8]) {
-				category = categories.get(8);
-			} else if (c == colors[9]) {
-				category = categories.get(9);
-			}
-			if (event.getAction() == MotionEvent.ACTION_UP) {
-				Intent detailViewIntent = new Intent(
-						CategoryGraphActivity.this, DetailViewActivity.class);
-				detailViewIntent.putExtra("selCategory", category);
-				startActivity(detailViewIntent);
-
-			}
-			return true;
-		}
+		
 	}
 }

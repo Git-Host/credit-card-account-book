@@ -43,6 +43,8 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	final static int SHOW_DATE_PICKER_FROM = 2;
 
 	final static int ADD_CASH_USE = 3;
+	
+
 	final static int ADD_CARD_USE = 4;
 	final static int INVALID_ALERT_DIALOG = 10;
 	
@@ -283,7 +285,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			strQuery += ") AND (combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= "
 							  + tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(strQuery, null);
-		
+			
 		// 상세내역보기 
 		} else {
 			String tmpStr = "SELECT * FROM breakdowstats WHERE (combineDate >= " + tmpFormat.format(tmpFromDate)
@@ -1089,4 +1091,13 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			}
 		}
 	}
+	
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent();
+		setResult(0,intent);
+		super.finish();
+	}
+
 }

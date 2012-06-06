@@ -14,13 +14,22 @@
     <string name="KEB_card">외환카드</string>
     <string name="SHINHAN_card">신한카드</string>
     <string name="Lotte_card">롯데카드</string>
+    <string name="Woori_card">우리카드</string>
+
     
+
     <string name="KB_check">KB국민체크</string>
     <string name="KB_credit">KB국민카드</string>
+    <string name="Samsung_card">삼성카드</string>
+    <string name="Sinhan_card">신한카드</string>
+    <string name="Hyundai_card">현대카드</string>
+    	
+
 
     <string name="SHINHAN_blank_card_number">****</string>
     
     <string name="refusal_card_payment">거절</string>
     <string name="refusal_cause">부족</string>
     <string name="sms_form_error">form_error</string>
+
 </resources>

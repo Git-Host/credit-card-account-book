@@ -71,7 +71,7 @@ public class CardAccountBookActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		// Button Create
 		myCardBtn = (ImageView) findViewById(R.id.my_card_btn);
 		detailViewBtn = (ImageView) findViewById(R.id.detail_view_btn);
