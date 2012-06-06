@@ -45,14 +45,15 @@ public class CategoryGraphActivity extends Activity {
 		setContentView(R.layout.category_graph_view);
 		setGraph();
 	}
-	
-
+		
 	@Override
-	public void startActivityForResult(Intent intent, int requestCode) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
 		setGraph();
-		super.startActivityForResult(intent, requestCode);
+		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
+
 	public void setGraph(){
 		
 		final GraphicalView mChartView;
