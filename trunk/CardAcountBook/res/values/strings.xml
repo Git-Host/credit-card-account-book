@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="mNum_gallexy_s_2_KT">SHW-M250K</string>
-    <string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
-    <string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
-
+	<string name="mNum_gallexy_s_2_KT">SHW-M250K</string>
+	<string name="mNum_gallexy_s_2_SK">SHW-M250S</string>
+	<string name="mNum_gallexy_s_2_LTE_LG">SHV-E120L</string>
+    <string name="model_number_end_upper_string_SK">S</string>
+    <string name="model_number_end_upper_string_LG">L</string>
+    <string name="model_number_end_lower_string_SK">s</string>
+    <string name="model_number_end_lower_string_LG">l</string>
+    <string name="nexus_s">Nexus S</string>
+    <string name="galaxy_nexus">Galaxy Nexus</string>
+    <string name="nexus_one">Nexus One</string>
+    
     <!-- Main Strings -->
     <string name="app_name">I - CARD</string>
     <string name="my_card">나의 카드</string>
@@ -38,12 +44,17 @@
 	<string name="add_card_use">카드 사용 추가하기</string>
 	<string name="add_my_card">나의 카드 추가하기</string>
 	<string name="delete_my_card">나의 카드 삭제</string>
+	<string name="approval_string">-승인</string>
 	
 	<string name="detete_my_card_dlg_title">카드 정보 수정 및 삭제</string>
 	<string name="delete_breakdown_stats_dlg_title">사용내역 정보 수정 및 삭제</string>
 	<string name="delete_b_stats_edit">사용내역 정보 수정 하기</string>
 	<string name="delete_b_stats_delete">사용내역 삭제 하기</string>
 	<string name="delete_b_alert_msg">정말 삭제 하시겠습니까?</string>
+	
+	<string name="delete_edit_cash_title">현금사용 정보 수정 및 삭제</string>
+	<string name="edit_cash_menu">현금사용 정보 수정하기</string>
+	<string name="delete_cash_menu">현금사용 삭제하기</string>
 	
 	<string name="my_card_add_init_payment_day">매월 0일</string>
 	<string name="my_card_add_init_card_type">신용</string>
@@ -55,6 +66,7 @@
 	<string name="no_space_won">원</string>
 	
 	<string name="list_have_no_items">결제 내역이 없습니다.</string>
+	<string name="my_card_list_have_no_items">카드가 없습니다. 추가해주세요.</string>
 	
 	<string name="cash_use_time">사용일시 :&#160;</string>
 	<string name="cash_use_place">사용장소 :&#160;</string>
@@ -83,6 +95,13 @@
     <string name="edit_payment_day">결제일 등록</string>
     <string name="edit_t_amount">사용목표금액 등록</string>
     <string name="edit_card_type">카드종류 등록</string>
+    
+    <!-- Detail View Title -->
+    <string name="detail_title_time">날짜</string>
+    <string name="detail_title_card">카드</string>
+    <string name="detail_title_place">장소</string>
+    <string name="detail_title_price">금액</string>
+    <string name="detail_title_category">분류</string>
 
     <!-- 상세내역 다이얼로그 스트링 -->
     <string name="deatil_dlg_edit_card_name">카드이름 : </string>
@@ -177,8 +196,8 @@
     <string name="nh_shoppingsave">채움 쇼핑세이브카드 </string>
 
     <!-- Lotte카드 카드명 리스트 -->
-    <string name="lotte_dc_supreme">DC Supreme 카드</string>
-    <string name="lotte_driving_pass">Driving Pass 카드</string>
+    <string name="lotte_dc_supreme">DC Supreme 롯데카드</string>
+    <string name="lotte_driving_pass">Driving Pass 롯데카드</string>
     <string name="lotte_lotte">롯데 롯데카드</string>
     <string name="lotte_happy_point">해피포인트 롯데체크카드</string>
     <string name="lotte_dc_sweet">DC Sweet 롯데 체크카드</string>

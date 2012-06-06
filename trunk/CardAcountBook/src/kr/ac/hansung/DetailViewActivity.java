@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -35,59 +34,70 @@ import android.widget.TextView;
  * @author Junu Kim
  */
 public class DetailViewActivity extends ListActivity implements CategoryList {
-	final static int DETAIL_DATE_EDIT_PICKER = 0;
-	final static int DETAIL_DATE_ADD_PICKER = 5;
-	final static int DETAIL_DATE_CASH_ADD_PICKER = 6;
+	private final static int DETAIL_DATE_EDIT_PICKER = 0;
+	private final static int DETAIL_DATE_ADD_PICKER = 5;
+	private final static int DETAIL_DATE_CASH_ADD_PICKER = 6;
 
-	final static int SHOW_DATE_PICKER_TO = 1;
-	final static int SHOW_DATE_PICKER_FROM = 2;
+	private final static int SHOW_DATE_PICKER_TO = 1;
+	private final static int SHOW_DATE_PICKER_FROM = 2;
 
-	final static int ADD_CASH_USE = 3;
+	private final static int ADD_CASH_USE = 3;
+	private final static int ADD_CARD_USE = 4;
+	private final static int INVALID_ALERT_DIALOG = 10;
 	
-
-	final static int ADD_CARD_USE = 4;
-	final static int INVALID_ALERT_DIALOG = 10;
+	private final static int DELETE_OR_EDIT_DIALOG = 7;
+	private final static int EDIT_DIALOG = 8;
+	private final static int EDIT_CASH_DIALOG = 12;
+	private final static int DELETE_ALERT_DIALOG = 9;
+	private final static int DELETE_OR_EDIT_DIALOG_CASH = 11;
+	private final static int CASH_USE_DATE_EDIT_PICKER = 13;
 	
-	final static int DELETE_OR_EDIT_DIALOG = 7;
-	final static int EDIT_DIALOG = 8;
-	final static int DELETE_ALERT_DIALOG = 9;
-	final static int EDIT_DIALOG_CASH = 11; 
-	
-	SQLiteDatabase db;
-	CardDB Cdb;
-	Intent receivedIntent;
+	private SQLiteDatabase db;
+	private CardDB Cdb;
+	private Intent receivedIntent;
 
-	String categoryQuery;
+	private String categoryQuery;
 	
-	Calendar today;
-	Bundle _bdl;
+	private Calendar today;
+	private Bundle _bdl;
 
-	ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
-	DetailViewAdapter dAdapter;
-	ListView detailListView;
-	TextView editApprovalTime;
-	TextView detailDlgCategory;
+	private ArrayList<SmsInfo> detailViewList = new ArrayList<SmsInfo>();
+	private DetailViewAdapter dAdapter;
+	private ListView detailListView;
+	private TextView editApprovalTime;
+	private TextView detailDlgCategory;
 
 	// 기간별 보기 컴포넌트
-	LinearLayout fromToLinear;
-	TextView priceView;
-	TextView fromDateDetailView;
-	TextView toDateDetailView;
-	TextView detailPriceView;
+	private LinearLayout fromToLinear;
+	private TextView priceView;
+	private TextView fromDateDetailView;
+	private TextView toDateDetailView;
+	private TextView detailPriceView;
 
 	// 카드사용 수동추가 다이얼로그 컴포넌트
-	EditText addDetailCardName;
-	EditText addDetailCardNumber;
-	TextView addDetailApprovalTime;
-	EditText addDetailPlace;
-	EditText addDetailPrice;
-	TextView addDetailCategory;
+	private EditText addDetailCardName;
+	private EditText addDetailCardNumber;
+	private TextView addDetailApprovalTime;
+	private EditText addDetailPlace;
+	private EditText addDetailPrice;
+	private TextView addDetailCategory;
 
 	// 현금사용 추가 다이얼로그 컴포넌트
-	TextView addCashUseTime;
-	EditText addCashUsePlace;
-	EditText addCashUsePrice;
-	TextView addCashUseCategory;
+	private TextView addCashUseTime;
+	private EditText addCashUsePlace;
+	private EditText addCashUsePrice;
+	private TextView addCashUseCategory;
+	
+	//현금사용 수정 다이얼로그 컴포넌트
+	private TextView addCashUseEditTime;
+	private EditText addCashUseEditPlace;
+	private EditText addCashUseEditPrice;
+	private TextView addCashUseEditCategory;
+	private String beforeCashUseTime;
+	private String beforeCashUsePlace;
+	private String beforeCashUsePrice;
+	private String beforeCashUseCategory;
+	private int clickedPos;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +106,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 		fromToLinear = (LinearLayout) findViewById(R.id.period_date_layout_detail); 
 		priceView = (TextView) findViewById(R.id.detail_price_view_title);
+		detailPriceView = (TextView) findViewById(R.id.detail_price_view);
 		today = Calendar.getInstance();
 
 		fromToDateChange();
@@ -113,7 +124,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	public void dynamicListAdd(Cursor detailCursor) {
 
 		detailViewList.clear();
-		detailPriceView = (TextView) findViewById(R.id.detail_price_view);
 
 		while (detailCursor.moveToNext()) {
 
@@ -252,6 +262,8 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			tmpCursor = db.rawQuery(strQuery, null);
 			fromToLinear.setVisibility(View.GONE);
 			priceView.setText(String.valueOf(selMonth) + getResources().getString(R.string.month_use));
+			priceView.setTextSize(25);
+			priceView.setPadding(20, 0, 20, 5);
 			priceView.setVisibility(View.VISIBLE);
 			
 		// 나의카드에서 카드선택 intent
@@ -286,6 +298,30 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 							  + tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(strQuery, null);
 			
+		// 메인에서 현재사용금액 눌럿을때 사용내역
+		} else if (intent.hasExtra("fromTime") && intent.hasExtra("toTime")) {
+			String[] fromTime = intent.getStringExtra("fromTime").replace(" ", "").split("\\.");
+			String[] toTime = intent.getStringExtra("toTime").replace(" ", "").split("\\.");
+			
+			Date fromTimeDate = new Date();
+			Date toTimeDate = new Date();
+
+			fromTimeDate.setYear(Integer.parseInt(fromTime[0]) - 1900);
+			fromTimeDate.setMonth(Integer.parseInt(fromTime[1]) - 1);
+			fromTimeDate.setDate(Integer.parseInt(fromTime[2]));
+			
+			toTimeDate.setYear(Integer.parseInt(toTime[0]) - 1900);
+			toTimeDate.setMonth(Integer.parseInt(toTime[1]) - 1);
+			toTimeDate.setDate(Integer.parseInt(toTime[2]));
+			
+			fromDateDetailView.setText(intent.getStringExtra("fromTime"));
+			toDateDetailView.setText(intent.getStringExtra("toTime"));
+			
+			String tmpStr = "SELECT * FROM breakdowstats WHERE (combineDate >= " + tmpFormat.format(fromTimeDate)
+					+ " AND combineDate <= "
+					+ tmpFormat.format(toTimeDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
+			tmpCursor = db.rawQuery(tmpStr, null);
+	
 		// 상세내역보기 
 		} else {
 			String tmpStr = "SELECT * FROM breakdowstats WHERE (combineDate >= " + tmpFormat.format(tmpFromDate)
@@ -293,7 +329,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 							+ tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
 			tmpCursor = db.rawQuery(tmpStr, null);
 		}
-
 		return tmpCursor;
 	}
 
@@ -304,10 +339,17 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	public class detailViewListItemLongClickListener implements	AdapterView.OnItemLongClickListener {
 
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
-			Bundle bdl = new Bundle();
-			bdl.putInt("position", pos);
-			showDialog(DELETE_OR_EDIT_DIALOG, bdl);
-			return true;
+			if (dAdapter.getItem(pos).getCardName().equals(getResources().getString(R.string.cash_use_list_string))) {
+				Bundle bdl = new Bundle();
+				bdl.putInt("position", pos);
+				showDialog(DELETE_OR_EDIT_DIALOG_CASH, bdl);
+				return true;
+			} else {
+				Bundle bdl = new Bundle();
+				bdl.putInt("position", pos);
+				showDialog(DELETE_OR_EDIT_DIALOG, bdl);
+				return true;
+			}
 		}
 	}
 
@@ -423,6 +465,8 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bdl) {
 		String[] delete_edit_array = { getResources().getString(R.string.delete_b_stats_edit), getResources().getString(R.string.delete_b_stats_delete) };
+		String[] delete_edit_cash_array = { getResources().getString(R.string.edit_cash_menu), getResources().getString(R.string.delete_cash_menu) };
+				
 		_bdl = new Bundle();
 		_bdl = bdl;
 		
@@ -438,6 +482,9 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			
 		case DETAIL_DATE_CASH_ADD_PICKER :
 			return new DatePickerDialog(this, detailDateCardAddPickerListener, bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
+			
+		case CASH_USE_DATE_EDIT_PICKER :
+			return new DatePickerDialog(this, cashDateEditPickerListener, bdl.getInt("aprvlYear"), bdl.getInt("aprvlMonth") - 1, bdl.getInt("aprvlDay"));
 			
 		case SHOW_DATE_PICKER_TO :
 			return new DatePickerDialog(this, toDetailDateSetListener, bdl.getInt("toYear"), bdl.getInt("toMonth") - 1, bdl.getInt("toDay"));
@@ -476,7 +523,6 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		case DELETE_ALERT_DIALOG :
 			builder = new AlertDialog.Builder(this);
 			
-			
 			builder
 			.setTitle(R.string.delete_b_stats_delete)
 			.setMessage(R.string.delete_b_alert_msg)
@@ -497,6 +543,8 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 
 					dAdapter.remove(dAdapter.getItem(pos));
 					dAdapter.notifyDataSetChanged();
+					
+					sumPrice();
 					
 					removeDialog(DELETE_ALERT_DIALOG);
 				}
@@ -649,24 +697,24 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			createDialog = builder.create();
 			return createDialog;
 		
-		case EDIT_DIALOG_CASH :
+		case DELETE_OR_EDIT_DIALOG_CASH :
 			builder = new AlertDialog.Builder(this);
 			
 			builder
-			.setTitle(R.string.delete_breakdown_stats_dlg_title)
-			.setItems(delete_edit_array, new DialogInterface.OnClickListener() {
+			.setTitle(R.string.delete_edit_cash_title)
+			.setItems(delete_edit_cash_array, new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					Bundle tmpBdl = new Bundle();
 					tmpBdl.putInt("position", _bdl.getInt("position"));
 					switch (which) {
 					case 0 :	// 사용내역 수정 클릭
-						removeDialog(DELETE_OR_EDIT_DIALOG);
-						showDialog(EDIT_DIALOG, tmpBdl);
+						removeDialog(DELETE_OR_EDIT_DIALOG_CASH);
+						showDialog(EDIT_CASH_DIALOG, tmpBdl);
 						break;
 						
 					case 1 :	// 사용내역 삭제 클릭
-						removeDialog(DELETE_OR_EDIT_DIALOG);
+						removeDialog(DELETE_OR_EDIT_DIALOG_CASH);
 						showDialog(DELETE_ALERT_DIALOG, tmpBdl);
 						break;
 					}
@@ -676,12 +724,44 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			
 			createDialog = builder.create();
 			return createDialog;
+
+		case EDIT_CASH_DIALOG :
+			builder = new AlertDialog.Builder(this);
+			clickedPos = _bdl.getInt("position");
+			
+			LayoutInflater editCashLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+			View editCashDlgView = editCashLayoutInflater.inflate(R.layout.detail_list_cash_edit_dialog_layout, (ViewGroup) findViewById(R.id.detail_cash_use_edit_root_view));
+
+			addCashUseEditTime = (TextView) editCashDlgView.findViewById(R.id.detail_cash_use_time_edit);
+			addCashUseEditPlace = (EditText) editCashDlgView.findViewById(R.id.detail_cash_use_place_edit);
+			addCashUseEditPrice = (EditText) editCashDlgView.findViewById(R.id.detail_cash_use_price_edit);
+			addCashUseEditCategory = (TextView) editCashDlgView.findViewById(R.id.detail_cash_use_category_edit);
+
+			beforeCashUseTime = dAdapter.getItem(clickedPos).getApprovalTime();
+			beforeCashUsePlace = dAdapter.getItem(clickedPos).getPlace();
+			beforeCashUsePrice = String.valueOf(dAdapter.getItem(clickedPos).getPrice());
+			beforeCashUseCategory = dAdapter.getItem(clickedPos).getCategory();
+			
+			addCashUseEditTime.setText(beforeCashUseTime);
+			addCashUseEditPlace.setText(beforeCashUsePlace);
+			addCashUseEditPrice.setText(beforeCashUsePrice);
+			addCashUseEditCategory.setText(beforeCashUseCategory);
+			
+			addCashUseEditTime.setOnClickListener(new detailEditClickListener());
+			addCashUseEditCategory.setOnClickListener(new detailEditClickListener());
+			
+			EditCashDialogListener editCashDialogListener = new EditCashDialogListener();
+			
+			builder
+			.setTitle(R.string.edit_cash_menu)
+			.setPositiveButton(R.string.edit_string, editCashDialogListener)
+			.setNegativeButton(R.string.cancel_string, editCashDialogListener)
+			.setCancelable(false)
+			.setView(editCashDlgView);
+			
+			createDialog = builder.create();
+			return createDialog;
 		}
-		
-			
-			
-			
-			
 		return super.onCreateDialog(id, bdl);
 	}
 
@@ -712,6 +792,19 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			detailDlgDate.setDate(dayOfMonth);
 
 			editApprovalTime.setText(dateFormat.format(detailDlgDate));
+		}
+	};
+	
+	private DatePickerDialog.OnDateSetListener cashDateEditPickerListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+			int month = monthOfYear + 1;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date detailDlgDate = new Date();
+			detailDlgDate.setYear(year - 1900);
+			detailDlgDate.setMonth(month - 1);
+			detailDlgDate.setDate(dayOfMonth);
+
+			addCashUseEditTime.setText(dateFormat.format(detailDlgDate));
 		}
 	};
 
@@ -751,7 +844,18 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			final TextView tmpView = (TextView) v;
 			Bundle aprvlBdl;
 			String[] tmpAprvl;
+		
 			switch (v.getId()) {
+			
+			case R.id.detail_cash_use_time_edit :
+				aprvlBdl = new Bundle();
+				tmpAprvl = ((TextView) v).getText().toString().split("-");
+				aprvlBdl.putInt("aprvlYear", Integer.parseInt(tmpAprvl[0]));
+				aprvlBdl.putInt("aprvlMonth", Integer.parseInt(tmpAprvl[1]));
+				aprvlBdl.putInt("aprvlDay", Integer.parseInt(tmpAprvl[2]));
+				showDialog(CASH_USE_DATE_EDIT_PICKER, aprvlBdl);
+				break;
+				
 			case R.id.detail_edit_approval_time:
 				aprvlBdl = new Bundle();
 				tmpAprvl = ((TextView) v).getText().toString().split("-");
@@ -779,6 +883,7 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 				showDialog(DETAIL_DATE_CASH_ADD_PICKER, aprvlBdl);
 				break;
 
+			case R.id.detail_cash_use_category_edit :
 			case R.id.detail_edit_category:
 			case R.id.detail_add_category:
 			case R.id.detail_cash_use_category:
@@ -1092,6 +1197,56 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		}
 	}
 	
+	public class EditCashDialogListener implements DialogInterface.OnClickListener {
+
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			case DialogInterface.BUTTON_POSITIVE :
+				
+				if (addCashUseEditPlace.getText().toString().replace(" ", "").equals("") 
+						|| addCashUseEditPrice.getText().toString().equals("")) {
+					removeDialog(EDIT_CASH_DIALOG);
+					showDialog(INVALID_ALERT_DIALOG);
+					break;
+				} else if (beforeCashUseTime.equals(addCashUseEditTime.getText().toString())
+						&& beforeCashUsePlace.equals(addCashUseEditPlace.getText().toString())
+						&& beforeCashUsePrice.equals(addCashUseEditPrice.getText().toString())
+						&& beforeCashUseCategory.equals(addCashUseEditCategory.getText().toString())) {
+					removeDialog(EDIT_CASH_DIALOG);
+					break;
+				}  else {
+					CardDB Cdb = new CardDB(DetailViewActivity.this);
+					String[] newCashUseTimeArray = addCashUseEditTime.getText().toString().split("-");
+					String newCashUseTime = addCashUseEditTime.getText().toString().replace("-", "");
+					
+					db = Cdb.getReadableDatabase();
+
+					String updateQuery = "UPDATE breakdowstats SET pYear = "+ newCashUseTimeArray[0] + ", pMonth = "+ newCashUseTimeArray[1] + ", pDay = " + newCashUseTimeArray[2]
+										 + ", combineDate = "+ newCashUseTime + ", pPlace = '"+ addCashUseEditPlace.getText().toString()
+										 + "', price = "+ addCashUseEditPrice.getText().toString() + ", category = '"+ addCashUseEditCategory.getText().toString() + "' WHERE breakKey = "
+										 + dAdapter.getItem(clickedPos).getBreakKey() + ";";
+					db.execSQL(updateQuery);
+					db.close();
+					
+					dAdapter.getItem(clickedPos).setApprovalTime(addCashUseEditTime.getText().toString());
+					dAdapter.getItem(clickedPos).setPlace(addCashUseEditPlace.getText().toString());
+					dAdapter.getItem(clickedPos).setPrice(Integer.parseInt(addCashUseEditPrice.getText().toString()));
+					dAdapter.getItem(clickedPos).setCategory(addCashUseEditCategory.getText().toString());
+					
+					dAdapter.notifyDataSetChanged();
+					removeDialog(EDIT_CASH_DIALOG);
+				}
+				break;
+				
+			case DialogInterface.BUTTON_NEGATIVE :
+				removeDialog(EDIT_CASH_DIALOG);
+				break;
+			}
+			
+		}
+		
+	}
+	
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
@@ -1099,5 +1254,4 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 		setResult(0,intent);
 		super.finish();
 	}
-
 }

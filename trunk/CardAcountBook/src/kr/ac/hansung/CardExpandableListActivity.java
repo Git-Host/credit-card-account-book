@@ -128,7 +128,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 			
 		}
 		
-		//Sinhan child ADD
+		//Shinhan child ADD
 		for(int i=0;i<CardInfoList.SinhanCardImg.length;i++){
 			cardElement = new MyCardInfo();
 			cardElement.setCardImage(SinhanCardImg[i]);
@@ -161,6 +161,7 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		setListAdapter(cardAdapter);
 		
 		cardExpandableListView = getExpandableListView();
+		cardExpandableListView.expandGroup(0);
 	}
 	
 	@Override

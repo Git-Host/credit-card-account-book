@@ -37,7 +37,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		// Notification Manager
 		smsNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		smsNotification = new Notification();
-		smsNotification.icon = R.drawable.ic_launcher;
+		smsNotification.icon = R.drawable.status_bar_icon_i_card;
 		smsNotification.tickerText = res.getString(R.string.notification_ticker_text);
 		smsNotification.when = System.currentTimeMillis();
 		smsNotification.number = 0;
@@ -56,8 +56,6 @@ public class SMSReceiver extends BroadcastReceiver {
 				smsAddress = msgs[i].getOriginatingAddress();
 				smsBody = smsBody + msgs[i].getMessageBody().toString();
 			}
-			Log.v("JUNU", smsAddress);
-			Log.v("JUNU", smsBody);
 		}
 		
 		if (smsAddress.equals(res.getString(R.string.phoneNum_KB)) || smsAddress.equals(res.getString(R.string.phoneNum_NH))

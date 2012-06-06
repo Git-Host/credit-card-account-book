@@ -7,138 +7,178 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/period_date_layout_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="120dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/detail_view_payment_title"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/from_date_view_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/grey"
-            android:clickable="true"
-            android:gravity="left"
-            android:paddingLeft="15dp"
-            android:paddingTop="5dp"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/grey"
-            android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:text="@string/dash"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/to_date_view_detail"
+        <LinearLayout
+            android:id="@+id/period_date_layout_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/grey"
-            android:clickable="true"
-            android:gravity="left"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="26dp"
+                android:gravity="left"
+                android:src="@drawable/calendar_icon" />
+
+            <TextView
+                android:id="@+id/from_date_view_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:gravity="left"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:text="@string/dash"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/to_date_view_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:gravity="left"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/detail_price_view_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_price_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:clickable="true"
+                android:gravity="right"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="27sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/detail_price_view_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/grey"
-        android:clickable="true"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/detail_price_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/grey"
-        android:clickable="true"
-        android:gravity="right"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold" />
 
     <!-- 분류 보여주는 리니어레이아웃 -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/border_edit_card_menu"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:paddingBottom="3dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="3dp" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="일시"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:maxLength="4"
             android:singleLine="true"
-            android:text="카드"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="사용장소"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:gravity="right"
-            android:singleLine="true"
-            android:text="금액"
+            android:text="@string/detail_title_time"
             android:textColor="@color/black"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="30dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_weight="1.2"
+            android:gravity="center"
+            android:maxLength="4"
+            android:paddingLeft="2dp"
             android:singleLine="true"
-            android:text="분류"
-            android:textColor="@color/black" />
+            android:text="@string/detail_title_card"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3.5"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:text="@string/detail_title_place"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/detail_title_price"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/detail_title_category"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <ListView

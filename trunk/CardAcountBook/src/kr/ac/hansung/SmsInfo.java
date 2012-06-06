@@ -27,12 +27,13 @@ public class SmsInfo implements CategoryList {
 	private String category;
 	private static Resources res;
 	
-	final static int NH_PNUM = 15881600;			// 농협
-	final static int KB_PNUM = 15881788; 			// 국민은행
-	final static int CITY_PNUM = 15661000;			// 시티은행
-	final static int KEB_PNUM = 15886700;			// 외환은행
-	final static int SAVING_BANK_PNUM = 15886622;	// 저축은행
-	final static int SHINHAN_PNUM = 15447200;		// 신한은행
+	private final static int NH_PNUM = 15881600;			// 농협
+	private final static int KB_PNUM = 15881788; 			// 국민은행
+	private final static int CITY_PNUM = 15661000;			// 시티은행
+	private final static int KEB_PNUM = 15886700;			// 외환은행
+	private final static int SAVING_BANK_PNUM = 15886622;	// 저축은행
+	private final static int SHINHAN_PNUM = 15447200;		// 신한은행
+	private final static int HYUNDAI_PNUM = 15776200;
 	
 	// getter
 	public Context getContext() { return context; }
@@ -128,117 +129,185 @@ public class SmsInfo implements CategoryList {
 		
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
 		
+		
 		// 명희전화번호꺼 신한으로 바꾸기
-		if (smsAddress.equals("01039487705")
-				|| smsAddress.equals("01042434994")) {
+		if (smsAddress.equals("01039487705")) {
 			tmpAddress = SHINHAN_PNUM;
+		} else if (smsAddress.equals("01042770817")) {
+			tmpAddress = HYUNDAI_PNUM;
+		} else if (smsAddress.equals("01042434994")) {
+			tmpAddress = KEB_PNUM;
 		}
 		
-		switch (tmpAddress) {
 		
-		case KB_PNUM :
-			tmpSplitBody = smsBody.split("\n");
-			tmpCardName = tmpSplitBody[0].substring(0, tmpSplitBody[0].indexOf("("));
-			tmpCardNum = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("(") + 1, tmpSplitBody[0].indexOf(")"));
-			tmpApproval = splitMonthDay(tmpSplitBody[2]);
-			tmpMonth = tmpApproval[0];
-			tmpDay = tmpApproval[1];
-			tmpPrice = tmpSplitBody[3].replace(",", "").replace(res.getString(R.string.no_space_won), "");
-			tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
-			tmpCategory = SearchCategory(tmpPlace);
+		try {
+			switch (tmpAddress) {
 			
-			date = new Date();
-			date.setYear(Integer.parseInt(tmpYear) - 1900);
-			date.setMonth(Integer.parseInt(tmpMonth) - 1);
-			date.setDate(Integer.parseInt(tmpDay));
-			inDate = Integer.parseInt(dateFormat.format(date));
+			case KB_PNUM :
+				tmpSplitBody = smsBody.split("\n");
+				tmpCardName = tmpSplitBody[0].substring(0, tmpSplitBody[0].indexOf("("));
+				tmpCardNum = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("(") + 1, tmpSplitBody[0].indexOf(")"));
+				tmpApproval = splitMonthDay(tmpSplitBody[2]);
+				tmpMonth = tmpApproval[0];
+				tmpDay = tmpApproval[1];
+				tmpPrice = tmpSplitBody[3].replace(",", "").replace(res.getString(R.string.no_space_won), "");
+				tmpPlace = tmpSplitBody[4].substring(0, tmpSplitBody[4].length() - 3);
+				tmpCategory = SearchCategory(tmpPlace);
+				
+				date = new Date();
+				date.setYear(Integer.parseInt(tmpYear) - 1900);
+				date.setMonth(Integer.parseInt(tmpMonth) - 1);
+				date.setDate(Integer.parseInt(tmpDay));
+				inDate = Integer.parseInt(dateFormat.format(date));
+				
+				tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', "
+								  + tmpYear + ", " + tmpMonth + ", " + tmpDay + ", '" + tmpPlace
+								  + "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory + "', '" 
+								  + tmpCardNum + "'," + inDate + ", 0);";
+				
+				break;
 			
-			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES(null, '" + tmpCardName	+ "', "
-							  + tmpYear + ", " + tmpMonth + ", " + tmpDay + ", '" + tmpPlace
-							  + "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory + "', '" 
-							  + tmpCardNum + "'," + inDate + ", 0);";
+			case NH_PNUM :
+				tmpSplitBody = smsBody.split("\n");
+				tmpAType = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("[") + 1, tmpSplitBody[0].indexOf("]"));
+				tmpPrice = tmpSplitBody[1].replace(",", "").replace(res.getString(R.string.no_space_won), "");
+				tmpCardName = tmpSplitBody[2].substring(0, tmpSplitBody[2].indexOf("("));
+				tmpCardNum = tmpSplitBody[2].substring(tmpSplitBody[2].indexOf("(") + 1, tmpSplitBody[2].indexOf(")"));
+				String[] tmpAprvl = tmpSplitBody[4].split(" ");
+				String[] tmpApprovalSplit = tmpAprvl[0].split("/");
+				tmpMonth = tmpApprovalSplit[0];
+				tmpDay = tmpApprovalSplit[1];
+				tmpCategory = SearchCategory(tmpSplitBody[5]);
+				
+				date = new Date();
+				date.setYear(Integer.parseInt(tmpYear) - 1900);
+				date.setMonth(Integer.parseInt(tmpMonth) - 1);
+				date.setDate(Integer.parseInt(tmpDay));
+				inDate = Integer.parseInt(dateFormat.format(date));
+				
+				tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+						+"null, '" + tmpCardName
+						+ "', " + tmpYear + ", " + tmpMonth + ", "
+						+ tmpDay + ", '" + tmpSplitBody[5]
+						+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
+						+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
+				
+				break;
 			
-			break;
-		
-		case NH_PNUM :
-			tmpSplitBody = smsBody.split("\n");
-			tmpAType = tmpSplitBody[0].substring(tmpSplitBody[0].indexOf("[") + 1, tmpSplitBody[0].indexOf("]"));
-			tmpPrice = tmpSplitBody[1].replace(",", "").replace(res.getString(R.string.no_space_won), "");
-			tmpCardName = tmpSplitBody[2].substring(0, tmpSplitBody[2].indexOf("("));
-			tmpCardNum = tmpSplitBody[2].substring(tmpSplitBody[2].indexOf("(") + 1, tmpSplitBody[2].indexOf(")"));
-			String[] tmpAprvl = tmpSplitBody[4].split(" ");
-			String[] tmpApprovalSplit = tmpAprvl[0].split("/");
-			tmpMonth = tmpApprovalSplit[0];
-			tmpDay = tmpApprovalSplit[1];
-			tmpCategory = SearchCategory(tmpSplitBody[5]);
-			
-			date = new Date();
-			date.setYear(Integer.parseInt(tmpYear) - 1900);
-			date.setMonth(Integer.parseInt(tmpMonth) - 1);
-			date.setDate(Integer.parseInt(tmpDay));
-			inDate = Integer.parseInt(dateFormat.format(date));
-			
-			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
-					+"null, '" + tmpCardName
-					+ "', " + tmpYear + ", " + tmpMonth + ", "
-					+ tmpDay + ", '" + tmpSplitBody[5]
-					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
-			
-			break;
-		
-		case SHINHAN_PNUM :
-			tmpSplitBody = smsBody.split(" ");
-			
-			Vector<String> stringVector = new Vector<String>();
-					
-			for (int i=0; i<tmpSplitBody.length; i++) {
-				if (!tmpSplitBody[i].equals("")) {
-					stringVector.add(tmpSplitBody[i]);
+			case SHINHAN_PNUM :
+				tmpSplitBody = smsBody.split(" ");
+				
+				Vector<String> stringVector = new Vector<String>();
+						
+				for (int i=0; i<tmpSplitBody.length; i++) {
+					if (!tmpSplitBody[i].equals("")) {
+						stringVector.add(tmpSplitBody[i]);
+					}
 				}
-			}
-			
-			if (stringVector.get(1).contains(res.getString(R.string.refusal_card_payment))
-					|| stringVector.get(4).contains(res.getString(R.string.refusal_cause))) {
-				return getSmsFormErrorString();
-			}
-			
-			tmpAType = stringVector.get(0);
-			tmpPrice = stringVector.get(3).replace(",", "").replace(res.getString(R.string.no_space_won), "");
-			tmpCardName = res.getString(R.string.SHINHAN_card);
-			tmpCardNum = res.getString(R.string.SHINHAN_blank_card_number);
-			String[] _tmpApproval = stringVector.get(1).split("/");
-			tmpMonth = _tmpApproval[0];
-			tmpDay = _tmpApproval[1];
-			tmpCategory = SearchCategory(stringVector.get(4));
+				
+				if (stringVector.get(1).contains(res.getString(R.string.refusal_card_payment))
+						|| stringVector.get(4).contains(res.getString(R.string.refusal_cause))) {
+					return getSmsFormErrorString();
+				}
+				
+				tmpAType = stringVector.get(0);
+				tmpPrice = stringVector.get(3).replace(",", "").replace(res.getString(R.string.no_space_won), "");
+				tmpCardName = res.getString(R.string.SHINHAN_card);
+				tmpCardNum = res.getString(R.string.SHINHAN_blank_card_number);
+				String[] _tmpApproval = stringVector.get(1).split("/");
+				tmpMonth = _tmpApproval[0];
+				tmpDay = _tmpApproval[1];
+				tmpCategory = SearchCategory(stringVector.get(4));
+	
+				date = new Date();
+				date.setYear(Integer.parseInt(tmpYear) - 1900);
+				date.setMonth(Integer.parseInt(tmpMonth) - 1);
+				date.setDate(Integer.parseInt(tmpDay));
+				inDate = Integer.parseInt(dateFormat.format(date));
+				
+				tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+						+"null, '" + tmpCardName
+						+ "', " + tmpYear + ", " + tmpMonth + ", "
+						+ tmpDay + ", '" + stringVector.get(4)
+						+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
+						+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
+				break;
+				
+			case CITY_PNUM :
+				break;
+	
+			case KEB_PNUM :
+				tmpSplitBody = smsBody.split(" ");
+				
+				Vector<String> kebSmsBody = new Vector<String>();
+				
+				for (int i=0; i<tmpSplitBody.length; i++) {
+					if (!tmpSplitBody[i].equals("")) {
+						kebSmsBody.add(tmpSplitBody[i]);
+					}
+				}
 
-			date = new Date();
-			date.setYear(Integer.parseInt(tmpYear) - 1900);
-			date.setMonth(Integer.parseInt(tmpMonth) - 1);
-			date.setDate(Integer.parseInt(tmpDay));
-			inDate = Integer.parseInt(dateFormat.format(date));
+				tmpCardName = kebSmsBody.get(0).substring(kebSmsBody.get(0).indexOf("[") + 1, kebSmsBody.get(0).indexOf("]"));
+				tmpPrice = kebSmsBody.get(1).replace(",", "").replace(res.getString(R.string.no_space_won), "");
+				tmpPlace = kebSmsBody.get(3);
+				tmpApproval = kebSmsBody.get(4).split("/");
+				tmpMonth = tmpApproval[0];
+				tmpDay = tmpApproval[1];
+				tmpCardNum = res.getString(R.string.SHINHAN_blank_card_number);
+				tmpCategory = SearchCategory(tmpPlace);
+				
+				tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+						+"null, '" + tmpCardName
+						+ "', " + tmpYear + ", " + tmpMonth + ", "
+						+ tmpDay + ", '" + tmpPlace
+						+ "', " + tmpPrice + ", '" + tmpCategory
+						+ "', '" + tmpCardNum + "'," + tmpYear + tmpMonth + tmpDay + ", 0);";
+				
+				break;
 			
-			tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
-					+"null, '" + tmpCardName
-					+ "', " + tmpYear + ", " + tmpMonth + ", "
-					+ tmpDay + ", '" + stringVector.get(4)
-					+ "', " + Integer.parseInt(tmpPrice) + ", '" + tmpCategory
-					+ "', '" + tmpCardNum + "'," + inDate  + ", 0);";
-			break;
+			case SAVING_BANK_PNUM :
+				break;
 			
-		case CITY_PNUM :
-			break;
-
-		case KEB_PNUM :
-			break;
-		
-		case SAVING_BANK_PNUM :
-			break;
-		
-		default : 
-			break;
+			case HYUNDAI_PNUM :
+				tmpSplitBody = smsBody.split("\n");
+				
+				if (!tmpSplitBody[0].contains(res.getString(R.string.approval_string))) {
+					return getSmsFormErrorString();
+				}
+				
+				String[] cardNameApproval = tmpSplitBody[0].split("-");
+				String[] tmpApprovalTime = tmpSplitBody[2].split(" ");
+				tmpApproval = tmpApprovalTime[0].split("/");
+				tmpPrice = tmpSplitBody[3].substring(0, tmpSplitBody[3].indexOf("(")).replace(",", "").replace(res.getString(R.string.no_space_won), "");
+				tmpCardNum = res.getString(R.string.SHINHAN_blank_card_number);
+				tmpPlace = tmpSplitBody[4];
+				
+				Vector<String> hyundaiSmsBody = new Vector<String>();
+				
+				hyundaiSmsBody.add(cardNameApproval[0].replace("[", "").replace("]", ""));
+				hyundaiSmsBody.add(tmpYear);
+				hyundaiSmsBody.add(tmpApproval[0]);
+				hyundaiSmsBody.add(tmpApproval[1]);
+				hyundaiSmsBody.add(tmpPlace);
+				hyundaiSmsBody.add(tmpPrice);
+				hyundaiSmsBody.add(SearchCategory(tmpPlace));
+				hyundaiSmsBody.add(tmpCardNum);
+				hyundaiSmsBody.add(tmpYear + tmpApproval[0] + tmpApproval[1]);
+				
+				tmpInsertQuery =  "INSERT INTO breakdowstats VALUES("
+								+"null, '" + hyundaiSmsBody.get(0)
+								+ "', " + hyundaiSmsBody.get(1) + ", " + hyundaiSmsBody.get(2) + ", "
+								+ hyundaiSmsBody.get(3) + ", '" + hyundaiSmsBody.get(4)
+								+ "', " + hyundaiSmsBody.get(5) + ", '" + hyundaiSmsBody.get(6)
+								+ "', '" + hyundaiSmsBody.get(7) + "'," + hyundaiSmsBody.get(8) + ", 0);";
+				break;
+				
+			default : 
+				break;
+			}
+		} catch (Exception e) {
+			return getSmsFormErrorString();
 		}
-		
 		return tmpInsertQuery; 
 	}
 	

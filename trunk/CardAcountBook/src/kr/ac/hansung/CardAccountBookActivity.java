@@ -33,10 +33,6 @@ import android.widget.TextView;
  * CardAccountBookActivity.java Main Activity  
  * @author Junu Kim
  */
-/**
- * @author Admin
- *
- */
 public class CardAccountBookActivity extends Activity {
 
 	// Nexus One, Nexus S, Gallaxy Nexus ContentProvider Uri
@@ -56,7 +52,7 @@ public class CardAccountBookActivity extends Activity {
 	private SharedPreferences pref;
 	private ProgressDialog progressDialog;
 	
-	private ImageView myCardBtn, detailViewBtn, chartViewBtn, optionViewBtn;
+	private ImageView myCardBtn, detailViewBtn, chartViewBtn, optionViewBtn, noticeViewBtn;
 
 	private SMSReceiver smsReceiver;
 	private String DELIVERED = "SMS_DELIVERED";
@@ -77,6 +73,7 @@ public class CardAccountBookActivity extends Activity {
 		detailViewBtn = (ImageView) findViewById(R.id.detail_view_btn);
 		chartViewBtn = (ImageView) findViewById(R.id.breakdown_stats_btn);
 		optionViewBtn = (ImageView) findViewById(R.id.option_btn);
+		noticeViewBtn = (ImageView) findViewById(R.id.notice_btn); 
 		todayPaymentView = (LinearLayout) findViewById(R.id.today_payment_view);
 
 		MainButtonClickListener scatterIntentListener = new MainButtonClickListener();
@@ -85,10 +82,19 @@ public class CardAccountBookActivity extends Activity {
 		boolean initial_flag = pref.getBoolean(INITIAL_FLAG, false);
 		
 		String modelNumber = getDeviceModelNumber();
-
+		
+		
 		// Device에 따라 적절한 ContentProvider 선택해줌
-		if (modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_LTE_LG))
-				|| modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_SK))) {
+		if (modelNumber.equals(getResources().getString(R.string.nexus_one))
+				|| modelNumber.equals(getResources().getString(R.string.nexus_s))
+				|| modelNumber.equals(getResources().getString(R.string.galaxy_nexus))) {
+			cpUri = REFERENCE_PHONE_URI;
+		} else if (modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_LTE_LG))
+				|| modelNumber.equals(getResources().getString(R.string.mNum_gallexy_s_2_SK))
+				|| modelNumber.endsWith(getResources().getString(R.string.model_number_end_upper_string_SK))
+				|| modelNumber.endsWith(getResources().getString(R.string.model_number_end_lower_string_SK))
+				|| modelNumber.endsWith(getResources().getString(R.string.model_number_end_upper_string_LG))
+				|| modelNumber.endsWith(getResources().getString(R.string.model_number_end_lower_string_LG))) {
 			cpUri = SAMSUNG_GALLEXY_S2_URI;
 		} else {
 			cpUri = REFERENCE_PHONE_URI;
@@ -119,6 +125,9 @@ public class CardAccountBookActivity extends Activity {
 		
 		// Option View Btn Click
 		optionViewBtn.setOnClickListener(scatterIntentListener);
+		
+		// Notice View Btn Click
+		noticeViewBtn.setOnClickListener(scatterIntentListener);
 
 		// SMS BroadcastReceiver
 		smsReceiver = new SMSReceiver();
@@ -184,25 +193,36 @@ public class CardAccountBookActivity extends Activity {
 			}
 		}
 	}
-	
-	
 
 	public class MainButtonClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			Intent scatterIntent = null;
 			switch (v.getId()) {
+			
 			case R.id.my_card_btn :
 				scatterIntent = new Intent(CardAccountBookActivity.this, MyCardActivity.class);
 				break;
-			case R.id.detail_view_btn :
+				
 			case R.id.today_payment_view :
 				scatterIntent = new Intent(CardAccountBookActivity.this, DetailViewActivity.class);
+				scatterIntent.putExtra("fromTime", fromDateView.getText().toString());
+				scatterIntent.putExtra("toTime", toDateView.getText().toString());
 				break;
+				
+			case R.id.detail_view_btn :
+				scatterIntent = new Intent(CardAccountBookActivity.this, DetailViewActivity.class);
+				break;
+				
 			case R.id.breakdown_stats_btn :
 				scatterIntent = new Intent(CardAccountBookActivity.this, GraphViewActivity.class);
 				break;
+				
 			case R.id.option_btn : 
 				scatterIntent = new Intent(CardAccountBookActivity.this, OptionViewActivity.class);
+				break;
+				
+			case R.id.notice_btn :
+				scatterIntent = new Intent(CardAccountBookActivity.this, NoticeActivity.class);
 				break;
 			}
 			startActivity(scatterIntent);
@@ -269,11 +289,10 @@ public class CardAccountBookActivity extends Activity {
 						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_CITY)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_KEB))
 						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_saving_bank)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_SHINHAN))
 						 
-						
-//					|| curAddress.equals("01039487705")) { // 명희번호임 지워야함
-//						|| curAddress.equals("01042434994")) { // 내번호임 지워야함
+//					|| curAddress.equals("01039487705")) { 			// 명희번호임 지워야함
+						|| curAddress.equals("01042434994")		 	// 내번호임 지워야함
+						|| curAddress.equals("01042770817")			// SDK 전화번호임 지워야함
 ){
-					
 					smsBody = cursor.getString(cursor.getColumnIndex("body"));
 					smsAddress = cursor.getString(cursor.getColumnIndex("address"));
 					
@@ -333,10 +352,6 @@ public class CardAccountBookActivity extends Activity {
 		
 		return imageUri;
 	}
-	
-	
-	
-	
 	
 	/**
 	 * Method fromToDateChange Main화면의 기간별 DatePicker를 보여주기 위한 메소드
@@ -448,13 +463,12 @@ public class CardAccountBookActivity extends Activity {
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
 
-		String nowPayQuery = "SELECT price FROM breakdowstats WHERE (breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) +
-				" AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +") AND breakdowstats.deleteFlag = 0;";
+		String nowPayQuery = "SELECT price FROM breakdowstats WHERE (breakdowstats.combineDate >=" + dateFormat.format(tmpFromDate) 
+							 + " AND breakdowstats.combineDate <= " + dateFormat.format(tmpToDate) +") AND breakdowstats.deleteFlag = 0;";
 		cursor = db.rawQuery(nowPayQuery, null);
 		
 		while (cursor.moveToNext()) {
 			String cPrice = cursor.getString(cursor.getColumnIndex("price"));
-			
 			priceTitle = priceTitle + Integer.parseInt(cPrice);
 		}
 		
