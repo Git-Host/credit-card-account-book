@@ -8,10 +8,36 @@
     <ListView
         android:id="@+id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:cacheColorHint="#00000000"
-        android:longClickable="true"
         android:layoutAnimation="@anim/anim_layout_controller"
+        android:longClickable="true"
         android:persistentDrawingCache="animation|scrolling" />
+
+    <LinearLayout
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/empty_card_add_view"
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:src="@drawable/questionmark_card_add"
+            android:clickable="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/my_card_list_have_no_items"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+    </LinearLayout>
 
 </LinearLayout>

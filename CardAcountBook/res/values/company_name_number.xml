@@ -7,6 +7,11 @@
     <string name="phoneNum_KEB">15886700</string>
     <string name="phoneNum_saving_bank">15886622</string>
     <string name="phoneNum_SHINHAN">15447200</string>
+    <string name="phoneNum_HYUNDAI">15776200</string>
+    <string name="phoneNum_lotte">15888100</string>
+    <string name="phoneNum_woori">15889955</string>
+    <string name="phoneNum_samsung">15888700</string>
+    
 
     <string name="NH_card">NH카드</string>
     <string name="KB_card">KB국민</string>
@@ -16,15 +21,11 @@
     <string name="Lotte_card">롯데카드</string>
     <string name="Woori_card">우리카드</string>
 
-    
-
     <string name="KB_check">KB국민체크</string>
     <string name="KB_credit">KB국민카드</string>
     <string name="Samsung_card">삼성카드</string>
     <string name="Sinhan_card">신한카드</string>
     <string name="Hyundai_card">현대카드</string>
-    	
-
 
     <string name="SHINHAN_blank_card_number">****</string>
     
@@ -32,4 +33,21 @@
     <string name="refusal_cause">부족</string>
     <string name="sms_form_error">form_error</string>
 
+    <string name="call_company_KB">KB</string>
+    
+    <string name="call_company_NH">NH</string>
+    <string name="call_company_NH_chaum">채움</string>
+    <string name="call_company_NH_nonghyup">농협</string>
+    
+    <string name="call_company_lotte">롯데</string>
+    
+    <string name="call_company_woori">우리</string>
+    
+    <string name="call_company_samsung">삼성</string>
+    
+    <string name="call_company_shinhan">신한</string>
+    
+    <string name="call_company_hyundai">현대</string>
+    
+    <string name="call_company_keb">외환</string>
 </resources>

@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,6 +49,8 @@ public class MyCardActivity extends ListActivity {
 	
 	int longClickedPosition;
 	
+	private ImageView addCardImageView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,10 +73,7 @@ public class MyCardActivity extends ListActivity {
 			String cardType = c.getString(c.getColumnIndex("cardType"));
 			String cardImageUri = c.getString(c.getColumnIndex("cardImageUri"));
 			
-			Log.e("JUNU", c.getString(c.getColumnIndex("deleteFlag")));
-			
 			MyCardInfo tmpCardInfo = new MyCardInfo(cardPrimaryKey, cardName, cardNumber, paymentDay, tAmount, cardType, cardImageUri);
-//			tmpCardInfo.setCardImage(setAutoCardImage(cardName));
 
 			myCardList.add(tmpCardInfo);
 		}
@@ -85,13 +85,20 @@ public class MyCardActivity extends ListActivity {
 		cardListView = this.getListView();
 		cardListView.setOnItemLongClickListener(new myCardListItemLongClickListener());
 		
+		addCardImageView = (ImageView) findViewById(R.id.empty_card_add_view);
+		addCardImageView.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent goCardListActivity = new Intent(MyCardActivity.this, CardExpandableListActivity.class);
+				startActivityForResult(goCardListActivity, GO_CARD_LIST_RESULT_OK);
+			}
+		});
 	}
 	
 	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		
 		if (requestCode == GO_EDIT_CARD_OPTION) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -99,6 +106,8 @@ public class MyCardActivity extends ListActivity {
 				mAdapter.getItem(longClickedPosition).setPaymentDay(bdl.getInt("paymentDay"));
 				mAdapter.getItem(longClickedPosition).setCardType(bdl.getString("cardType"));
 				mAdapter.getItem(longClickedPosition).setTAmount(bdl.getInt("tAmount"));
+				
+				mAdapter.notifyDataSetChanged();
 			}
 		} else if (requestCode == GO_CARD_LIST_RESULT_OK) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -190,19 +199,7 @@ public class MyCardActivity extends ListActivity {
 					String updateQuery = "UPDATE myCard SET deleteFlag = 1 WHERE myCardKey = " + tmpBdl.getInt("cardPrimaryKey") + ";";
 					db.execSQL(updateQuery);
 					db.close();
-//					
-//					db = Cdb.getReadableDatabase();
-//					String myCardQuery = "SELECT * FROM myCard WHERE deleteFlag = 1;";
-//					c = db.rawQuery(myCardQuery, null);
-//					
-//					while (c.moveToNext()) {
-//						int cardPrimaryKey = c.getInt(c.getColumnIndex("myCardKey"));
-//						String cardName = c.getString(c.getColumnIndex("cardName"));
-//						String cardNumber = c.getString(c.getColumnIndex("cardNumber"));
-//						String cardImageUri = c.getString(c.getColumnIndex("cardImageUri"));
-//						int deleteFlag = c.getInt(c.getColumnIndex("deleteFlag"));
-//					}
-					
+
 					removeDialog(DELETE_CARD_DIALOG);
 					myCardList.remove(longClickedPosition);
 					mAdapter.notifyDataSetChanged();
@@ -237,19 +234,53 @@ public class MyCardActivity extends ListActivity {
 	public void callCardCompany(TextView v) {
 		TextView tmpTv = v;
 		Resources tmpRes = this.getResources();
-		Intent callCompany;
+		Intent callCompany = new Intent(Intent.ACTION_DIAL);
+		callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_NH)));
 
-		if (tmpTv.getText().equals(tmpRes.getString(R.string.NH_card))) {
+		// NH카드 고객센터 전화번호 등록
+		if (tmpTv.getText().equals(tmpRes.getString(R.string.NH_card)) || tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_NH))
+				|| tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_NH_chaum))
+				|| tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_NH_nonghyup))) {
 			callCompany = new Intent(Intent.ACTION_DIAL);
 			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_NH)));
-			startActivity(callCompany);
-		} else if (tmpTv.getText().equals(tmpRes.getString(R.string.KB_check)) || tmpTv.getText().equals(tmpRes.getString(R.string.KB_credit))) {
+	
+		// KB국민카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().equals(tmpRes.getString(R.string.KB_check)) || tmpTv.getText().equals(tmpRes.getString(R.string.KB_credit))
+				|| tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_KB))) {
 			callCompany = new Intent(Intent.ACTION_DIAL);
 			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_KB)));
-			startActivity(callCompany);
-		} else {
-			// Other Card Phone Number Add
-		}
+		
+		// 롯데카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_lotte))) {
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_lotte)));
+		
+		// 우리카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_woori))) {
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_woori)));
+		
+		// 삼성카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_samsung))) {
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_samsung)));
+		
+		// 신한카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_shinhan))){
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_SHINHAN)));
+						
+		// 현대카드 고객센터 전화번호 등록
+		} else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_hyundai))){
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_HYUNDAI)));
+			
+		// KEB카드 고객센터 전화번호 등록
+		}  else if (tmpTv.getText().toString().contains(tmpRes.getString(R.string.call_company_keb))){
+			callCompany = new Intent(Intent.ACTION_DIAL);
+			callCompany.setData(Uri.parse("tel:" + tmpRes.getString(R.string.phoneNum_KEB)));
+		}	
+		startActivity(callCompany);
 	}
 	
 	@Override
