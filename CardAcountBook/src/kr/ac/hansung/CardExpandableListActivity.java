@@ -67,12 +67,20 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 		cardCompanyList.add(getResources().getString(R.string.KB_card));
 		cardCompanyList.add(getResources().getString(R.string.NH_card));
 		cardCompanyList.add(getResources().getString(R.string.Lotte_card));
+		cardCompanyList.add(getResources().getString(R.string.Woori_card));
+		cardCompanyList.add(getResources().getString(R.string.Samsung_card));
+		cardCompanyList.add(getResources().getString(R.string.Sinhan_card));
+		cardCompanyList.add(getResources().getString(R.string.Hyundai_card));
 		
 		// Child List
 		ArrayList<ArrayList<MyCardInfo>> cardList = new ArrayList<ArrayList<MyCardInfo>>();
 		ArrayList<MyCardInfo> kbChildList = new ArrayList<MyCardInfo>();
 		ArrayList<MyCardInfo> nhChildList = new ArrayList<MyCardInfo>();
 		ArrayList<MyCardInfo> lotteChildList = new ArrayList<MyCardInfo>();
+		ArrayList<MyCardInfo> WooriChildList = new ArrayList<MyCardInfo>();
+		ArrayList<MyCardInfo> samsungChildList = new ArrayList<MyCardInfo>();
+		ArrayList<MyCardInfo> SinhanChildList = new ArrayList<MyCardInfo>();
+		ArrayList<MyCardInfo> HyundaiChildList = new ArrayList<MyCardInfo>();
 		
 		// KB child ADD
 		for (int i=0; i<CardInfoList.kbCardImg.length; i++) {
@@ -101,10 +109,53 @@ public class CardExpandableListActivity extends ExpandableListActivity implement
 			lotteChildList.add(cardElement);
 		}
 		
+		//Woori child ADD
+		for(int i =0;i<CardInfoList.WooriCardImg.length;i++){
+			cardElement = new MyCardInfo();
+			cardElement.setCardImage(WooriCardImg[i]);
+			cardElement.setCardName(getResources().getString(WooriCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.Woori_card));
+			WooriChildList.add(cardElement);
+		}
+		
+		//Samsung child ADD
+		for(int i =0;i<CardInfoList.SamsungCardImg.length;i++){
+			cardElement = new MyCardInfo();
+			cardElement.setCardImage(SamsungCardImg[i]);
+			cardElement.setCardName(getResources().getString(SamsungCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.Samsung_card));
+			samsungChildList.add(cardElement);
+			
+		}
+		
+		//Sinhan child ADD
+		for(int i=0;i<CardInfoList.SinhanCardImg.length;i++){
+			cardElement = new MyCardInfo();
+			cardElement.setCardImage(SinhanCardImg[i]);
+			cardElement.setCardName(getResources().getString(SinhanCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.Sinhan_card));
+			SinhanChildList.add(cardElement);
+			
+		}
+		
+		//Hyundai Child ADD
+		for(int i=0;i<CardInfoList.HyundaiCardImg.length;i++){
+			cardElement = new MyCardInfo();
+			cardElement.setCardImage(HyundaiCardImg[i]);
+			cardElement.setCardName(getResources().getString(HyundaiCardName[i]));
+			cardElement.setReduceCardName(getResources().getString(R.string.Hyundai_card));
+			HyundaiChildList.add(cardElement);
+			
+		}
+		
 		// Attach child list to group ist
 		cardList.add(kbChildList);
 		cardList.add(nhChildList);
 		cardList.add(lotteChildList);
+		cardList.add(WooriChildList);
+		cardList.add(samsungChildList);
+		cardList.add(SinhanChildList);
+		cardList.add(HyundaiChildList);
 		
 		cardAdapter = new CardExpandableListAdapter(cardCompanyList, cardList);
 		setListAdapter(cardAdapter);

@@ -268,15 +268,15 @@ public class OptionViewActivity extends ListActivity {
 
 						Pass = password.getText().toString();
 						Confirm = confirmPass.getText().toString();
-						if (Pass.equals(Confirm)) {
+						if (Pass.equals(Confirm)&&(!Pass.isEmpty())) {
 
 							SharedPreferences pref = getSharedPreferences(
 									"Pref", Activity.MODE_PRIVATE);
 							SharedPreferences.Editor editor = pref.edit();
-
+														
 							editor.putBoolean("setPass", true);
 							editor.putString("password", Pass);
-
+							
 							editor.commit();
 
 						} else
