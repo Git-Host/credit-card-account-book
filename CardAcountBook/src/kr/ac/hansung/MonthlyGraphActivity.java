@@ -25,21 +25,36 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class MonthlyGraphActivity extends Activity implements OnClickListener {
-	GraphicalView gv;
-	SQLiteDatabase db;
-	CardDB Cdb;
-	Cursor c;
+public class MonthlyGraphActivity extends Activity{
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setGraph();
+	}
+	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		setGraph();
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
+
+
+	public void setGraph(){
+		final GraphicalView gv;
+		SQLiteDatabase db;
+		CardDB Cdb;
+		Cursor c;
 		int iYear,iMonth;
 		
 		setContentView(R.layout.monthly_graph_view);
 
-		CardDB Cdb = new CardDB(this);
+		Cdb = new CardDB(this);
 
 		List<double[]> values = new ArrayList<double[]>();
 
@@ -73,6 +88,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		db.close();
 		values.add(monthlyPrice);
 		
+		
 		// 표시할 수치값
 		double YAxisMax = monthlyPrice[0]/1000;
 
@@ -83,7 +99,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		String[] titles = new String[] { "월별 카드 사용량" };
 
 		// 항목을 표시하는데 사용될 색상값
-		int[] colors = new int[] { Color.parseColor("#8a2BE2") };
+		int[] colors = new int[] { Color.parseColor("#90EE90") };
 		
 		// 분류명 글자 크기 및 각 색상 지정
 		renderer.setLegendTextSize(25);
@@ -100,9 +116,10 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 			if (YAxisMax < monthlyPrice[i])
 				YAxisMax = monthlyPrice[i];
 		}
+		
 		double tmp = Math.ceil(YAxisMax / 100000);
-		YAxisMax = tmp * 100000;
-
+		YAxisMax = tmp * 100;
+		
 		// X,Y축 항목이름과 글자 크기
 		renderer.setXTitle("월");
 		renderer.setAxisTitleTextSize(20);
@@ -114,17 +131,17 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		renderer.setYAxisMax(YAxisMax);
 		renderer.setYAxisMin(0);
 		
-		renderer.setZoomLimits(new double[]{0,iMonth+0.5,0 ,0});
-		renderer.setPanLimits(new double[]{0.5,iMonth+0.5,0,15});
+		
+		renderer.setPanLimits(new double[]{0.5,iMonth+0.5,0,0});
 		// X,Y축 라인 색상
 		renderer.setAxesColor(Color.BLACK);
 		// 상단제목, X,Y축 제목, 수치값의 글자 색상
 		renderer.setLabelsColor(Color.DKGRAY);
 		
 		// X축의 표시 간격
-		renderer.setXLabels(0);
+		renderer.setXLabels(iMonth);
 		// Y축의 표시 간격
-		renderer.setYLabels(0);
+		renderer.setYLabels(10);
 
 		// X,Y축 정렬방향
 		renderer.setXLabelsAlign(Align.CENTER);
@@ -132,7 +149,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		// X,Y축 스크롤 여부 ON/OFF
 		renderer.setPanEnabled(true, false);
 		// ZOOM기능 ON/OFF
-		renderer.setZoomEnabled(true, false);
+		renderer.setZoomEnabled(false, false);
 		// ZOOM 비율
 		renderer.setZoomRate(1.0f);
 		// 막대간 간격
@@ -143,7 +160,8 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		renderer.setMarginsColor(Color.argb(0, 0xff, 0, 0));
 		
 		renderer.setBackgroundColor(Color.TRANSPARENT);
-		renderer.setShowGrid(false);
+		renderer.setGridColor(Color.parseColor("#D3D3D3"));
+		renderer.setShowGrid(true);
 		
 		
 		
@@ -155,31 +173,35 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 			double[] v = values.get(i);
 			int seriesLength = v.length;
 			for (int k = 0; k < seriesLength; k++) {
-				series.add(v[k]);
+				series.add(v[k]/1000);
 			}
 			dataset.addSeries(series.toXYSeries());
 
 		}
 		renderer.setClickEnabled(true);
 		
-		for (int i = 1; i < 6; i++) {
-			int tmp1 = (int)Math.ceil((YAxisMax /5));
-			String ttt = SmsInfo.decimalPointToString(i*(tmp1/1000));
-			ttt = ttt.substring(0,ttt.length()-1);
-			renderer.addYTextLabel(tmp1*i, ttt);
-		}
-		for(int i = 0;i<iMonth+1;i++){
-			String tmp1 = String.valueOf(i+1);
-			renderer.addXTextLabel(i+1,tmp1);
-		}
 		
 		
-		renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
+		
 		renderer.getSeriesRendererAt(0).setChartValuesTextSize(25);
 		// 그래프 객체 생성
 		gv = ChartFactory
 				.getBarChartView(this, dataset, renderer, Type.DEFAULT);
-		gv.setOnClickListener(this);
+		gv.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
+
+				if (seriesSelection != null) {
+					Intent detailViewIntent = new Intent(MonthlyGraphActivity.this,
+							DetailViewActivity.class);
+					detailViewIntent.putExtra("selMonth", seriesSelection.getXValue());
+					startActivityForResult(detailViewIntent,0);
+
+				}
+			}
+		});
 
 		// 그래프를 LinearLayout에 추가
 		LinearLayout llBody = (LinearLayout) findViewById(R.id.Monthly);
@@ -193,21 +215,7 @@ public class MonthlyGraphActivity extends Activity implements OnClickListener {
 		          gv.repaint();
 
 		   }
-
-
-
+		
 	}
-
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		SeriesSelection seriesSelection = gv.getCurrentSeriesAndPoint();
-
-		if (seriesSelection != null) {
-			Intent detailViewIntent = new Intent(MonthlyGraphActivity.this,
-					DetailViewActivity.class);
-			detailViewIntent.putExtra("selMonth", seriesSelection.getXValue());
-			startActivity(detailViewIntent);
-
-		}
-	}
+	
 }
