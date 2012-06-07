@@ -82,7 +82,7 @@ public class CategoryGraphActivity extends Activity {
 				}
 				break;
 			case R.id.month_forward:
-				if(selmonth<12){
+				if(selmonth<currentMonth){
 					selmonth++;
 					mtext.setText(selmonth+"¿ù");
 					setGraph(selmonth);
@@ -99,7 +99,7 @@ public class CategoryGraphActivity extends Activity {
 		
 		final GraphicalView mChartView;
 		final ArrayList<String> categories = new ArrayList<String>();
-		
+		final int mon = currentMonth;
 		SQLiteDatabase db;
 		Cursor c;
 		CardDB Cdb = new CardDB(this);
@@ -208,60 +208,70 @@ public class CategoryGraphActivity extends Activity {
 					category = categories.get(0);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[1]) {
 					category = categories.get(1);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[2]) {
 					category = categories.get(2);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[3]) {
 					category = categories.get(3);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[4]) {
 					category = categories.get(4);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[5]) {
 					category = categories.get(5);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[6]) {
 					category = categories.get(6);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[7]) {
 					category = categories.get(7);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[8]) {
 					category = categories.get(8);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				} else if (c == colors[9]) {
 					category = categories.get(9);
 					if (event.getAction() == MotionEvent.ACTION_UP) {
 						detailViewIntent.putExtra("selCategory", category);
+						detailViewIntent.putExtra("cMonth", mon);
 						startActivityForResult(detailViewIntent, GO_DETAIL);
 					}
 				}				
