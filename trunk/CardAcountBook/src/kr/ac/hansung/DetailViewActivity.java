@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -279,48 +280,48 @@ public class DetailViewActivity extends ListActivity implements CategoryList {
 			String selCategory = (String) intent.getStringExtra("selCategory");
 			String strQuery = null;
 			int cIndex = 0;
-			
+
+			int todayYear;
+			int todayMonth;
+			int todayDay;
+			int m = intent.getIntExtra("cMonth", 0);
+			Date dd = new Date();
+			int mmm = dd.getMonth()+1;;
+			todayYear = today.get(Calendar.YEAR);
+			todayMonth = m;
+			todayDay = today.get(Calendar.DAY_OF_MONTH);
+			if (todayMonth < mmm) {
+				GregorianCalendar cld = new GregorianCalendar(todayYear, todayMonth-1, 1);
+				todayDay = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
+			}
+
+			String updateToDate = todayYear + ". " + todayMonth + ". "
+					+ todayDay + ". ";
+			String updateFromDate = todayYear + ". " + todayMonth + ". 1. ";
+
+			toDateDetailView.setText(updateToDate);
+			fromDateDetailView.setText(updateFromDate);
+
 			for (int i = 0; i < High_Category.length; i++) {
 				if (High_Category[i].matches(selCategory))
 					cIndex = i;
 			}
-			
-			strQuery = "SELECT * FROM breakdowstats WHERE (category = '" + getResources().getString(i_category[cIndex][0])+"'";
-			
+
+			strQuery = "SELECT * FROM breakdowstats WHERE (category = '"
+					+ getResources().getString(i_category[cIndex][0]) + "'";
+
 			for (int j = 1; j < i_category[cIndex].length; j++) {
-				String setCategory = getResources().getString(i_category[cIndex][j]);
+				String setCategory = getResources().getString(
+						i_category[cIndex][j]);
 				strQuery += " OR category = '" + setCategory + "'";
 			}
-			
-			categoryQuery = strQuery;
-			
-			strQuery += ") AND (combineDate >= " + tmpFormat.format(tmpFromDate) + " AND combineDate <= "
-							  + tmpFormat.format(tmpToDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
-			tmpCursor = db.rawQuery(strQuery, null);
-			
-		// 메인에서 현재사용금액 눌럿을때 사용내역
-		} else if (intent.hasExtra("fromTime") && intent.hasExtra("toTime")) {
-			String[] fromTime = intent.getStringExtra("fromTime").replace(" ", "").split("\\.");
-			String[] toTime = intent.getStringExtra("toTime").replace(" ", "").split("\\.");
-			
-			Date fromTimeDate = new Date();
-			Date toTimeDate = new Date();
 
-			fromTimeDate.setYear(Integer.parseInt(fromTime[0]) - 1900);
-			fromTimeDate.setMonth(Integer.parseInt(fromTime[1]) - 1);
-			fromTimeDate.setDate(Integer.parseInt(fromTime[2]));
-			
-			toTimeDate.setYear(Integer.parseInt(toTime[0]) - 1900);
-			toTimeDate.setMonth(Integer.parseInt(toTime[1]) - 1);
-			toTimeDate.setDate(Integer.parseInt(toTime[2]));
-			
-			fromDateDetailView.setText(intent.getStringExtra("fromTime"));
-			toDateDetailView.setText(intent.getStringExtra("toTime"));
-			
-			String tmpStr = "SELECT * FROM breakdowstats WHERE (combineDate >= " + tmpFormat.format(fromTimeDate)
-					+ " AND combineDate <= "
-					+ tmpFormat.format(toTimeDate) + ") AND deleteFlag = 0 ORDER BY combineDate DESC;";
-			tmpCursor = db.rawQuery(tmpStr, null);
+			categoryQuery = strQuery;
+			Date d = new Date();
+			int yyyy = d.getYear() + 1900;
+			strQuery += ") AND pYear = " + yyyy + " AND pMonth = " + m
+					+ " AND deleteFlag = 0 ORDER BY combineDate DESC;";
+			tmpCursor = db.rawQuery(strQuery, null);
 	
 		// 상세내역보기 
 		} else {
