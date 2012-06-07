@@ -19,9 +19,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * @author Admin
@@ -30,6 +34,9 @@ import android.widget.LinearLayout;
 public class CategoryGraphActivity extends Activity {
 	
 	private final static int GO_DETAIL = 0;
+	Date date = new Date();
+	int currentMonth = date.getMonth() + 1;
+	int selmonth = currentMonth;
 	
 	int[] colors = new int[] { Color.parseColor("#F08080"),
 			Color.parseColor("#7CFC00"), Color.parseColor("#EE82EE"),
@@ -43,33 +50,68 @@ public class CategoryGraphActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_graph_view);
-		setGraph();
+		ImageView back = (ImageView)findViewById(R.id.month_back);
+		ImageView forward = (ImageView)findViewById(R.id.month_forward);
+		ClickListener l = new ClickListener();
+		back.setOnClickListener(l);
+		forward.setOnClickListener(l);
+		TextView mtext = (TextView)findViewById(R.id.month_view);
+		mtext.setTextColor(Color.WHITE);
+		mtext.setText(currentMonth+"월");
+		setGraph(currentMonth);
 	}
 		
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		setGraph();
+		setGraph(currentMonth);
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	public class ClickListener implements OnClickListener{
+		
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			TextView mtext = (TextView)findViewById(R.id.month_view);; 
+			mtext.setTextColor(Color.WHITE);
+			switch(v.getId()){
+			case R.id.month_back:
+				if(selmonth>1){
+					selmonth--;
+					mtext.setText(selmonth+"월");
+					setGraph(selmonth);
+				}
+				break;
+			case R.id.month_forward:
+				if(selmonth<12){
+					selmonth++;
+					mtext.setText(selmonth+"월");
+					setGraph(selmonth);
+				}
+				break;
+			
+			}
+		}
+		
 	}
 
 
-	public void setGraph(){
+	public void setGraph(int currentMonth){
 		
 		final GraphicalView mChartView;
 		final ArrayList<String> categories = new ArrayList<String>();
+		
 		SQLiteDatabase db;
 		Cursor c;
-		int SelMonth;
 		CardDB Cdb = new CardDB(this);
 		db = Cdb.getReadableDatabase();
+		
 		// Pie차트 그리기
 		LinearLayout incomePiechartLayout = (LinearLayout) findViewById(R.id.pie_graph_layout);
 		incomePiechartLayout.removeAllViews();
 
-		Date date = new Date();
+		
 		int currentYear = date.getYear() + 1900;
-		int currentMonth = date.getMonth() + 1;
+		
 
 		String strQuery = "Select Distinct category from breakdowstats where pYear = "
 				+ currentYear + " and pMonth = " + currentMonth + " AND deleteFlag = 0;";
@@ -94,6 +136,7 @@ public class CategoryGraphActivity extends Activity {
 		while (it.hasNext()) {
 			categories.add((String) it.next());
 		}
+		
 
 		c.moveToFirst();
 		for (int i = 0; i < CategoryList.High_Category.length; i++) {
@@ -129,11 +172,12 @@ public class CategoryGraphActivity extends Activity {
 			series.add(categories.get(cIndex), value);
 			cIndex++;
 		}
+		
 
 		DefaultRenderer renderer = new DefaultRenderer();
 		renderer.setLabelsTextSize(15);
-		renderer.setLegendTextSize(15);
-
+		renderer.setLegendTextSize(25);
+		renderer.setShowAxes(true);
 		db.close();
 
 		renderer.setMargins(new int[] { 20, 30, 15, 0 });
@@ -146,10 +190,9 @@ public class CategoryGraphActivity extends Activity {
 		renderer.setZoomButtonsVisible(false);
 		renderer.setZoomEnabled(false);
 		renderer.setLabelsColor(Color.BLACK);
-		renderer.setLegendTextSize(25);
-		renderer.setLabelsTextSize(25);
 		// ChartFactory.getPieChartView
-
+		renderer.setShowLegend(true);
+		renderer.setShowLabels(false);
 		mChartView = ChartFactory.getPieChartView(this, series, renderer);
 		
 		mChartView.setOnTouchListener(new OnTouchListener() {
@@ -159,35 +202,69 @@ public class CategoryGraphActivity extends Activity {
 				int c = mChartView.toBitmap().getPixel((int) event.getX(),
 						(int) event.getY());
 				String category = getResources().getString(R.string.c_etc);
-
+				Intent detailViewIntent = new Intent(
+						CategoryGraphActivity.this, DetailViewActivity.class);
 				if (c == colors[0]) {
 					category = categories.get(0);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[1]) {
 					category = categories.get(1);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[2]) {
 					category = categories.get(2);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[3]) {
 					category = categories.get(3);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[4]) {
 					category = categories.get(4);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[5]) {
 					category = categories.get(5);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[6]) {
 					category = categories.get(6);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[7]) {
 					category = categories.get(7);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[8]) {
 					category = categories.get(8);
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
 				} else if (c == colors[9]) {
 					category = categories.get(9);
-				}
-				if (event.getAction() == MotionEvent.ACTION_UP) {
-					Intent detailViewIntent = new Intent(
-							CategoryGraphActivity.this, DetailViewActivity.class);
-					detailViewIntent.putExtra("selCategory", category);
-					startActivityForResult(detailViewIntent, GO_DETAIL);
-
-				}
+					if (event.getAction() == MotionEvent.ACTION_UP) {
+						detailViewIntent.putExtra("selCategory", category);
+						startActivityForResult(detailViewIntent, GO_DETAIL);
+					}
+				}				
 				return true;
 			}
 		});
