@@ -129,17 +129,6 @@ public class SmsInfo implements CategoryList {
 		
 		tmpYear = String.valueOf(c.get(Calendar.YEAR));
 		
-		
-		// 명희전화번호꺼 신한으로 바꾸기
-		if (smsAddress.equals("01039487705")) {
-			tmpAddress = SHINHAN_PNUM;
-		} else if (smsAddress.equals("01042770817")) {
-			tmpAddress = HYUNDAI_PNUM;
-		} else if (smsAddress.equals("01042434994")) {
-			tmpAddress = KEB_PNUM;
-		}
-		
-		
 		try {
 			switch (tmpAddress) {
 			

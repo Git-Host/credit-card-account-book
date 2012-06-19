@@ -6,36 +6,38 @@
 
     <uses-sdk android:minSdkVersion="10" />
 
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="kr.ac.hansung.WRITE_DATA" />
+    <uses-permission android:name="kr.ac.hansung.READ_DATA" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.READ_OWNER_DATA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
           
-		<!-- PassWord Activity -->
-		<!--
-	 	<activity 
-		    android:name=".PasswordActivity"
-		    android:theme="@android:style/Theme.Black.NoTitleBar" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
-		-->
-		
         <!-- Main Activity -->
         <activity
             android:name=".CardAccountBookActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
 
         <!-- My Card Activity -->
         <activity
             android:name=".MyCardActivity"
-            android:label="@string/my_card" >
+            android:label="@string/my_card" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MY_CARD" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -45,7 +47,8 @@
         <!-- Detail View Activity -->
         <activity
             android:name=".DetailViewActivity"
-            android:label="@string/detail_view" >
+            android:label="@string/detail_view" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.DETAIL_VIEW" />
 
@@ -63,25 +66,30 @@
         <!-- Graph View Activity -->
         <activity
             android:name=".GraphViewActivity"
-            android:label="@string/breakdown_stats" >
+            android:label="@string/breakdown_stats" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.GRAPH_VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".MonthlyGraphActivity"
-            android:label="@string/monthly_show_text" >
+            android:label="@string/monthly_show_text" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MONTHLY_GRAPH_VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".CategoryGraphActivity"
-            android:label="@string/category_show_text" >
+            android:label="@string/category_show_text"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.CATEGORY_GRAPH_VIEW" />
 
@@ -92,7 +100,8 @@
         <!-- Option View Activity -->
         <activity
             android:name=".OptionViewActivity"
-            android:label="@string/app_name" >
+            android:label="@string/option"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.OPTION_VIEW" />
 
@@ -103,24 +112,19 @@
         <!-- Card Info Edit Activity -->
         <activity
             android:name=".CardInfoEditActivity"
-            android:label="@string/edit_my_card" >
+            android:label="@string/edit_my_card"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.CARD_INFO_EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-      
-        <activity android:name=".CardListActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.CARD_LIST" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
         <!-- Expandable Card List Activity -->
-        <activity android:name="CardExpandableListActivity" >
+        <activity android:name="CardExpandableListActivity"
+            android:label="@string/add_my_card"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.EXPANDABLE_CARD_LIST" />
 
@@ -128,15 +132,16 @@
             </intent-filter>
         </activity>
         
+        <!-- Notice Activity -->
+        <activity android:name=".NoticeActivity"
+            android:label="@string/notice"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.NOTICE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="kr.ac.hansung.WRITE_DATA" />
-    <uses-permission android:name="kr.ac.hansung.READ_DATA" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.READ_OWNER_DATA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

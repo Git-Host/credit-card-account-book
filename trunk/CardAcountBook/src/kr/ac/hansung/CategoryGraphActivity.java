@@ -64,7 +64,7 @@ public class CategoryGraphActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		setGraph(currentMonth);
+		setGraph(selmonth);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	public class ClickListener implements OnClickListener{
