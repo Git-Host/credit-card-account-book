@@ -287,12 +287,7 @@ public class CardAccountBookActivity extends Activity {
 			
 				if (curAddress.equals(tmpRes.getString(R.string.phoneNum_KB)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_NH))
 						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_CITY)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_KEB))
-						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_saving_bank)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_SHINHAN))
-						 
-//					|| curAddress.equals("01039487705")) { 			// 명희번호임 지워야함
-						|| curAddress.equals("01042434994")		 	// 내번호임 지워야함
-						|| curAddress.equals("01042770817")			// SDK 전화번호임 지워야함
-){
+						|| curAddress.equals(tmpRes.getString(R.string.phoneNum_saving_bank)) || curAddress.equals(tmpRes.getString(R.string.phoneNum_SHINHAN))){
 					smsBody = cursor.getString(cursor.getColumnIndex("body"));
 					smsAddress = cursor.getString(cursor.getColumnIndex("address"));
 					
@@ -305,11 +300,38 @@ public class CardAccountBookActivity extends Activity {
 		}
 		cursor.close();
 		
+//		db.execSQL("CREATE TABLE breakdowstats (breakKey INTEGER PRIMARY KEY, cardName TEXT, pYear INTEGER, pMonth INTEGER, pDay INTEGER, pPlace TEXT"
+//				+ ", price INTEGER, category TEXT, cardNumber TEXT, combineDate INTEGER, deleteFlag INTEGER);");
 
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 5, '이마트', 21000, '대중교통', '1*2*', 20120605, 0);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 5, '이마트', 14000, '술/유흥', '1*2*', 20120605, 0);");
-		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 5, '이마트', 300000, '등록금', '1*2*', 20120605, 0);");
-
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 5, '뉴발란스이대점', 54000, '패션/잡화', '1*2*', 20120605, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 4, '알라딘', 60000, '기타', '1*2*', 20120604, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 3, '현대쇼핑(신촌점)', 49000, '패션/잡화', '1*2*', 20120603, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 2, '현대쇼핑(신촌점)', 35000, '패션/잡화', '1*2*', 20120602, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 6, 2, '빈스앤와플', 9900, '패션/잡화', '1*2*', 20120602, 0);");
+		
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 30, '월드마트', 11000, '주식', '1*2*', 20120530, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 26, '훼미리마트종로와룡점', 30000, '잡화', '1*2*', 20120526, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 21, '(주)맥도날드미아점', 17500, '부식', '1*2*', 20120521, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 18, '보광훼미리마트성북한성대', 7500, '잡화', '1*2*', 20120518, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 5, 7, '청진동해장국', 30000, '주식', '1*2*', 20120507, 0);");
+		
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 25, '이마트', 30000, '주식', '1*2*', 20120425, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 23, '영웅종합분식', 24000, '주식', '1*2*', 20120423, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 15, '티머니택시', 15000, '대중교통', '1*2*', 20120415, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 13, '스타우트', 35000, '술/유흥', '1*2*', 20120413, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 4, 10, '영웅종합분식', 15000, '주식', '1*2*', 20120410, 0);");
+		
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 27, 'GS25미아타운점', 16000, '잡화', '1*2*', 20120327, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 17, '티머니택시', 17580, '대중교통', '1*2*', 20120317, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 15, '밥앤죽', 12000, '주식', '1*2*', 20120315, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 10, '보광훼미리마트성북한성대점', 9800, '잡화', '1*2*', 20120310, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 3, 9, '미스터피자미아점', 35000, '간식', '1*2*', 20120309, 0);");
+		
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 12, '(주)맥도날드안암점', 12000, '외식', '1*2*', 20120212, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 11, '치코파닭', 17000, '부식', '1*2*', 20120211, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 11, '옵티마시민약국', 4500, '병원비', '1*2*', 20120211, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 9, '유신마트', 9700, '주식', '1*2*', 20120209, 0);");
+		db.execSQL("INSERT INTO breakdowstats VALUES(null, 'KB국민카드' , 2012, 2, 7, 'GS25신촌명물점', 2700, '잡화', '1*2*', 20120207, 0);");
 		
 		cursor = getContentResolver().query(READ_SMS, null, null, null, null);
 		String myCardQuery = "SELECT DISTINCT cardName, cardNumber FROM breakdowstats WHERE deleteFlag = 0;";

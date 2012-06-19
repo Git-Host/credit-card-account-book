@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -19,8 +18,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,10 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,17 +40,9 @@ import android.widget.Toast;
  * @author Admin
  *
  */
-/**
- * @author Admin
- * 
- */
-/**
- * @author Admin
- * 
- */
 public class OptionViewActivity extends ListActivity {
 	private static final int OPTION_PASSWORD_SET = 0;
-	private static final int OPTION_CSV_OUT = 1;
+	private static final int OPTION_CSV_OUT = 0;
 	private static final int OPTION_THEME_CHAGE = 2;
 	/*ArrayList<themeInfo> iconList;
 	ArrayList<themeInfo> backgroundList;*/
@@ -116,8 +102,7 @@ public class OptionViewActivity extends ListActivity {
 		optionList.add(csvOutput);
 		//optionList.add(themeChage);
 
-		optionListAdapter = new OptionListAdapter(this,
-				R.layout.option_view_list_layout, optionList);
+		optionListAdapter = new OptionListAdapter(this,R.layout.option_view_list_layout, optionList);
 		setListAdapter(optionListAdapter);
 	}
 

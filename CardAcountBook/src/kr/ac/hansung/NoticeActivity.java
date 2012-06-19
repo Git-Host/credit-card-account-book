@@ -2,6 +2,8 @@ package kr.ac.hansung;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class NoticeActivity extends ListActivity {
-	
+	private final static int HOW_TO = 0;
+	private final static int FIRST_NOTICE = 1;
 	private ArrayList<String> noticeList;
 	private NoticeListAdapter noticeListAdapter;
 	
@@ -24,18 +27,54 @@ public class NoticeActivity extends ListActivity {
 		
 		noticeList = new ArrayList<String>();
 
-		noticeList.add("이용방법 및 설명");
-		noticeList.add("첫번째 공지사항");
+		noticeList.add(getResources().getString(R.string.app_method_title));
 		
 		noticeListAdapter = new NoticeListAdapter(this, R.layout.notice_view_layout, noticeList);
 		setListAdapter(noticeListAdapter);
 		
 		noticeListAdapter.notifyDataSetChanged();
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog noticeDialog;
+		AlertDialog.Builder noticeBuilder;
+		
+		switch (id) {
+		case HOW_TO :
+			noticeBuilder = new AlertDialog.Builder(this);
+			
+			noticeBuilder
+			.setTitle(R.string.app_method_title)
+			.setMessage(R.string.app_method);
+			
+			noticeDialog = noticeBuilder.create();
+			return noticeDialog;
+		case FIRST_NOTICE :
+			noticeBuilder = new AlertDialog.Builder(this);
+			
+			
+			
+			noticeDialog = noticeBuilder.create();
+			return noticeDialog;
+		}
+ 
+		return super.onCreateDialog(id);
+	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-	
+		switch (position) {
+		case 0 :
+			showDialog(HOW_TO);
+			break;
+		case 1 :
+			showDialog(FIRST_NOTICE);
+			break;
+		}
+		
+		
+		
 		super.onListItemClick(l, v, position, id);
 	}
 
